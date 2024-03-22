@@ -61,6 +61,7 @@ const Login = () => {
   return (
     <BaseContainer>
       <div className="login container">
+        <h2>Group 42</h2>
         <div className="login form">
           <FormField
             label="Username"
