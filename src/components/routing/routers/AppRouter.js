@@ -3,7 +3,8 @@ import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import {GameGuard} from "../routeProtectors/GameGuard";
 import GameRouter from "./GameRouter";
 import {LoginGuard} from "../routeProtectors/LoginGuard";
-import Login from "../../views/Login";
+import FrontPage from "../../views/FrontPage";
+import CreateGame from "../../views/CreateGame";
 
 /**
  * Main router of your application.
@@ -24,7 +25,11 @@ const AppRouter = () => {
         </Route>
 
         <Route path="/login" element={<LoginGuard />}>
-          <Route path="/login" element={<Login/>} />
+          <Route path="/login" element={<FrontPage />} />
+        </Route>
+
+        <Route path="/creategame" element={<LoginGuard />}>
+          <Route path="/creategame" element={<CreateGame />} />
         </Route>
 
         <Route path="/" element={
