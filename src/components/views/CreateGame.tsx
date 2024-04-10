@@ -61,7 +61,6 @@ const CreateGame = () => {
       localStorage.setItem("lobbyId", lobby.lobbyId);
       // upgrading to a websocket connection
       connect(subscribeToLobby)
-      // Login successfully worked --> navigate to the route /game in the GameRouter
       navigate("/waitingroom");
     } catch (error) {
       alert(
@@ -87,7 +86,7 @@ const CreateGame = () => {
           />
           <div className="createGame button-container">
             <Button
-              disabled={!username || !username}
+              disabled={!username || !numberPlayers}
               width="100%"
               onClick={() => doCreateGame()}
             >
