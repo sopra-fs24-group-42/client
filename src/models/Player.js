@@ -9,7 +9,7 @@ class Player {
     this.token = null;
     this.role = null;
     Object.assign(this, data);
-}
+  }
 }
   
 export default Player;
