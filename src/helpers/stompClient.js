@@ -29,14 +29,14 @@ import { getDomain } from "./getDomain";
 
 // ## INITIALIZATION OVER ##
 
-var websocket = null;
+var ws = null;
 var connection = false;
 const baseURL = getDomain();
 
 export var connect = (callback) => { // passing a callback function as argument to STOMP's connect method
-  var websocket = new SockJS(baseURL+"/game"); // creating a new SockJS object (essentially a websocket object)
-  var client = over(websocket); // specifying that it's a special type of websocket connection (i.e. using sockJS)
-  websocket.connect({}, () => { // connecting to server websocket
+  var ws = new SockJS(baseURL+"/game"); // creating a new SockJS object (essentially a websocket object)
+  var client = over(ws); // specifying that it's a special type of websocket connection (i.e. using sockJS)
+  ws.connect({}, () => { // connecting to server websocket
     setTimeout(function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
       //ws.subscribe('/topic/greetings', function (greeting) {
       //console.log(JSON.parse(greeting.body).content);
@@ -49,26 +49,26 @@ export var connect = (callback) => { // passing a callback function as argument 
         console.log("Error " + message.body);
         }); // Subscribe to error messages through this*/
   });
-  websocket.onclose = reason => {
+  ws.onclose = reason => {
     connection = false;
     console.log("Socket was closed, Reason: " + reason);
   }
 }
 
 export const subscribe = (mapping, callback) => {
-  websocket.subscribe(mapping, function (data) {
+  ws.subscribe(mapping, function (data) {
     callback(JSON.parse(data.body)); // This is already the body!!!
   });
 }
 
 export const unsubscribe = (mapping) => {
-  websocket.unsubscribe(mapping, function (data) {});
+  ws.unsubscribe(mapping, function (data) {});
 }
 
 export let getConnection = () => connection;
 
 export const disconnect = () => {
-  if (websocket !== null) websocket.disconnect();
+  if (ws !== null) ws.disconnect();
   connection = false
   console.log("Disconnected websocket.");
 }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { api, handleError } from "helpers/api";
-import User from "models/User";
+import Player from "models/Player";
 import Lobby from "models/Lobby";
 import {useNavigate} from "react-router-dom";
 import { Button } from "components/ui/Button";
@@ -52,13 +52,13 @@ const CreateGame = () => {
       // creating a new Player object out of the host
       const response1 = await api.post("/players", JSON.stringify({username}));
       // Get the returned user and update a new object.
-      const user = new User(response1.data);
+      const player = new Player(response1.data);
       // Store the token into the local storage.
-      localStorage.setItem("user", user.username);
+      localStorage.setItem("user", player.username);
       // creating a new Lobby object 
       const response2 = await api.post("/lobbies", JSON.stringify({numberPlayers}));
       const lobby = new Lobby(response2.data);
-      localStorage.setItem("lobbyId", lobby.id);
+      localStorage.setItem("lobbyId", lobby.lobbyId);
       // upgrading to a websocket connection
       connect(subscribeToLobby)
       // Login successfully worked --> navigate to the route /game in the GameRouter
