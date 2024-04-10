@@ -35,6 +35,8 @@ jobs:
         with:
           node-version: "20.x"
       - run: npm install
+      - run: npm install stompjs --save
+      - run: npm install net --save
       - run: npm run build
 
       - name: Deploy to App Engine
