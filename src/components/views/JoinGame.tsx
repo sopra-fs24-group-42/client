@@ -4,7 +4,7 @@ import Player from "models/Player";
 import Lobby from "models/Lobby";
 import {useNavigate} from "react-router-dom";
 import { Button } from "components/ui/Button";
-import "styles/views/Login.scss";
+import "styles/views/JoinGame.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import {connect, subscribe} from "helpers/stompClient"
@@ -32,7 +32,7 @@ FormField.propTypes = {
 
 const JoinGame = () => {
   const navigate = useNavigate();
-  const [gameCode, setGameCode] = useState<string>(null);
+  const [lobbyCode, setLobbyCode] = useState<string>(null);
   const [username, setUsername] = useState<string>(null);
 
   function subscribeToLobby() {
@@ -43,13 +43,12 @@ const JoinGame = () => {
     try {
       // creating a new Player object out of the joining player
       const response1 = await api.post("/players", JSON.stringify({username}));
-      // Get the returned user and update a new object.
       const player = new Player(response1.data);
-      // Store the token into the local storage.
       localStorage.setItem("user", player.username);
-      localStorage.setItem("lobbyId", gameCode);
+      const response2 = await api.put("/lobbies", JSON.stringify({username, lobbyCode}));
+      localStorage.setItem("lobbyCode", lobbyCode);
       // upgrading to a websocket connection
-      connect(subscribeToLobby)
+      connect(subscribeToLobby);
       navigate("/waitingroom");
     } catch (error) {
       alert(
@@ -70,12 +69,12 @@ const JoinGame = () => {
           />
           <FormField
             label="Enter a game code:"
-            value={gameCode}
-            onChange={(e: string) => setGameCode(e)}
+            value={lobbyCode}
+            onChange={(e: string) => setLobbyCode(e)}
           />
           <div className="createGame button-container">
             <Button
-              disabled={!username || !gameCode}
+              disabled={!username || !lobbyCode}
               width="100%"
               onClick={() => doJoinGame()}
             >
@@ -83,7 +82,7 @@ const JoinGame = () => {
             </Button>
             <Button
               width="100%"
-              onClick={() => navigate("/game")}
+              onClick={() => navigate("/frontpage")}
             >
               Back
             </Button>

@@ -13,6 +13,7 @@ $accentDark: #123597;
 $textColor: white;
 $background: #262632;
 
+
 /* some constants */
 
 $DESKTOP_WIDTH: 1160px;
@@ -28,7 +29,7 @@ $fontMono: "Roboto Mono", monospace;
 /* a standard drop shadow */
 $dropShadow: 0 0.25em 0.25em rgba(0, 0, 0, 0.25);
 
-$borderRadius: 5.0em;
+$borderRadius: 2.0em;
 
 /* mixins
 
@@ -39,4 +40,9 @@ $borderRadius: 5.0em;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+@mixin background-image($image) {
+  background-image: url($image);
+  background-size: cover;
+  background-position: center;
 }

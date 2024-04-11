@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Header from "./Header";
 import { api, handleError } from "helpers/api";
-import User from "models/User";
 import {useNavigate} from "react-router-dom";
 import { Button } from "components/ui/Button";
-import "styles/views/Login.scss";
+import "styles/views/FrontPage.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 
@@ -18,16 +18,19 @@ const FrontPage = () => {
   const navigate = useNavigate();
   
   return (
-    <BaseContainer>
-      <Button 
-        onClick = {()=> navigate("/joingame")}> 
-        Join an existing Game
-      </Button>
-      <Button onClick = {()=> navigate("/creategame")}
-      > 
-      Create Game
-      </Button>
-    </BaseContainer>
+    <div>
+      <Header height="100" /> 
+      <BaseContainer>
+        <Button 
+          onClick = {()=> navigate("/joingame")}> 
+          Join an existing game
+        </Button>
+        <Button onClick = {()=> navigate("/creategame")}
+        > 
+        Create a new game
+        </Button>
+      </BaseContainer>
+    </div>
   );
 };
 

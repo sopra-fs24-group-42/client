@@ -4,10 +4,11 @@ class Player {
     this.username = null;
     this.alive = null;
     this.isProtected = null;
-    this.killed = null;
+    this.isKilled = null;
     this.ready = null;
     this.token = null;
     this.role = null;
+    this.lobbyCode = null;
     Object.assign(this, data);
   }
 }
