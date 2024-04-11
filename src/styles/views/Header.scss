@@ -3,11 +3,13 @@
 .header {
   &.container {
     @include center;
+    margin-top: 50px;
   }
 
   &.title {
     font-weight: bold;
-    color: $background;
+    font-size: 55px;
+    color: $textColor;
     text-align: center;
   }
 }
