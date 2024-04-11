@@ -9,6 +9,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import {connect, subscribe} from "helpers/stompClient"
 
+
 /*
 It is possible to add multiple components inside a single file,
 however be sure not to clutter your files with an endless amount!
@@ -16,14 +17,14 @@ As a rule of thumb, use one file per component and only add small,
 specific components that belong to the main one in the same file.
  */
 
-
+//WANNA INCLUDE HEADING
 const FormField = (props) => {
 
   return (
-    <div className="frontpage field">
-      <label className="frontpage label">{props.label}</label>
+    <div className="createGame field">
+      <label className="createGame label">{props.label}</label>
       <input
-        className="frontpage input"
+        className="createGame input"
         placeholder="enter here.."
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
@@ -76,7 +77,9 @@ const CreateGame = () => {
 
   return (
     <BaseContainer>
-    <h2>Create a new game</h2>
+      <div className="createGame header">
+        Create a new game
+      </div>
       <div className="createGame container">
         <div className="createGame form">
           <FormField
@@ -89,16 +92,21 @@ const CreateGame = () => {
             value={hostName}
             onChange={(e: string) => setHostName(e)}
           />
+          <div className="createGame space"></div>
           <div className="createGame button-container">
             <Button
+              width="100%"
+              height="80px"
               disabled={!hostName || !numberPlayers}
-              
               onClick={() => doCreateGame()}
             >
-              Create Game
+            Create Game
             </Button>
+          </div>
+          <div className="createGame button-container">
             <Button
               width="100%"
+              height="30px"
               onClick={() => navigate("/frontpage")}
             >
               Back

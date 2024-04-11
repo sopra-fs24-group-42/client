@@ -6,19 +6,18 @@ import {useNavigate} from "react-router-dom";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
-import { User } from "types";
+import { Player } from "types";
 
-const Player = ({ user }: { user: User }) => (
-  <div className="player container">
-    <div className="player username">{user.username}</div>
-    <div className="player name">{user.name}</div>
-    <div className="player id">id: {user.id}</div>
-  </div>
-);
+//const Player = ({ user }: { user: Player }) => (
+//<div className="player container">
+// <div className="player username">{user.username}</div>
+//<div className="player id">id: {user.playerId}</div>
+//</div>
+//);
 
-Player.propTypes = {
-  user: PropTypes.object,
-};
+//Player.propTypes = {
+//user: PropTypes.object,
+//};
 
 const Game = () => {
   // use react-router-dom's hook to access navigation, more info: https://reactrouter.com/en/main/hooks/use-navigate 
@@ -29,7 +28,7 @@ const Game = () => {
   // keep its value throughout render cycles.
   // a component can have as many state variables as you like.
   // more information can be found under https://react.dev/learn/state-a-components-memory and https://react.dev/reference/react/useState 
-  const [users, setUsers] = useState<User[]>(null);
+  const [users, setUsers] = useState<Player[]>(null);
 
   const logout = (): void => {
     localStorage.removeItem("token");
@@ -80,23 +79,6 @@ const Game = () => {
   }, []);
 
   let content = <Spinner />;
-
-  if (users) {
-    content = (
-      <div className="game">
-        <ul className="game user-list">
-          {users.map((user: User) => (
-            <li key={user.id}>
-              <Player user={user} />
-            </li>
-          ))}
-        </ul>
-        <Button width="100%" onClick={() => logout()}>
-          Logout
-        </Button>
-      </div>
-    );
-  }
 
   return (
     <BaseContainer className="game container">

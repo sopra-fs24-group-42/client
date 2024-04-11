@@ -12,10 +12,10 @@ import {connect, subscribe} from "helpers/stompClient"
 const FormField = (props) => {
 
   return (
-    <div className="login field">
-      <label className="login label">{props.label}</label>
+    <div className="joinGame field">
+      <label className="joinGame label">{props.label}</label>
       <input
-        className="login input"
+        className="joinGame input"
         placeholder="enter here.."
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
@@ -59,9 +59,9 @@ const JoinGame = () => {
 
   return (
     <BaseContainer>
-      <div className="login container">
-        <h2>Group 42</h2>
-        <div className="login form">
+      <div className= "joinGame header">Join an existing game</div>
+      <div className="joinGame container">
+        <div className="joinGame form">
           <FormField
             label="Choose your username:"
             value={username}
@@ -72,16 +72,21 @@ const JoinGame = () => {
             value={lobbyCode}
             onChange={(e: string) => setLobbyCode(e)}
           />
-          <div className="createGame button-container">
+          <div className="joinGame space"></div>
+          <div className="joinGame button-container">
             <Button
-              disabled={!username || !lobbyCode}
               width="100%"
+              height="80px"
+              disabled={!username || !lobbyCode}
               onClick={() => doJoinGame()}
             >
               Join Game
             </Button>
+          </div>
+          <div className="joinGame button-container">
             <Button
               width="100%"
+              height="40px"
               onClick={() => navigate("/frontpage")}
             >
               Back

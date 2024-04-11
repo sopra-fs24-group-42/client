@@ -25,7 +25,9 @@ const FrontPage = () => {
           onClick = {()=> navigate("/joingame")}> 
           Join an existing game
         </Button>
-        <Button onClick = {()=> navigate("/creategame")}
+        <Button 
+          style={{"margin-top": "70px"}}
+          onClick = {()=> navigate("/creategame")}
         > 
         Create a new game
         </Button>
