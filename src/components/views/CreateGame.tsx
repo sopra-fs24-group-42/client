@@ -41,12 +41,18 @@ FormField.propTypes = {
 
 const CreateGame = () => {
   const navigate = useNavigate();
-  const [numberPlayers, setNumberPlayers] = useState<string>(null);
+  const [numberOfPlayers, setNumberOfPlayers] = useState<string>(null);
   const [hostName, setHostName] = useState<string>(null);
 
   function subscribeToLobby() {
     const lobbyId = localStorage.getItem("lobbyId");
-    subscribe(`topic/lobby/${lobbyId}`);}
+    //subscribe("/topic/test");}
+    subscribe(`/topic/lobby/${lobbyId}`, data => {
+      localStorage.setItem("players", JSON.stringify(data["players"]));
+    });
+    
+  }
+
 
   const doCreateGame = async () => {
     try {
@@ -57,14 +63,14 @@ const CreateGame = () => {
       // Store the token into the local storage.
       //localStorage.setItem("user", player.username);
       // creating a new Lobby object which also creates the host player object
-      const response = await api.post("/lobbies", JSON.stringify({hostName, numberPlayers}));
+      const response = await api.post("/lobbies", JSON.stringify({hostName, numberOfPlayers}));
       const lobby = new Lobby(response.data);
       localStorage.setItem("user", lobby.hostName);
       localStorage.setItem("lobbyCode", lobby.lobbyCode);
-      //localStorage.setItem("players", lobby.players);
-      //localStorage.setItem("numberOfPlayers", lobby.numberOfPlayers);
-      //localStorage.setItem("gameState", lobby.gameState);
-      //localStorage.setItem("lobbyId", lobby.lobbyId);
+      localStorage.setItem("players", lobby.players);
+      localStorage.setItem("numberOfPlayers", lobby.numberOfPlayers);
+      localStorage.setItem("gameState", lobby.gameState);
+      localStorage.setItem("lobbyId", lobby.lobbyId);
       // upgrading to a websocket connection
       connect(subscribeToLobby)
       navigate("/waitingroom");
@@ -84,8 +90,8 @@ const CreateGame = () => {
         <div className="createGame form">
           <FormField
             label="How many people are playing?"
-            value={numberPlayers}
-            onChange={(e: string) => setNumberPlayers(e)}
+            value={numberOfPlayers}
+            onChange={(e: string) => setNumberOfPlayers(e)}
           />
           <FormField
             label="Choose your username:"
@@ -97,7 +103,7 @@ const CreateGame = () => {
             <Button
               width="100%"
               height="80px"
-              disabled={!hostName || !numberPlayers}
+              disabled={!hostName || !numberOfPlayers}
               onClick={() => doCreateGame()}
             >
             Create Game

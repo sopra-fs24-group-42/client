@@ -7,7 +7,7 @@ import { Button } from "components/ui/Button";
 import "styles/views/JoinGame.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import {connect, subscribe} from "helpers/stompClient"
+import {connect, subscribe, testMessage} from "helpers/stompClient"
 
 const FormField = (props) => {
 
@@ -37,16 +37,25 @@ const JoinGame = () => {
 
   function subscribeToLobby() {
     const lobbyId = localStorage.getItem("lobbyId");
-    subscribe(`topic/lobby/${lobbyId}`);}
+    //subscribe("/topic/test");
+    subscribe(`/topic/lobby/${lobbyId}`, data => {
+            //localStorage.setItem("players1", JSON.stringify(data["players"]));
+            //localStorage.setItem("players2", data["players"])
+    });
+  }
+
+  function sendMessage() {
+    testMessage(localStorage.getItem("lobbyId"), JSON.stringify({username, lobbyCode}));
+  }
 
   const doJoinGame = async () => {
     try {
       // creating a new Player object out of the joining player
-      const response1 = await api.post("/players", JSON.stringify({username}));
+      const response1 = await api.post("/players", JSON.stringify({username, lobbyCode}));
       const player = new Player(response1.data);
       localStorage.setItem("user", player.username);
-      const response2 = await api.put("/lobbies", JSON.stringify({username, lobbyCode}));
-      localStorage.setItem("lobbyCode", lobbyCode);
+      localStorage.setItem("lobbyCode", player.lobbyCode);
+      localStorage.setItem("lobbyId", player.lobbyId);
       // upgrading to a websocket connection
       connect(subscribeToLobby);
       navigate("/waitingroom");
