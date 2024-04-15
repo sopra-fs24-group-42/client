@@ -7,17 +7,8 @@ import { Button } from "components/ui/Button";
 import "styles/views/CreateGame.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import {connect, subscribe} from "helpers/stompClient"
+import {connect, subscribe, send} from "helpers/stompClient"
 
-
-/*
-It is possible to add multiple components inside a single file,
-however be sure not to clutter your files with an endless amount!
-As a rule of thumb, use one file per component and only add small,
-specific components that belong to the main one in the same file.
- */
-
-//WANNA INCLUDE HEADING
 const FormField = (props) => {
 
   return (
@@ -46,22 +37,19 @@ const CreateGame = () => {
 
   function subscribeToLobby() {
     const lobbyId = localStorage.getItem("lobbyId");
-    //subscribe("/topic/test");}
-    subscribe(`/topic/lobby/${lobbyId}`, data => {
-      localStorage.setItem("players", JSON.stringify(data["players"]));
-    });
-    
+    //subscribe("/topic/test");
+    subscribe(`/topic/lobby/${lobbyId}`, sendUsername);
   }
 
+  function sendUsername() {
+    const lobbyId = localStorage.getItem("lobbyId");
+    let username = localStorage.getItem("user");
+    let body = JSON.stringify({username});
+    send(`/topic/lobby/${lobbyId}`, body);
+  }
 
   const doCreateGame = async () => {
     try {
-      // creating a new Player object out of the host
-      //const response1 = await api.post("/players", JSON.stringify({username}));
-      // Get the returned user and update a new object.
-      //const player = new Player(response1.data);
-      // Store the token into the local storage.
-      //localStorage.setItem("user", player.username);
       // creating a new Lobby object which also creates the host player object
       const response = await api.post("/lobbies", JSON.stringify({hostName, numberOfPlayers}));
       const lobby = new Lobby(response.data);

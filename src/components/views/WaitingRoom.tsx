@@ -40,14 +40,14 @@ const WaitingRoom = () => {
     let username = localStorage.getItem("user");
     let body = JSON.stringify({username, selection});
     send(`/topic/lobby/${lobbyId}`, body);
-    send("/test", body);
+    //send("/app/test", body);
   }
 
   return (
     <BaseContainer>
       <div className= "waitingRoom header">Welcome to game </div>
       <div className= "waitingRoom container">
-      <div className="joinGame form">
+        <div className="joinGame form">
           <FormField
             label="Who is your selection?"
             value={selection}
