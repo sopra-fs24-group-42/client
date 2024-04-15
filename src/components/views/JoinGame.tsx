@@ -7,7 +7,7 @@ import { Button } from "components/ui/Button";
 import "styles/views/JoinGame.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import {connect, subscribe, testMessage} from "helpers/stompClient"
+import {connect, subscribe, send} from "helpers/stompClient"
 
 const FormField = (props) => {
 
@@ -38,14 +38,14 @@ const JoinGame = () => {
   function subscribeToLobby() {
     const lobbyId = localStorage.getItem("lobbyId");
     //subscribe("/topic/test");
-    subscribe(`/topic/lobby/${lobbyId}`, data => {
-            //localStorage.setItem("players1", JSON.stringify(data["players"]));
-            //localStorage.setItem("players2", data["players"])
-    });
+    subscribe(`/topic/lobby/${lobbyId}`, sendUsername);
   }
 
-  function sendMessage() {
-    testMessage(localStorage.getItem("lobbyId"), JSON.stringify({username, lobbyCode}));
+  function sendUsername() {
+    const lobbyId = localStorage.getItem("lobbyId");
+    let username = localStorage.getItem("user");
+    let body = JSON.stringify({username});
+    send(`/topic/lobby/${lobbyId}`, body);
   }
 
   const doJoinGame = async () => {
@@ -56,7 +56,7 @@ const JoinGame = () => {
       localStorage.setItem("user", player.username);
       localStorage.setItem("lobbyCode", player.lobbyCode);
       localStorage.setItem("lobbyId", player.lobbyId);
-      // upgrading to a websocket connection
+      // upgrading to a websocket connection over Sockjs
       connect(subscribeToLobby);
       navigate("/waitingroom");
     } catch (error) {
