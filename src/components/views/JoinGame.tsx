@@ -7,7 +7,7 @@ import { Button } from "components/ui/Button";
 import "styles/views/JoinGame.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import {connect, subscribe} from "helpers/stompClient"
+import {connect, subscribe, send} from "helpers/stompClient"
 
 const FormField = (props) => {
 
@@ -35,20 +35,30 @@ const JoinGame = () => {
   const [lobbyCode, setLobbyCode] = useState<string>(null);
   const [username, setUsername] = useState<string>(null);
 
-  function subscribeToLobby() {
+  async function subscribeToLobby() {
     const lobbyId = localStorage.getItem("lobbyId");
-    subscribe(`topic/lobby/${lobbyId}`);}
+    await subscribe(`/topic/lobby/${lobbyId}`, sendUsername);
+  }
+
+  function sendUsername() {
+    const lobbyId = localStorage.getItem("lobbyId");
+    const username = localStorage.getItem("user");
+    let selection = "none" // note: not actually making a selection here, just need to trigger lobby broadcast
+    let body = JSON.stringify({username, selection}); 
+    send("/app/test", body);
+  }
 
   const doJoinGame = async () => {
     try {
       // creating a new Player object out of the joining player
-      const response1 = await api.post("/players", JSON.stringify({username}));
+      const response1 = await api.post("/players", JSON.stringify({username, lobbyCode}));
       const player = new Player(response1.data);
       localStorage.setItem("user", player.username);
-      const response2 = await api.put("/lobbies", JSON.stringify({username, lobbyCode}));
-      localStorage.setItem("lobbyCode", lobbyCode);
-      // upgrading to a websocket connection
-      connect(subscribeToLobby);
+      localStorage.setItem("lobbyCode", player.lobbyCode);
+      localStorage.setItem("lobbyId", player.lobbyId);
+      // upgrading to a websocket connection over Sockjs
+      await connect(subscribeToLobby);
+      console.log("I waited: CONNECT, SUBSCRIBE AND SEND FINISHED?");
       navigate("/waitingroom");
     } catch (error) {
       alert(

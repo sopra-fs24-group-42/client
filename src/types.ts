@@ -1,4 +1,4 @@
-export type Player = {
+export type User = {
   playerId: string;
   username: string;
   alive: string;
@@ -10,7 +10,7 @@ export type Player = {
   lobbyCode: string;
 };
 
-export type Lobby = {
+export type GameRoom = {
   lobbyId: string;
   hostName: string;
   lobbyCode: string;

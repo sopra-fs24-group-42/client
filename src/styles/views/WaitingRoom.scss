@@ -1,0 +1,162 @@
+@import "../theme";
+
+.waitingRoom     {
+
+    &.highlight {
+    @include center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    font-weight: bold;
+    font-size: 25px;
+    max-width: 30em;
+    padding-left: 37px;
+    padding-right: 37px;
+    border-radius: 0.75em;
+    background-color: #FB6D48;
+    }
+
+    &.space {
+        margin-top: 50px;
+    }
+    &.header {
+    @include center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    font-weight: bold;
+    font-size: 25px;
+    }
+    &.container {
+    margin-top: 155px;
+    min-height: 100px;
+    /* we include the center mixin defined in _theme.scss and save three duplicate lines :) */
+    @include center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+  &.form {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    max-width: 30em;
+    height: 20em;
+    font-size: 16px;
+    font-weight: 300;
+    padding-left: 37px;
+    padding-right: 37px;
+    border-radius: 0.75em;
+    background-color: E72929;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    
+  }
+  &.field {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  &.input {
+    height: 35px;
+    padding-left: 15px;
+    margin-left: -4px;
+    border: none;
+    border-radius: 0.75em;
+    margin-bottom: 20px;
+    background: transparentize(white, 0.35);
+    color: black;
+  }
+  &.label {
+    color: $textColor;
+    margin-bottom: 10px;
+    font-weight: 300;
+    text-align: center; 
+    font-size: 20px;
+    font-weight: bold;
+  }
+  &.button-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 20px;
+  }
+}
+
+.member {
+    &.container {
+      margin: 0.5em 0;
+      width: 20em;
+      padding: 10px;
+      border-radius: $borderRadius;
+      display: flex;
+      align-items: center;
+      background: lighten($background, 5);
+    }
+    &.name {
+      font-weight: 300;
+      margin-left: 5px;
+    }
+    &.username {
+      font-weight: 500;
+      color: $accent;
+    }
+    &.id {
+      margin-left: auto;
+      margin-right: 10px;
+      font-family: $fontMono;
+      font-weight: 300;
+    }
+  }
+
+  .game {
+    &.container {
+      background: $background;
+      padding: 1.5em;
+      border-radius: $borderRadius;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: $dropShadow;
+    }
+    &.user-list {
+      list-style: none;
+      padding-left: 0;
+    }
+    &.user-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    & p,h2 {
+      margin: 0.5em 0;
+    }
+  }
+  
+  .player {
+    &.container {
+      margin: 0.5em 0;
+      width: 20em;
+      padding: 10px;
+      border-radius: $borderRadius;
+      display: flex;
+      align-items: center;
+      background: lighten($background, 5);
+    }
+    &.name {
+      font-weight: 300;
+      margin-left: 5px;
+    }
+    &.username {
+      font-weight: 500;
+      color: $accent;
+    }
+    &.id {
+      margin-left: auto;
+      margin-right: 10px;
+      font-family: $fontMono;
+      font-weight: 300;
+    }
+  }

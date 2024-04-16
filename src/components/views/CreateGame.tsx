@@ -7,17 +7,8 @@ import { Button } from "components/ui/Button";
 import "styles/views/CreateGame.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import {connect, subscribe} from "helpers/stompClient"
+import {connect, subscribe, send, getSubscribedToLobby} from "helpers/stompClient"
 
-
-/*
-It is possible to add multiple components inside a single file,
-however be sure not to clutter your files with an endless amount!
-As a rule of thumb, use one file per component and only add small,
-specific components that belong to the main one in the same file.
- */
-
-//WANNA INCLUDE HEADING
 const FormField = (props) => {
 
   return (
@@ -41,33 +32,34 @@ FormField.propTypes = {
 
 const CreateGame = () => {
   const navigate = useNavigate();
-  const [numberPlayers, setNumberPlayers] = useState<string>(null);
+  const [numberOfPlayers, setNumberOfPlayers] = useState<string>(null);
   const [hostName, setHostName] = useState<string>(null);
 
-  function subscribeToLobby() {
+  async function subscribeToLobby() {
     const lobbyId = localStorage.getItem("lobbyId");
-    subscribe(`topic/lobby/${lobbyId}`);}
+    await subscribe(`/topic/lobby/${lobbyId}`, sendUsername);
+  }
+
+  function sendUsername() {
+    const lobbyId = localStorage.getItem("lobbyId");
+    const username = localStorage.getItem("user");
+    let selection = "none" // note: not actually making a selection here, just need to trigger lobby broadcast
+    let body = JSON.stringify({username, selection}); 
+    send("/app/test", body);
+  }
 
   const doCreateGame = async () => {
     try {
-      // creating a new Player object out of the host
-      //const response1 = await api.post("/players", JSON.stringify({username}));
-      // Get the returned user and update a new object.
-      //const player = new Player(response1.data);
-      // Store the token into the local storage.
-      //localStorage.setItem("user", player.username);
       // creating a new Lobby object which also creates the host player object
-      const response = await api.post("/lobbies", JSON.stringify({hostName, numberPlayers}));
+      const response = await api.post("/lobbies", JSON.stringify({hostName, numberOfPlayers}));
       const lobby = new Lobby(response.data);
       localStorage.setItem("user", lobby.hostName);
       localStorage.setItem("lobbyCode", lobby.lobbyCode);
-      //localStorage.setItem("players", lobby.players);
-      //localStorage.setItem("numberOfPlayers", lobby.numberOfPlayers);
-      //localStorage.setItem("gameState", lobby.gameState);
-      //localStorage.setItem("lobbyId", lobby.lobbyId);
+      localStorage.setItem("lobbyId", lobby.lobbyId);
       // upgrading to a websocket connection
-      connect(subscribeToLobby)
-      navigate("/waitingroom");
+      await connect(subscribeToLobby);
+      console.log("I waited: CONNECT, SUBSCRIBE AND SEND FINISHED?");
+      navigate("/waitingroom");      
     } catch (error) {
       alert(
         `Something went wrong during the creation of the game: \n${handleError(error)}`
@@ -84,8 +76,8 @@ const CreateGame = () => {
         <div className="createGame form">
           <FormField
             label="How many people are playing?"
-            value={numberPlayers}
-            onChange={(e: string) => setNumberPlayers(e)}
+            value={numberOfPlayers}
+            onChange={(e: string) => setNumberOfPlayers(e)}
           />
           <FormField
             label="Choose your username:"
@@ -97,7 +89,7 @@ const CreateGame = () => {
             <Button
               width="100%"
               height="80px"
-              disabled={!hostName || !numberPlayers}
+              disabled={!hostName || !numberOfPlayers}
               onClick={() => doCreateGame()}
             >
             Create Game

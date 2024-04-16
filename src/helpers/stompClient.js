@@ -1,74 +1,95 @@
 import SockJS from "sockjs-client";
 import { over, client } from "stompjs";
 import { getDomain } from "./getDomain";
-
-// Question: do I have to include this 'global' initialization when I basically do it inside the methods??
-// ## INITIALIZATION ##
-// Option 1
-// initialization of websocket connection in a node.js app:
-
-//var Stomp = require('@stomp/stompjs'); // requiring the stompjs module
-//var client = Stomp.overWS("ws://localhost:15674/ws"); // connecting a STOMP broker over a websocket 
-// if you wanted to connect a STOMP broker over a TCP connection, you would use 
-//var client = Stomp.overTCP('localhoast', '61613');
-
-// Option 2
-// initialization of websocket connection in a web browser with regular websocket:
-
-//var url = "ws://localhost:15674/ws"
-//var client = client(url); // from g9 project
-
-// Option 3
-// initialization of a custom websocket connection in a web browser:
-//<script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
-//<script>
-// use SockJS implementation instead of the browser's native implementation    //var ws = new SockJS(url);
-//var client = Stomp.over(ws);
-//[...]
-//</script>
-
-// ## INITIALIZATION OVER ##
+import Lobby from "../models/Lobby.js";
+import { useLobby } from "./lobbyContext";
 
 var ws = null;
 var connection = false;
+var subscribedToLobby = false;
 const baseURL = getDomain();
 
-export var connect = (callback) => { // passing a callback function as argument to STOMP's connect method
-  var ws = new SockJS(baseURL+"/game"); // creating a new SockJS object (essentially a websocket object)
-  var client = over(ws); // specifying that it's a special type of websocket connection (i.e. using sockJS)
-  ws.connect({}, () => { // connecting to server websocket
-    setTimeout(function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
-      //ws.subscribe('/topic/greetings', function (greeting) {
-      //console.log(JSON.parse(greeting.body).content);
-      //console.log("Socket was connected.")
-      // });
-    }, 500);
+var stompClient = null;
+
+var lobby = new Lobby();
+console.log(lobby);
+
+export var connect = async (callback) => {
+  return new Promise((resolve, reject) => {
+    var socket = new SockJS(baseURL+"/game"); // creating a new SockJS object (essentially a websocket object)
+    stompClient = over(socket); // specifying that it's a special type of websocket connection (i.e. using sockJS)
+    stompClient.connect({}, function (frame) { // connecting to server websocket: instructions inside "function" will only be executed once we get something (i.e. a connect frame back from the server). Parameter "frame" is what we get from the server. 
+    console.log("socket was successfully connected: " + frame);
     connection = true;
-    callback();
-    /* ws.subscribe("/queue/errors", function(message) {
-        console.log("Error " + message.body);
-        }); // Subscribe to error messages through this*/
+    setTimeout(async function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
+      await callback();
+      console.log("I waited: I received a CONNECT frame back!!");
+      resolve(stompClient);
+    }, 500);
+    })  // passing a callback function as argument to STOMP's connect method --> this will be the call to subscribe
+  }, function(error) {
+    console.log("There was an error in connecting: " + error);
+    reject(error);
   });
-  ws.onclose = reason => {
-    connection = false;
-    console.log("Socket was closed, Reason: " + reason);
-  }
+  //stompClient.onclose = reason => {
+    //connection = false;
+    //console.log("Socket was closed, Reason: " + reason);
+  //});
 }
 
-export const subscribe = (mapping, callback) => {
-  ws.subscribe(mapping, function (data) {
-    callback(JSON.parse(data.body)); // This is already the body!!!
-  });
+export const subscribe = async (destination, callback) => { // we call this function with destination and sendUsername as parameters (where sendUsername is a function that sends the user's username)
+  return new Promise((resolve, reject) => {
+    stompClient.subscribe(destination, function(message) {
+    console.log("subscribed to " + destination + " successfully");
+    console.log("received message at " + destination);
+    console.log(JSON.parse(message.body));
+    subscribedToLobby = true;
+    localStorage.setItem("lobby", message.body);
+    setLobby(JSON.parse(message.body));
+    resolve(stompClient);
+    });
+    callback(); 
+    console.log("I waited: for the client to SEND");
+  }, function (error) {
+    console.log("There was an error in subscribing: " + error);
+  }); 
+}
+
+function setLobby(messageBody) { //messageBody should be parsed already! 
+  lobby.lobbyCode = messageBody.lobbyCode;
+  lobby.lobbyId = messageBody.lobbyId;
+  lobby.hostName = messageBody.hostName;
+  lobby.numberOfPlayers = messageBody.numberOfPlayers;
+  lobby.players = messageBody.players;
+  lobby.gameSettings = messageBody.gameSettings;
+  lobby.gameState = messageBody.gameState;
+  console.log("lobby as a js object::: " + JSON.stringify(getLobby()));
+  console.log("lobby players list inside js lobby object::: " + JSON.stringify(getLobby()["players"]));
+  console.log("lobby players list inside js lobby object SIZE: " + getLobby()["players"].length);
+
 }
 
 export const unsubscribe = (mapping) => {
-  ws.unsubscribe(mapping, function (data) {});
+  stompClient.unsubscribe(mapping, function (data) {});
 }
+
+export const send = async (destination, body) => {
+    const headers = {
+      "Content-Type": "application/json"};
+    stompClient.send(destination, headers, body);
+}
+
+export function getSubscribedToLobby() {return subscribedToLobby;}
+
+export function getLobby() {return lobby;}
+
+export function getLobbySize() {
+  try {return lobby["players"].length;} catch (e){return 0;}}
 
 export let getConnection = () => connection;
 
 export const disconnect = () => {
-  if (ws !== null) ws.disconnect();
+  if (stompClient !== null) ws.disconnect();
   connection = false
   console.log("Disconnected websocket.");
 }
