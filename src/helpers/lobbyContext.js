@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from "react";
 import PropTypes from "prop-types";
 import Lobby from "models/Lobby";
 
@@ -19,7 +19,7 @@ export const LobbyProvider = ({ children }) => {
 };
 
 LobbyProvider.propTypes = {
-    children: PropTypes.node // 'node' covers anything that can be rendered: numbers, strings, elements or an array containing these types.
+  children: PropTypes.node // 'node' covers anything that can be rendered: numbers, strings, elements or an array containing these types.
 };
 
 
