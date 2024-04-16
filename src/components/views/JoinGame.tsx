@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { api, handleError } from "helpers/api";
 import Player from "models/Player";
-import Lobby from "models/Lobby";
 import {useNavigate} from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/JoinGame.scss";

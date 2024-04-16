@@ -1,104 +1,61 @@
 import React, { useState, useEffect } from "react";
 import { api, handleError } from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
-import Player from "models/Player";
 import Lobby from "models/Lobby";
 import {useNavigate} from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/WaitingRoom.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import { User, GameRoom } from "types";
-import {connect, subscribe, send, getLobby, getLobbySize} from "helpers/stompClient"
+import { User } from "types";
+import { getLobby, getLobbySize} from "helpers/stompClient"
 
-const Member = ({ user }: {user: User}) => (
+const LobbyMember = ({ user }: { user: User }) => (
   <div className="player container">
     <div className="player username">{user.username}</div>
   </div>
 );
-Member.propTypes = {
+
+LobbyMember.propTypes = {
   user: PropTypes.object,
 };
 
-const gameRoom = ({ lobs }: {lobs: Lobby}) => (
-  <div className="player container">
-    <div className="player username">{lobs.lobbyCode}</div>
-  </div>
-);
-gameRoom.propTypes = {
-  lobs: PropTypes.object,
-};
-
-
-const FormField = (props) => {
-
-  return (
-    <div className="joinGame field">
-      <label className="joinGame label">{props.label}</label>
-      <input
-        className="joinGame input"
-        placeholder="enter here.."
-        value={props.value}
-        onChange={(e) => props.onChange(e.target.value)}
-      />
-    </div>
-  );
-};
-
-FormField.propTypes = {
-  label: PropTypes.string,
-  value: PropTypes.string,
-  onChange: PropTypes.func,
-};
-
-//var lobby = null;
-
+var jsLobbyObjectNumberOfPlayers = 0;
 
 const WaitingRoom = () => {
-  var storedLobby = localStorage.getItem("lobby");
-  var playersInLobby = 0;
-  setTimeout(function() {
-    storedLobby = localStorage.getItem("lobby");
-  }, 800);
-  
-  //const { lobby } = useLobby();
-  //var lobby = null;
+  console.log("IN WAITING ROOM NOW! THIS IS THE CURRENT LOBBY: ");
+  //var localStorageLobbyNumberOfPlayers = JSON.parse(localStorage.getItem("lobby")).length;
+  //console.log("Number of players in lobby (from localStorage): " + localStorageLobbyNumberOfPlayers);
+  console.log("Number of players in lobby (from js object): " + jsLobbyObjectNumberOfPlayers);
+  //console.log("from localstorage" + localStorage.getItem("lobby"));
+  //console.log("from getLobby()" + JSON.stringify(getLobby()));
   const navigate = useNavigate();
-  //var playersInLobby = 0;
-  //const [players, setPlayers] = useState<Player[]>([]);
-  //var [playersInLobby, setPlayersInLobby] = useState(0);
-  //var [lobby, setLobby] = useState<Lobby>({});
-  const [selection, setSelection] = useState<string>(null);
+  const [playersInLobby, setPlayersInLobby] = useState<User []>([]);
   const lobbyCode = localStorage.getItem("lobbyCode");
-  console.log("inside waiting room: first?")
 
   useEffect(() => {
-    setTimeout(function() {
-      try{
-        storedLobby = localStorage.getItem("lobby");
-        playersInLobby = storedLobby["players"].length;
-        console.log("playersssss: " + playersInLobby);
-      } catch (e) { playersInLobby = 0;
-        console.log("no players yet: " + playersInLobby);}
-    }, 800);
+    try{
+      jsLobbyObjectNumberOfPlayers = getLobby().players.length;
+      setPlayersInLobby(getLobby().players);
+      console.log("playersssss: " + playersInLobby);
+    } catch (e) {
+      jsLobbyObjectNumberOfPlayers = 0;
+      console.log("no players yet: " + playersInLobby);}
 
-  },[playersInLobby]);
-
-  const doSelection = () => {
-    const lobbyId = localStorage.getItem("lobbyId");
-    let username = localStorage.getItem("user");
-    let body = JSON.stringify({username, selection});
-    send(`/topic/lobby/${lobbyId}`, body);
-  }
+  },[jsLobbyObjectNumberOfPlayers]);
 
   let content = <Spinner />;
 
-  if (playersInLobby !== 0) {
+  if (jsLobbyObjectNumberOfPlayers !== 0) {
     content = (
       <div className ="game">
-        <div className= "WaitingRoom header">there are players here!</div>
-        <div className= "WaitingRoom header">{storedLobby}</div>
-
+        <ul className= "game user-list">
+          {playersInLobby.map((user: User) => (
+            <li key={user.username}>
+              < LobbyMember user={user} />
+            </li>
+          ))}
+        </ul>
       </div>
     );
   }
@@ -112,21 +69,13 @@ const WaitingRoom = () => {
       </div>
       <div className= "waitingRoom container">
         {content}
-        <div className="joinGame form">
-          <FormField
-            label="Who is your selection?"
-            value={selection}
-            onChange={(e: string) => setSelection(e)}
-          />
-          <div className="joinGame button-container">
-            <Button
-              width="100%"
-              height="40px"
-              onClick={() => doSelection()}
-            >
-              send selection
-            </Button>
-          </div>
+        <div className="waitingRoom button-container">
+          <Button
+            width="100%"
+            height="40px"
+          >
+            Start Game
+          </Button>
         </div>
       </div>
     </BaseContainer>

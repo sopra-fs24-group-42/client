@@ -28,13 +28,13 @@
     font-size: 25px;
     }
     &.container {
-    margin-top: 155px;
-    min-height: 100px;
-    /* we include the center mixin defined in _theme.scss and save three duplicate lines :) */
-    @include center;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
+      margin-top: 155px;
+      min-height: 100px;
+      /* we include the center mixin defined in _theme.scss and save three duplicate lines :) */
+      @include center;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
   }
   &.form {
     margin-top: 10px;
@@ -83,32 +83,6 @@
     margin-top: 20px;
   }
 }
-
-.member {
-    &.container {
-      margin: 0.5em 0;
-      width: 20em;
-      padding: 10px;
-      border-radius: $borderRadius;
-      display: flex;
-      align-items: center;
-      background: lighten($background, 5);
-    }
-    &.name {
-      font-weight: 300;
-      margin-left: 5px;
-    }
-    &.username {
-      font-weight: 500;
-      color: $accent;
-    }
-    &.id {
-      margin-left: auto;
-      margin-right: 10px;
-      font-family: $fontMono;
-      font-weight: 300;
-    }
-  }
 
   .game {
     &.container {
