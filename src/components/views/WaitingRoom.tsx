@@ -58,7 +58,7 @@ const WaitingRoom = () => {
   var storedLobby = localStorage.getItem("lobby");
   var playersInLobby = 0;
   setTimeout(function() {
-  storedLobby = localStorage.getItem("lobby");
+    storedLobby = localStorage.getItem("lobby");
   }, 800);
   
   //const { lobby } = useLobby();
@@ -79,20 +79,8 @@ const WaitingRoom = () => {
         playersInLobby = storedLobby["players"].length;
         console.log("playersssss: " + playersInLobby);
       } catch (e) { playersInLobby = 0;
-      console.log("no players yet: " + playersInLobby);}
-      }, 800);
-    //lobby = getLobby();
-    //playersInLobby = getLobbySize();
-    //getCurrentLobby();
-    //setLobby(getLobby);
-    //console.log("set the lobbbyyyy: " + lobby);
-    //in here: get the players currently in the lobby and assign them to setPlayers
-    //console.log("useEffect: first?");
-    //setPlayersInLobby(getLobbySize());
-    //setPlayers(JSON.stringify(getLobby()["players"]));
-    //setPlayers(lobby.players || []);
-    //console.log("Current players:", lobby.players);
-    //console.log("useEffect players: " + players);
+        console.log("no players yet: " + playersInLobby);}
+    }, 800);
 
   },[playersInLobby]);
 
@@ -101,7 +89,6 @@ const WaitingRoom = () => {
     let username = localStorage.getItem("user");
     let body = JSON.stringify({username, selection});
     send(`/topic/lobby/${lobbyId}`, body);
-    //send("/app/test", body);
   }
 
   let content = <Spinner />;
@@ -119,10 +106,10 @@ const WaitingRoom = () => {
   return (
     <BaseContainer>
       <div className= "waitingRoom header">Welcome to game 
-      <div className= "waitingRoom highlight">{lobbyCode}</div>
+        <div className= "waitingRoom highlight">{lobbyCode}</div>
       </div>
       <div>
-         </div>
+      </div>
       <div className= "waitingRoom container">
         {content}
         <div className="joinGame form">
@@ -146,9 +133,4 @@ const WaitingRoom = () => {
   );
 };
 
-
-
-/**
- * You can get access to the history object's properties via the useLocation, useNavigate, useParams, ... hooks.
- */
 export default WaitingRoom;
