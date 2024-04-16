@@ -7,7 +7,7 @@ import { Button } from "components/ui/Button";
 import "styles/views/CreateGame.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import {connect, subscribe, send} from "helpers/stompClient"
+import {connect, subscribe, send, getSubscribedToLobby} from "helpers/stompClient"
 
 const FormField = (props) => {
 
@@ -35,17 +35,17 @@ const CreateGame = () => {
   const [numberOfPlayers, setNumberOfPlayers] = useState<string>(null);
   const [hostName, setHostName] = useState<string>(null);
 
-  function subscribeToLobby() {
+  async function subscribeToLobby() {
     const lobbyId = localStorage.getItem("lobbyId");
-    //subscribe("/topic/test");
-    subscribe(`/topic/lobby/${lobbyId}`, sendUsername);
+    await subscribe(`/topic/lobby/${lobbyId}`, sendUsername);
   }
 
   function sendUsername() {
     const lobbyId = localStorage.getItem("lobbyId");
-    let username = localStorage.getItem("user");
-    let body = JSON.stringify({username});
-    send(`/topic/lobby/${lobbyId}`, body);
+    const username = localStorage.getItem("user");
+    let selection = "none" // note: not actually making a selection here, just need to trigger lobby broadcast
+    let body = JSON.stringify({username, selection}); 
+    send("/app/test", body);
   }
 
   const doCreateGame = async () => {
@@ -55,13 +55,11 @@ const CreateGame = () => {
       const lobby = new Lobby(response.data);
       localStorage.setItem("user", lobby.hostName);
       localStorage.setItem("lobbyCode", lobby.lobbyCode);
-      localStorage.setItem("players", lobby.players);
-      localStorage.setItem("numberOfPlayers", lobby.numberOfPlayers);
-      localStorage.setItem("gameState", lobby.gameState);
       localStorage.setItem("lobbyId", lobby.lobbyId);
       // upgrading to a websocket connection
-      connect(subscribeToLobby)
-      navigate("/waitingroom");
+      await connect(subscribeToLobby);
+      console.log("I waited: CONNECT, SUBSCRIBE AND SEND FINISHED?");
+      navigate("/waitingroom");      
     } catch (error) {
       alert(
         `Something went wrong during the creation of the game: \n${handleError(error)}`
