@@ -14,17 +14,34 @@ As a rule of thumb, use one file per component and only add small,
 specific components that belong to the main one in the same file.
  */
 
-function TextToSpeech() {
-    const msg = new SpeechSynthesisUtterance();
-    msg.text = "This is the Narrationphase, listen carefully";
-    window.speechSynthesis.speak(msg);
-}
 
-const NarrationPhaseGoogle = () => {
-  const navigate = useNavigate();
-  
-  const msg = new SpeechSynthesisUtterance();
-    msg.text = "This is the Narrationphase, listen carefully";
+const [srcFile, setsrcFile] = Usestate(null);
+
+(async () => {
+  const rawResponse = await fetch('https://texttospeech.googleapis.com/v1/text:synthesize', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify('"input": {
+      "text": "Android is a mobile operating system developed by Google, based on the Linux kernel and designed primarily for touchscreen mobile devices such as smartphones and tablets."
+    },
+    "voice": {
+      "languageCode": "en-gb",
+      "name": "en-GB-Standard-A",
+      "ssmlGender": "FEMALE"
+    },
+    "audioConfig": {
+      "audioEncoding": "MP3"
+    }
+  }')
+  });
+  const content = await rawResponse.json();
+
+  console.log(content);
+})();
+
 
   return (
     <div>
