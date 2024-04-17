@@ -21,11 +21,11 @@ export var connect = async (callback) => {
     stompClient.connect({}, function (frame) { // connecting to server websocket: instructions inside "function" will only be executed once we get something (i.e. a connect frame back from the server). Parameter "frame" is what we get from the server. 
       console.log("socket was successfully connected: " + frame);
       connection = true;
-      //setTimeout(async function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
-        //const response = await callback();
-        //console.log("I waited: I received  MESSAGE frame back based on subscribing!!");
-      //}, 500);
-      resolve(stompClient);
+      setTimeout(async function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
+        const response = await callback();
+        console.log("I waited: I received  MESSAGE frame back based on subscribing!!");
+        resolve(stompClient);
+      }, 500);
     })  // passing a callback function as argument to STOMP's connect method --> this will be the call to subscribe
   }, function(error) {
     console.log("There was an error in connecting: " + error);
@@ -42,26 +42,21 @@ export const subscribe = async (destination, callback) => { // we call this func
   return new Promise( (resolve, reject) => {
     //const { updateLobby } = useLobby();
     stompClient.subscribe(destination, async function(message) {
-      console.log("subscribed to " + destination + " successfully");
-      console.log("received message at " + destination);
+      //console.log("subscribed to " + destination + " successfully");
+      //console.log("received message at " + destination);
       //console.log("MESSAGE COUNTER: " + messageCounter);
       //console.log(JSON.parse(message.body));
       localStorage.setItem("lobby", message.body);
-      try {
-      localStorage.setItem("newMessage", "true"); 
-    } catch (e) {
-      console.log("local storage try didnt work");
-    }
       const locallyStoredLobby = await putLobbyintoLocalStorage(message.body);
-      console.log("put lobby into local storage: " + locallyStoredLobby);
+      //console.log("put lobby into local storage: " + locallyStoredLobby);
       const jsObjectLobby = await setLobbyintoJsObject(JSON.parse(message.body));
       //updateLobby(JSON.parse(message.body));
-      console.log("updated Lobby js object: " + JSON.stringify(jsObjectLobby));
+      //console.log("updated Lobby js object: " + JSON.stringify(jsObjectLobby));
       //console.log("LOBBY RECEIVED CUZ I'm SUBSCRIBED" + JSON.stringify(message.body));
       resolve(JSON.parse(message.body));
     });
     //callback(); 
-    console.log("I waited: for the client to SUBSCRIBE");
+    //console.log("I waited: for the client to SUBSCRIBE");
   }, function (error) {
     console.log("There was an error in subscribing: " + error);
   }); 
@@ -70,7 +65,7 @@ export const subscribe = async (destination, callback) => { // we call this func
 async function putLobbyintoLocalStorage(messageBody) {
   return new Promise((resolve, reject) => {
     localStorage.setItem("lobby", messageBody);
-    resolve(localStorage.getItem("lobby"));
+    resolve();
   }, function(error) {
     console.log("there was an error putting lobby into storage: " + error);
     reject(error);

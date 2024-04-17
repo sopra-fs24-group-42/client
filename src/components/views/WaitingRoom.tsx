@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { api, handleError } from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
 import Lobby from "models/Lobby";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useLocation} from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/WaitingRoom.scss";
 import BaseContainer from "components/ui/BaseContainer";
@@ -23,68 +23,63 @@ LobbyMember.propTypes = {
 
 const WaitingRoom = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  let data = location.state;
+  console.log("DATA: " + JSON.stringify(data));
   const lobbyCode = getLobby().lobbyCode; // need this to display at the top of the waitingRoom
-  //const hostPlayer = getLobby().hostName; // need this to check if current player is the host
-  //const totalPlayers = getLobby().numberOfPlayers; // need this to check if all players are in the lobby
 
   const [currentLobby, setCurrentLobby] = useState({}); // this variable will store the lobby object (dictionary)
   const [playersInLobby, setPlayersInLobby] = useState<User []>([]); // this variable will store the list of players currently in the lobby
+  const [messageReceived, setMessageReceived] = useState(null);
+  const [numberOfPlayersInLobby, setNumberOfPlayersInLobby] = useState(0);
 
-  //console.log("IN WAITING ROOM NOW! THIS IS THE CURRENT LOBBY: " + JSON.stringify(getLobby()));
-  //console.log("This is my username: " + username);
+  //async function doSetup() {
+    //return new Promise((resolve, reject) => {
+      //try {
+        //await connect(subscribeToLobby);
+      //} catch (e) {
+        //console.log("There was an error: " + e);
+      //}
+    //}, function(error) {
+
+    //});
+  //}
 
   async function subscribeToLobby() {
     const lobbyId = localStorage.getItem("lobbyId");
-    let message = await subscribe(`/topic/lobby/${lobbyId}`);
-    setCurrentLobby(message);
-    setPlayersInLobby(message["players"]);
-    //console.log("MESSAGE IN SUBSCRIBE: " + message);
-    //console.log("MESSAGE IN current lobby: " + message);
-    //console.log("Extracting players: " + JSON.stringify(message["players"]));
+    const message = await subscribe(`/topic/lobby/${lobbyId}`);
+    console.log("MESSAGE IN SUBSCRIBE: " + message);
+    setMessageReceived(message);
   }
-  
-  // this function handles displaying of the button only the host and only if all players are here
-  const allPlayersHereCheck = () => {
-    //try {
-      //console.log("Total number of players: " + totalPlayers);
-      //onsole.log("hostPlayer: " + hostPlayer);
-      //if ((playersInLobby.length === totalPlayers) && hostPlayer === username) {
-        //return true;
-     // }
-    //} catch (e) {
-      //console.log("Error: Couldn't execute total player check, maybe lobby is empty? " + e);
+
+
+
+  //useEffect(() => { // connecting and subscribing first --> messageReceived should get set
+    //async function setup() {
+      //try {
+        //await connect(subscribeToLobby);
+      //} catch (e) {
+        //console.log("There was an error");
+      //}
     //}
 
-    return false;
-  }
+  //});
+
 
   useEffect( () => {
-    //first thing: I need to fetch the lobby and set it to currentLobby variable
-    async function fetchLobby() {
-      //console.log("This is my username: " + username);
-      try{
-        await subscribeToLobby();
-        console.log("MESSAGE: " + currentLobby);
-        //const response = await send("/app/test", JSON.stringify({username, selection}));
-        //console.log("this is my response: " + JSON.stringify(response));
-        //await setCurrentLobby(send("/app/test", JSON.stringify({username, selection})));
-        //console.log("I have fetched the current Lobby in useEffect: " + JSON.stringify(currentLobby));
-      } catch (e) {
-        console.log("there was an error: " + e);
-      }
-    }
-    fetchLobby();
+    //async function fetchLobby() {
+      //try{
+        //setCurrentLobby(messageReceived);
+        //setPlayersInLobby(messageReceived["players"]);
 
-    //function fetchLobbyPlayers() {
-      //try {
-        //setPlayersInLobby(getLobby().players);
-        //console.log("SETTING PLAYERS IN LOBBY IN GETLOBBY: " + playersInLobby);
-     // } catch (e) {
-       // console.log("problem: " + e);}
+      //} catch (e) {
+        //console.log("there was an error: " + e);
+      //}
     //}
-    //fetchLobbyPlayers();
-    //localStorage.setItem("newMessage", "false");
-  }, [currentLobby]);
+    //fetchLobby();
+
+    setPlayersInLobby(data.players);
+  }, [data]);
 
   let content = <Spinner />;
 
@@ -115,7 +110,7 @@ const WaitingRoom = () => {
           <Button
             width="100%"
             height="40px"
-            disabled={!allPlayersHereCheck()}
+            disabled={true}
           >
             Start Game
           </Button>

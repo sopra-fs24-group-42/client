@@ -33,11 +33,12 @@ const JoinGame = () => {
   const navigate = useNavigate();
   const [lobbyCode, setLobbyCode] = useState<string>(null);
   const [username, setUsername] = useState<string>(null);
+  let messageReceived = null;
 
   async function subscribeToLobby() {
     const lobbyId = localStorage.getItem("lobbyId");
-    await subscribe(`/topic/lobby/${lobbyId}`);
-    localStorage.setItem("newMessage","false");
+    const message = await subscribe(`/topic/lobby/${lobbyId}`);
+    messageReceived = (message);
   }
 
   // remove:
@@ -58,9 +59,9 @@ const JoinGame = () => {
       localStorage.setItem("lobbyCode", player.lobbyCode);
       localStorage.setItem("lobbyId", player.lobbyId);
       // upgrading to a websocket connection over Sockjs
-      await connect();
-      console.log("I waited: CONNECT, SUBSCRIBE AND SEND FINISHED?");
-      navigate("/waitingroom");
+      //await connect();
+      //console.log("I waited: CONNECT, SUBSCRIBE AND SEND FINISHED?");
+      navigate("/waitingroom",  {state: messageReceived});
     } catch (error) {
       alert(
         `Something went wrong during the creation of the game: \n${handleError(error)}`
