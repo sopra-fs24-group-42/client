@@ -37,16 +37,19 @@ const CreateGame = () => {
 
   async function subscribeToLobby() {
     const lobbyId = localStorage.getItem("lobbyId");
-    await subscribe(`/topic/lobby/${lobbyId}`);
+    const message = await subscribe(`/topic/lobby/${lobbyId}`);
+    console.log("MESSAGE IN SUBSCRIBE: " + message);
+    localStorage.setItem("newMessage","false");
   }
 
-  function sendUsername() {
-    const lobbyId = localStorage.getItem("lobbyId");
-    const username = localStorage.getItem("user");
-    let selection = "none" // note: not actually making a selection here, just need to trigger lobby broadcast
-    let body = JSON.stringify({username, selection}); 
-    send("/app/test", body);
-  }
+  // remove:
+  //function sendUsername() {
+    //const lobbyId = localStorage.getItem("lobbyId");
+    //const username = localStorage.getItem("user");
+    //let selection = "none" // note: not actually making a selection here, just need to trigger lobby broadcast
+    //let body = JSON.stringify({username, selection}); 
+    //send("/app/test", body);
+  //}
 
   const doCreateGame = async () => {
     try {
@@ -57,7 +60,7 @@ const CreateGame = () => {
       localStorage.setItem("lobbyCode", lobby.lobbyCode);
       localStorage.setItem("lobbyId", lobby.lobbyId);
       // upgrading to a websocket connection
-      await connect(subscribeToLobby);
+      await connect();
       console.log("I waited: CONNECT, SUBSCRIBE AND SEND FINISHED?");
       navigate("/waitingroom");      
     } catch (error) {
