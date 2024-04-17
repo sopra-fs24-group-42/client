@@ -7,7 +7,7 @@ import { Button } from "components/ui/Button";
 import "styles/views/CreateGame.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import {connect, subscribe, send, getSubscribedToLobby} from "helpers/stompClient"
+import {connect, subscribe, send, getSubscribedToLobby} from "helpers/stompClient";
 
 const FormField = (props) => {
 
@@ -37,7 +37,7 @@ const CreateGame = () => {
 
   async function subscribeToLobby() {
     const lobbyId = localStorage.getItem("lobbyId");
-    await subscribe(`/topic/lobby/${lobbyId}`, sendUsername);
+    await subscribe(`/topic/lobby/${lobbyId}`);
   }
 
   function sendUsername() {

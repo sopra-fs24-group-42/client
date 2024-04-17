@@ -6,13 +6,12 @@ import { useLobby } from "./lobbyContext";
 
 var ws = null;
 var connection = false;
-var subscribedToLobby = false;
 const baseURL = getDomain();
 
 var stompClient = null;
 
 var lobby = new Lobby();
-console.log(lobby);
+//console.log(lobby);
 
 export var connect = async (callback) => {
   return new Promise((resolve, reject) => {
@@ -40,16 +39,17 @@ export var connect = async (callback) => {
 
 export const subscribe = async (destination, callback) => { // we call this function with destination and sendUsername as parameters (where sendUsername is a function that sends the user's username)
   return new Promise((resolve, reject) => {
+    //const { updateLobby } = useLobby();
     stompClient.subscribe(destination, function(message) {
       console.log("subscribed to " + destination + " successfully");
       console.log("received message at " + destination);
       console.log(JSON.parse(message.body));
-      subscribedToLobby = true;
       localStorage.setItem("lobby", message.body);
       setLobby(JSON.parse(message.body));
+      //updateLobby(JSON.parse(message.body));
       resolve(stompClient);
     });
-    callback(); 
+    //callback(); 
     console.log("I waited: for the client to SEND");
   }, function (error) {
     console.log("There was an error in subscribing: " + error);
@@ -95,11 +95,3 @@ export const disconnect = () => {
   console.log("Disconnected websocket.");
 }
 
-//export const startGame = (lobbyId, token) => {
-//    const requestBody = JSON.stringify({lobbyId});
-//    const headers = {
-//        Authorization: `Bearer ${token}`,
-//       'Content-Type': 'application/json'
-//    };
-//    ws.send("/app/games/" + lobbyId, headers, requestBody);
-//}

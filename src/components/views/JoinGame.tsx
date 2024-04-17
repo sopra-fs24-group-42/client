@@ -36,7 +36,7 @@ const JoinGame = () => {
 
   async function subscribeToLobby() {
     const lobbyId = localStorage.getItem("lobbyId");
-    await subscribe(`/topic/lobby/${lobbyId}`, sendUsername);
+    await subscribe(`/topic/lobby/${lobbyId}`);
   }
 
   function sendUsername() {

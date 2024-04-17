@@ -8,7 +8,8 @@ import "styles/views/WaitingRoom.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { User } from "types";
-import { getLobby, getLobbySize} from "helpers/stompClient"
+import { send, getLobby, getLobbySize} from "helpers/stompClient";
+import { useLobby} from "helpers/lobbyContext";
 
 const LobbyMember = ({ user }: { user: User }) => (
   <div className="player container">
@@ -20,33 +21,49 @@ LobbyMember.propTypes = {
   user: PropTypes.object,
 };
 
-var jsLobbyObjectNumberOfPlayers = 0;
-
 const WaitingRoom = () => {
   console.log("IN WAITING ROOM NOW! THIS IS THE CURRENT LOBBY: ");
-  //var localStorageLobbyNumberOfPlayers = JSON.parse(localStorage.getItem("lobby")).length;
-  //console.log("Number of players in lobby (from localStorage): " + localStorageLobbyNumberOfPlayers);
-  console.log("Number of players in lobby (from js object): " + jsLobbyObjectNumberOfPlayers);
-  //console.log("from localstorage" + localStorage.getItem("lobby"));
-  //console.log("from getLobby()" + JSON.stringify(getLobby()));
+
   const navigate = useNavigate();
+  //const { lobby } = useLobby();
   const [playersInLobby, setPlayersInLobby] = useState<User []>([]);
+  const [lobbyCode2, setLobbyCode] = useState(null);
   const lobbyCode = localStorage.getItem("lobbyCode");
 
-  useEffect(() => {
-    try{
-      jsLobbyObjectNumberOfPlayers = getLobby().players.length;
-      setPlayersInLobby(getLobby().players);
-      console.log("playersssss: " + playersInLobby);
+  const allPlayersHereCheck = () => {
+    try {
+      const totalPlayers = getLobby().numberOfPlayers;
+      console.log("Total number of players: " + totalPlayers);
+      const hostPlayer = getLobby().hostName;
+      const username = localStorage.getItem("username");
+      console.log("hostPlayer: " + hostPlayer);
+      if ((playersInLobby.length === totalPlayers) && hostPlayer === username) {
+        return true;
+      }
     } catch (e) {
-      jsLobbyObjectNumberOfPlayers = 0;
-      console.log("no players yet: " + playersInLobby);}
+      console.log("Error: Couldn't execute total player check, maybe lobby is empty? " + e);
+    }
 
-  },[jsLobbyObjectNumberOfPlayers]);
+    return false;
+  }
+
+  useEffect(() => {
+    function fetchLobby() {
+      
+      try {
+        setPlayersInLobby(getLobby().players);
+        console.log("SETTING PLAYERS IN LOBBY IN GETLOBBY: " + playersInLobby);
+      } catch (e) {
+        console.log("problem: " + e);}
+    }
+    fetchLobby()
+    ;},
+
+  [playersInLobby]);
 
   let content = <Spinner />;
 
-  if (jsLobbyObjectNumberOfPlayers !== 0) {
+  if (playersInLobby) {
     content = (
       <div className ="game">
         <ul className= "game user-list">
@@ -73,6 +90,7 @@ const WaitingRoom = () => {
           <Button
             width="100%"
             height="40px"
+            disabled={!allPlayersHereCheck()}
           >
             Start Game
           </Button>
