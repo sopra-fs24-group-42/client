@@ -34,14 +34,14 @@ const CreateGame = () => {
   const navigate = useNavigate();
   const [numberOfPlayers, setNumberOfPlayers] = useState<string>(null);
   const [hostName, setHostName] = useState<string>(null);
-  let messageReceived = null;
+  //let messageReceived = null;
 
   async function subscribeToLobby() {
     const lobbyId = localStorage.getItem("lobbyId");
     const message = await subscribe(`/topic/lobby/${lobbyId}`);
     console.log("MESSAGE IN SUBSCRIBE: " + message);
-    messageReceived = (message);
-    console.log("I set messageReceived:" + messageReceived);
+    //messageReceived = (message);
+    //console.log("I set messageReceived:" + messageReceived);
 
   }
 
@@ -63,10 +63,11 @@ const CreateGame = () => {
       localStorage.setItem("lobbyCode", lobby.lobbyCode);
       localStorage.setItem("lobbyId", lobby.lobbyId);
       // upgrading to a websocket connection
-      await connect(subscribeToLobby);
+      //await connect(subscribeToLobby);
       //console.log("I waited: CONNECT, SUBSCRIBE AND SEND FINISHED?");
-      console.log("dataaaa: " + messageReceived);
-      navigate("/waitingroom", {state: messageReceived});      
+      //console.log("dataaaa: " + messageReceived);
+      //navigate("/waitingroom", {state: messageReceived});
+      navigate("/waitingroom");            
     } catch (error) {
       alert(
         `Something went wrong during the creation of the game: \n${handleError(error)}`

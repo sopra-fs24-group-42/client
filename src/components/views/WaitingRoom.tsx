@@ -8,7 +8,7 @@ import "styles/views/WaitingRoom.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { User } from "types";
-import { connect, subscribe, getLobby, getLobbySize} from "helpers/stompClient";
+import { connect, subscribe, getLobby, getLobbySize, getConnection} from "helpers/stompClient";
 import { useLobby} from "helpers/lobbyContext";
 
 const LobbyMember = ({ user }: { user: User }) => (
@@ -23,16 +23,60 @@ LobbyMember.propTypes = {
 
 const WaitingRoom = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  let data = location.state;
-  console.log("DATA: " + JSON.stringify(data));
-  const lobbyCode = getLobby().lobbyCode; // need this to display at the top of the waitingRoom
-
-  const [currentLobby, setCurrentLobby] = useState({}); // this variable will store the lobby object (dictionary)
+  //const location = useLocation();
+  //let data = location.state;
+  var [messageReceived, setMessageReceived] = useState();
   const [playersInLobby, setPlayersInLobby] = useState<User []>([]); // this variable will store the list of players currently in the lobby
-  const [messageReceived, setMessageReceived] = useState(null);
-  const [numberOfPlayersInLobby, setNumberOfPlayersInLobby] = useState(0);
+  //localStorage.setItem("data", data);
+  //console.log("DATA: " + JSON.stringify(data));
+  const lobbyCode = getLobby().lobbyCode; // need this to display at the top of the waitingRoom
+  //var messageReceived = null; 
+  //const [currentLobby, setCurrentLobby] = useState({}); // this variable will store the lobby object (dictionary)
+  //const [messageReceived, setMessageReceived] = useState(null);
+  //const [numberOfPlayersInLobby, setNumberOfPlayersInLobby] = useState(0);
 
+  useEffect(() => {
+    if(!getConnection()) {
+    const connectAndSubscribe = async () => {
+      try {
+        await connect(subscribeToLobby);
+      } catch (error) {
+        console.error("There was an error connecting or subscribing: ", error);
+      }
+    };
+    connectAndSubscribe();}
+    //setPlayersInLobby(messageReceived.players);
+    //return {};
+  }, []);
+
+  useEffect(() => {
+    if (messageReceived) {
+      setPlayersInLobby(messageReceived.players);
+    }
+  }, [messageReceived]);  // Proper handling when messageReceived updates
+
+  //try {
+    //await connect(subscribeToLobby);
+    //console.log("I waited: CONNECT, SUBSCRIBE AND SEND FINISHED?");
+  //} catch (e) {
+    //console.log("There was an errror: " + e);
+  //};
+
+  async function subscribeToLobby() {
+    const lobbyId = localStorage.getItem("lobbyId");
+    const message = await subscribe(`/topic/lobby/${lobbyId}`);
+    console.log("MESSAGE IN SUBSCRIBE: " + JSON.stringify(message));
+    setMessageReceived(message);
+    //messageReceived = message;
+    //setNumberOfPlayersInLobby(message.players.length);
+    //setCurrentLobby(message);
+    console.log("I set messageReceived: " + messageReceived);
+  }
+
+  //useEffect(() => {
+    //setPlayersInLobby(messageReceived.players);
+  //}, [messageReceived]);
+  
   //async function doSetup() {
     //return new Promise((resolve, reject) => {
       //try {
@@ -45,45 +89,17 @@ const WaitingRoom = () => {
     //});
   //}
 
-  async function subscribeToLobby() {
-    const lobbyId = localStorage.getItem("lobbyId");
-    const message = await subscribe(`/topic/lobby/${lobbyId}`);
-    console.log("MESSAGE IN SUBSCRIBE: " + message);
-    setMessageReceived(message);
-  }
 
+  //useEffect( () => {
 
-
-  //useEffect(() => { // connecting and subscribing first --> messageReceived should get set
-    //async function setup() {
-      //try {
-        //await connect(subscribeToLobby);
-      //} catch (e) {
-        //console.log("There was an error");
-      //}
-    //}
-
-  //});
-
-
-  useEffect( () => {
-    //async function fetchLobby() {
-      //try{
-        //setCurrentLobby(messageReceived);
-        //setPlayersInLobby(messageReceived["players"]);
-
-      //} catch (e) {
-        //console.log("there was an error: " + e);
-      //}
-    //}
-    //fetchLobby();
-
-    setPlayersInLobby(data.players);
-  }, [data]);
+   // data = location.state
+    //setPlayersInLobby(data.players);
+    //console.log("something's happening");
+  //}, [location]);
 
   let content = <Spinner />;
 
-  if (playersInLobby) {
+  if (messageReceived) {
     content = (
       <div className ="game">
         <ul className= "game user-list">
