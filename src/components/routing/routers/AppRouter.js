@@ -7,6 +7,8 @@ import FrontPage from "../../views/FrontPage";
 import CreateGame from "../../views/CreateGame";
 import JoinGame from "../../views/JoinGame";
 import WaitingRoom from "../../views/WaitingRoom";
+import NarrationPhase from "../../views/NarrationPhase";
+import NarrationPhaseGoogle from "../../views/NarrationPhaseGoogle";
 
 
 /**
@@ -42,6 +44,15 @@ const AppRouter = () => {
         <Route path="/waitingroom" element={<LoginGuard />}>
           <Route path="/waitingroom" element={<WaitingRoom />} />
         </Route>
+
+        <Route path="/NarrationPhase" element={<LoginGuard />}>
+          <Route path="/NarrationPhase" element={<NarrationPhase />} />
+        </Route>
+
+        <Route path="/NarrationPhaseGoogle" element={<LoginGuard />}>
+          <Route path="/NarrationPhaseGoogle" element={<NarrationPhaseGoogle />} />
+        </Route>
+
 
         <Route path="/" element={
           <Navigate to="/frontpage" replace />

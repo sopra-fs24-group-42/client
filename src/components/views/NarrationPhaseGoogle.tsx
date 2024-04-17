@@ -20,7 +20,7 @@ function TextToSpeech() {
     window.speechSynthesis.speak(msg);
 }
 
-const NarrationPhase = () => {
+const NarrationPhaseGoogle = () => {
   const navigate = useNavigate();
   
   const msg = new SpeechSynthesisUtterance();
@@ -48,4 +48,4 @@ const NarrationPhase = () => {
 /**
  * You can get access to the history object's properties via the useLocation, useNavigate, useParams, ... hooks.
  */
-export default NarrationPhase;
+export default NarrationPhaseGoogle;
