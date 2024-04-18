@@ -24,11 +24,13 @@ LobbyMember.propTypes = {
 const WaitingRoom = () => {
 
   // variables needed for establishing websocket connection
-  var connection = false;
+  let connection = false;
   const baseURL = getDomain();
   var stompClient = null;
 
   const navigate = useNavigate();
+
+  // variables needed for dynamic rendering of waitingRoom
   const [messageReceived, setMessageReceived] = useState(null);
   const [playersInLobby, setPlayersInLobby] = useState<User []>([]); // this variable will store the list of players currently in the lobby
   const [numberOfPlayersInLobby, setNumberOfPlayersInLobby] = useState(0);
@@ -36,14 +38,14 @@ const WaitingRoom = () => {
   const [hostName, setHostName] = useState(null);
   const [disconnected, setDisconnected] = useState(false);
 
-  const [displayText, setDisplayText] = useState();
+  // variables needed for UI
   const waitingHeading = "Waiting for all players to join...";
   const readyHeading = `Everyone's here! ${hostName}, start the game.`;
-
   const lobbyCode = localStorage.getItem("lobbyCode"); // need this to display at the top of the waitingRoom
+  
+  // variables needed for conditional button display
   const lobbyId = localStorage.getItem("lobbyId");
   const user = localStorage.getItem("user");
-  //const numberOfPlayers = parseInt(localStorage.getItem("numberOfPlayers"), 10);
 
   const connect = async () => {
     return new Promise((resolve, reject) => {
@@ -105,13 +107,17 @@ const WaitingRoom = () => {
   useEffect(() => { // This useEffect tracks changes in the lobby
     console.log("something is hapaapapapeenning");
     if (messageReceived && messageReceived.players) {
+      // TODO: include if statement here that checks if the role field of the user (i.e. the user that is you, not the one who joined) is null or not
+      // and if not, then navigate to roleReveal and pass role as props.
+      // Also, might have to unsubscribe at this point here as well (depends on if I can (re)subscribe multiple times w/o consequences and always trigger broadcast or not!)
+      // if(messageReceived.players.${user}.role !== null) {navigate("/rolereveal", {state: messageReceived.players.${user}.role});}
       setPlayersInLobby(messageReceived.players);
       setNumberOfPlayersInLobby((messageReceived.players).length);
       setNumberOfPlayers(messageReceived.numberOfPlayers);
       setHostName(messageReceived.hostName);
       console.log("number of players in lobby: " + numberOfPlayersInLobby);
     }
-  }, [messageReceived, disconnected===true]); 
+  }, [messageReceived, disconnected===true]); //disconnected===true is a WIP: hoping this will update the lobby view to show that a user dropped out.
 
   const checkIfAllPlayersHere = () => {
     if(numberOfPlayers === numberOfPlayersInLobby) {
@@ -120,6 +126,19 @@ const WaitingRoom = () => {
     return false;
   }
 
+  const doStartGame = () => {
+    const headers = {
+      "Content-type": "application/json"
+    };
+    const body = JSON.stringify({lobbyId});
+    try{
+      stompClient.send("/app/startgame", headers, body);
+    } catch (e) {
+      console.log("Something went wrong while starting the game: " + e);
+    }
+  }
+
+  useEffect
 
   let content = <Spinner />;
 
@@ -154,6 +173,7 @@ const WaitingRoom = () => {
             width="100%"
             height="40px"
             disabled={checkIfAllPlayersHere() === false}
+            onClick={doStartGame()}
           >
             Start Game
           </Button>}
