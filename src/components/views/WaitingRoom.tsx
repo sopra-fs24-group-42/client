@@ -36,6 +36,10 @@ const WaitingRoom = () => {
   const [hostName, setHostName] = useState(null);
   const [disconnected, setDisconnected] = useState(false);
 
+  const [displayText, setDisplayText] = useState();
+  const waitingHeading = "Waiting for all players to join...";
+  const readyHeading = `Everyone's here! ${hostName}, start the game.`;
+
   const lobbyCode = localStorage.getItem("lobbyCode"); // need this to display at the top of the waitingRoom
   const lobbyId = localStorage.getItem("lobbyId");
   const user = localStorage.getItem("user");
@@ -113,7 +117,6 @@ const WaitingRoom = () => {
     if(numberOfPlayers === numberOfPlayersInLobby) {
       return true;
     }
-
     return false;
   }
 
@@ -137,7 +140,9 @@ const WaitingRoom = () => {
   return (
     <BaseContainer>
       <div className= "waitingRoom header">Welcome to game 
-        <div className= "waitingRoom highlight">{lobbyCode}</div>
+        <div className= "waitingRoom highlight">{lobbyCode}
+        <div className= "waitingRoom heading"> {checkIfAllPlayersHere() ? readyHeading : waitingHeading}</div>
+        </div>
       </div>
       <div>
       </div>
