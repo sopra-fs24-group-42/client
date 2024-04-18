@@ -41,6 +41,7 @@ const CreateGame = () => {
       localStorage.setItem("user", lobby.hostName);
       localStorage.setItem("lobbyCode", lobby.lobbyCode);
       localStorage.setItem("lobbyId", lobby.lobbyId);
+      localStorage.setItem("numberOfPlayers", lobby.numberOfPlayers);
       navigate("/waitingroom");            
     } catch (error) {
       alert(
