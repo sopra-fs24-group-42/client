@@ -123,6 +123,7 @@ const WaitingRoom = () => {
     if(numberOfPlayers === numberOfPlayersInLobby) {
       return true;
     }
+    
     return false;
   }
 
@@ -160,7 +161,7 @@ const WaitingRoom = () => {
     <BaseContainer>
       <div className= "waitingRoom header">Welcome to game 
         <div className= "waitingRoom highlight">{lobbyCode}
-        <div className= "waitingRoom heading"> {checkIfAllPlayersHere() ? readyHeading : waitingHeading}</div>
+          <div className= "waitingRoom heading"> {checkIfAllPlayersHere() ? readyHeading : waitingHeading}</div>
         </div>
       </div>
       <div>
