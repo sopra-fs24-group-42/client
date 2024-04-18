@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from "react";
 import SockJS from "sockjs-client";
-import { over, client } from "stompjs";
+import { over } from "stompjs";
 import { getDomain } from "../../helpers/getDomain";
 import { api, handleError } from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
-import Lobby from "models/Lobby";
 import {useNavigate, useLocation} from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/WaitingRoom.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { User } from "types";
-import { getLobby, getLobbySize, getConnection} from "helpers/stompClient";
-import { useLobby} from "helpers/lobbyContext";
 
 const LobbyMember = ({ user }: { user: User }) => (
   <div className="player container">
@@ -27,7 +24,6 @@ LobbyMember.propTypes = {
 const WaitingRoom = () => {
 
   // variables needed for establishing websocket connection
-  var ws = null;
   var connection = false;
   const baseURL = getDomain();
   var stompClient = null;
@@ -56,30 +52,30 @@ const WaitingRoom = () => {
     });
   };
 
-  const subscribe = async (destination) => { // we call this function with destination and sendUsername as parameters (where sendUsername is a function that sends the user's username)
+  const subscribe = async (destination) => { 
     return new Promise( (resolve, reject) => {
-      stompClient.subscribe(destination, async function(message) { // all of this only gets executed when message is received
+      stompClient.subscribe(destination, async function(message) { 
+        // all of this only gets executed when message is received
         console.log("MESSAGE IN SUBSCRIBE: " + JSON.stringify(message));
         localStorage.setItem("lobby", message.body);
         setMessageReceived(JSON.parse(message.body));
         setPlayersInLobby(JSON.parse(message.body).players);
-        //console.log("I set messageReceived: " + messageReceived);
         resolve(JSON.parse(message.body));
       });
     }); 
   }
 
   useEffect(() => {
-    if(!connection) { // TODO: make this async function?
-    const connectAndSubscribe = async () => { // try calling subscribe explicitly and handling updates inside callback!
-      try {
-        await connect();
-        await subscribe(`/topic/lobby/${lobbyId}`);      
-      } catch (error) {
-        console.error("There was an error connecting or subscribing: ", error);
-      }
-    };
-    connectAndSubscribe();}
+    if(!connection) { 
+      const connectAndSubscribe = async () => { 
+        try {
+          await connect();
+          await subscribe(`/topic/lobby/${lobbyId}`);      
+        } catch (error) {
+          console.error("There was an error connecting or subscribing: ", error);
+        }
+      };
+      connectAndSubscribe();}
 
     if (messageReceived && messageReceived.players) {
       setPlayersInLobby(messageReceived.players);

@@ -11,8 +11,6 @@ const baseURL = getDomain();
 var stompClient = null;
 
 var lobby = new Lobby();
-//console.log(lobby);
-
 
 export var connect = async (callback) => {
   return new Promise((resolve, reject) => {
@@ -32,31 +30,17 @@ export var connect = async (callback) => {
     connection = false;
     reject(error);
   });
-  //stompClient.onclose = reason => {
-  //connection = false;
-  //console.log("Socket was closed, Reason: " + reason);
-  //});
 }
 
 export const subscribe = async (destination, callback) => { // we call this function with destination and sendUsername as parameters (where sendUsername is a function that sends the user's username)
   return new Promise( (resolve, reject) => {
-    //const { updateLobby } = useLobby();
     stompClient.subscribe(destination, async function(message) {
-      //console.log("subscribed to " + destination + " successfully");
-      //console.log("received message at " + destination);
-      //console.log("MESSAGE COUNTER: " + messageCounter);
-      //console.log(JSON.parse(message.body));
       localStorage.setItem("lobby", message.body);
       const locallyStoredLobby = await putLobbyintoLocalStorage(message.body);
-      //console.log("put lobby into local storage: " + locallyStoredLobby);
       const jsObjectLobby = await setLobbyintoJsObject(JSON.parse(message.body));
-      //updateLobby(JSON.parse(message.body));
-      //console.log("updated Lobby js object: " + JSON.stringify(jsObjectLobby));
-      //console.log("LOBBY RECEIVED CUZ I'm SUBSCRIBED" + JSON.stringify(message.body));
       resolve(JSON.parse(message.body));
     });
     //callback(); 
-    //console.log("I waited: for the client to SUBSCRIBE");
   }, function (error) {
     console.log("There was an error in subscribing: " + error);
   }); 
@@ -104,8 +88,6 @@ export const send = async (destination, body) => {
     reject(error);
   });
 }
-
-export function getSubscribedToLobby() {return subscribedToLobby;}
 
 export function getLobby() {return lobby;}
 

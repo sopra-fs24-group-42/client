@@ -6,7 +6,6 @@ import { Button } from "components/ui/Button";
 import "styles/views/JoinGame.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import {connect, subscribe, send} from "helpers/stompClient"
 
 const FormField = (props) => {
 
@@ -33,22 +32,6 @@ const JoinGame = () => {
   const navigate = useNavigate();
   const [lobbyCode, setLobbyCode] = useState<string>(null);
   const [username, setUsername] = useState<string>(null);
-  //let messageReceived = null;
-
-  async function subscribeToLobby() {
-    const lobbyId = localStorage.getItem("lobbyId");
-    const message = await subscribe(`/topic/lobby/${lobbyId}`);
-    //messageReceived = (message);
-  }
-
-  // remove:
-  //function sendUsername() {
-  //  const lobbyId = localStorage.getItem("lobbyId");
-  //  const username = localStorage.getItem("user");
-  //  let selection = "none" // note: not actually making a selection here, just need to trigger lobby broadcast
-  //  let body = JSON.stringify({username, selection}); 
-  //  send("/app/test", body);
-  //}
 
   const doJoinGame = async () => {
     try {
@@ -58,10 +41,6 @@ const JoinGame = () => {
       localStorage.setItem("user", player.username);
       localStorage.setItem("lobbyCode", player.lobbyCode);
       localStorage.setItem("lobbyId", player.lobbyId);
-      // upgrading to a websocket connection over Sockjs
-      //await connect(subscribeToLobby);
-      //console.log("I waited: CONNECT, SUBSCRIBE AND SEND FINISHED?");
-      //navigate("/waitingroom",  {state: messageReceived});
       navigate("/waitingroom");            
     } catch (error) {
       alert(
@@ -111,7 +90,4 @@ const JoinGame = () => {
   );
 };
 
-/**
- * You can get access to the history object's properties via the useLocation, useNavigate, useParams, ... hooks.
- */
 export default JoinGame;
