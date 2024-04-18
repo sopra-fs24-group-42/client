@@ -29,12 +29,16 @@ const WaitingRoom = () => {
   var stompClient = null;
 
   const navigate = useNavigate();
-  var [messageReceived, setMessageReceived] = useState(null);
+  const [messageReceived, setMessageReceived] = useState(null);
   const [playersInLobby, setPlayersInLobby] = useState<User []>([]); // this variable will store the list of players currently in the lobby
+  const [numberOfPlayersInLobby, setNumberOfPlayersInLobby] = useState(0);
+  const [numberOfPlayers, setNumberOfPlayers] = useState(0);
+  const [hostName, setHostName] = useState(null);
 
   const lobbyCode = localStorage.getItem("lobbyCode"); // need this to display at the top of the waitingRoom
-  //const lobbyCode = getLobby().lobbyCode; // need this to display at the top of the waitingRoom
   const lobbyId = localStorage.getItem("lobbyId");
+  const user = localStorage.getItem("user");
+  //const numberOfPlayers = parseInt(localStorage.getItem("numberOfPlayers"), 10);
 
   const connect = async () => {
     return new Promise((resolve, reject) => {
@@ -57,15 +61,18 @@ const WaitingRoom = () => {
       stompClient.subscribe(destination, async function(message) { 
         // all of this only gets executed when message is received
         console.log("MESSAGE IN SUBSCRIBE: " + JSON.stringify(message));
-        localStorage.setItem("lobby", message.body);
+        //localStorage.setItem("lobby", message.body);
         setMessageReceived(JSON.parse(message.body));
         setPlayersInLobby(JSON.parse(message.body).players);
+        setNumberOfPlayersInLobby(JSON.parse(message.body).players.length);
+        setNumberOfPlayers(JSON.parse(message.body).numberOfPlayers);
+        setHostName(JSON.parse(message.body).hostName);
         resolve(JSON.parse(message.body));
       });
     }); 
   }
 
-  useEffect(() => {
+  useEffect(() => { // This is executed once upon mounting of waitingRoom --> establishes ws connection & subscribes
     if(!connection) { 
       const connectAndSubscribe = async () => { 
         try {
@@ -79,15 +86,31 @@ const WaitingRoom = () => {
 
     if (messageReceived && messageReceived.players) {
       setPlayersInLobby(messageReceived.players);
+      setNumberOfPlayersInLobby((messageReceived.players).length);
+      setNumberOfPlayers(messageReceived.numberOfPlayers);
+      setHostName(messageReceived.hostName);
     }
   }, []);
 
-  useEffect(() => {
+  useEffect(() => { // This useEffect tracks changes in the lobby
     console.log("something is hapaapapapeenning");
     if (messageReceived && messageReceived.players) {
       setPlayersInLobby(messageReceived.players);
+      setNumberOfPlayersInLobby((messageReceived.players).length);
+      setNumberOfPlayers(messageReceived.numberOfPlayers);
+      setHostName(messageReceived.hostName);
+      console.log("number of players in lobby: " + numberOfPlayersInLobby);
     }
-  }, [messageReceived]);  // Proper handling when messageReceived updates
+  }, [messageReceived]); 
+
+  const checkIfAllPlayersHere = () => {
+    if(numberOfPlayers === numberOfPlayersInLobby) {
+      return true;
+    }
+
+    return false;
+  }
+
 
   let content = <Spinner />;
 
@@ -115,13 +138,14 @@ const WaitingRoom = () => {
       <div className= "waitingRoom container">
         {content}
         <div className="waitingRoom button-container">
+          { user === hostName &&
           <Button
             width="100%"
             height="40px"
-            disabled={true}
+            disabled={checkIfAllPlayersHere() === false}
           >
             Start Game
-          </Button>
+          </Button>}
         </div>
       </div>
     </BaseContainer>
