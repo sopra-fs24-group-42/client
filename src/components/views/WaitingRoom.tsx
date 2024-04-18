@@ -34,6 +34,7 @@ const WaitingRoom = () => {
   const [numberOfPlayersInLobby, setNumberOfPlayersInLobby] = useState(0);
   const [numberOfPlayers, setNumberOfPlayers] = useState(0);
   const [hostName, setHostName] = useState(null);
+  const [disconnected, setDisconnected] = useState(false);
 
   const lobbyCode = localStorage.getItem("lobbyCode"); // need this to display at the top of the waitingRoom
   const lobbyId = localStorage.getItem("lobbyId");
@@ -47,12 +48,17 @@ const WaitingRoom = () => {
       stompClient.connect({}, function (frame) { // connecting to server websocket: instructions inside "function" will only be executed once we get something (i.e. a connect frame back from the server). Parameter "frame" is what we get from the server. 
         console.log("socket was successfully connected: " + frame);
         connection = true;
-        setTimeout(async function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
+        setTimeout( function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
           //const response = await callback();
           console.log("I waited: I received  MESSAGE frame back based on subscribing!!");
           resolve(stompClient);
         }, 500);
-      })
+      });
+      stompClient.onclose = reason => {
+        connection = false;
+        setDisconnected(true);
+        console.log("Socket was closed, Reason: " + reason);
+        reject(reason);}
     });
   };
 
@@ -90,7 +96,7 @@ const WaitingRoom = () => {
       setNumberOfPlayers(messageReceived.numberOfPlayers);
       setHostName(messageReceived.hostName);
     }
-  }, []);
+  }, [disconnected===true]);
 
   useEffect(() => { // This useEffect tracks changes in the lobby
     console.log("something is hapaapapapeenning");
