@@ -14,27 +14,37 @@
     padding-right: 37px;
     border-radius: 0.75em;
     background-color: #FB6D48;
+    margin-top: 10px;
     }
 
     &.space {
         margin-top: 50px;
     }
     &.header {
-    @include center;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    font-weight: bold;
-    font-size: 25px;
+      @include center;
+      display: flex;
+      justify-content: center; // Centers content horizontally in the flex container
+      align-items: center;     // Centers content vertically in the flex container
+      flex-direction: column;  // Stacks items vertically
+      font-weight: bold;
+      font-size: 25px;
+      position: fixed; // makes header not scroll
+      z-index: 9999; // makes header be topmost layer
+      top: 0;
+      left: 50%;              // Positions the left edge of the element at the center of the container
+      transform: translateX(-50%); // Shifts the element left by 50% of its own width, centering it
+      width: 100%;            // Optional: ensure it spans full width if needed for design
+      margin-top: 40px;
     }
+
     &.container {
-    margin-top: 155px;
-    min-height: 100px;
-    /* we include the center mixin defined in _theme.scss and save three duplicate lines :) */
-    @include center;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
+      margin-top: 155px;
+      min-height: 100px;
+      /* we include the center mixin defined in _theme.scss and save three duplicate lines :) */
+      @include center;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
   }
   &.form {
     margin-top: 10px;
@@ -76,39 +86,21 @@
     font-size: 20px;
     font-weight: bold;
   }
+
   &.button-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     margin-top: 20px;
+    position: fixed; // makes header not scroll
+    z-index: 9999; // makes button be topmost layer
+    bottom: 50px;
+    left: 50%;              // Positions the left edge of the element at the center of the container
+    transform: translateX(-50%); // Shifts the element left by 50% of its own width, centering it
+    width: 25%;            // Optional: ensure it spans full width if needed for design
+    margin-top: 40px;
   }
 }
-
-.member {
-    &.container {
-      margin: 0.5em 0;
-      width: 20em;
-      padding: 10px;
-      border-radius: $borderRadius;
-      display: flex;
-      align-items: center;
-      background: lighten($background, 5);
-    }
-    &.name {
-      font-weight: 300;
-      margin-left: 5px;
-    }
-    &.username {
-      font-weight: 500;
-      color: $accent;
-    }
-    &.id {
-      margin-left: auto;
-      margin-right: 10px;
-      font-family: $fontMono;
-      font-weight: 300;
-    }
-  }
 
   .game {
     &.container {

@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { api, handleError } from "helpers/api";
-import Player from "models/Player";
 import Lobby from "models/Lobby";
 import {useNavigate} from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/CreateGame.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import {connect, subscribe, send, getSubscribedToLobby} from "helpers/stompClient"
 
 const FormField = (props) => {
 
@@ -35,19 +33,6 @@ const CreateGame = () => {
   const [numberOfPlayers, setNumberOfPlayers] = useState<string>(null);
   const [hostName, setHostName] = useState<string>(null);
 
-  async function subscribeToLobby() {
-    const lobbyId = localStorage.getItem("lobbyId");
-    await subscribe(`/topic/lobby/${lobbyId}`, sendUsername);
-  }
-
-  function sendUsername() {
-    const lobbyId = localStorage.getItem("lobbyId");
-    const username = localStorage.getItem("user");
-    let selection = "none" // note: not actually making a selection here, just need to trigger lobby broadcast
-    let body = JSON.stringify({username, selection}); 
-    send("/app/test", body);
-  }
-
   const doCreateGame = async () => {
     try {
       // creating a new Lobby object which also creates the host player object
@@ -56,10 +41,7 @@ const CreateGame = () => {
       localStorage.setItem("user", lobby.hostName);
       localStorage.setItem("lobbyCode", lobby.lobbyCode);
       localStorage.setItem("lobbyId", lobby.lobbyId);
-      // upgrading to a websocket connection
-      await connect(subscribeToLobby);
-      console.log("I waited: CONNECT, SUBSCRIBE AND SEND FINISHED?");
-      navigate("/waitingroom");      
+      navigate("/waitingroom");            
     } catch (error) {
       alert(
         `Something went wrong during the creation of the game: \n${handleError(error)}`
@@ -110,7 +92,4 @@ const CreateGame = () => {
   );
 };
 
-/**
- * You can get access to the history object's properties via the useLocation, useNavigate, useParams, ... hooks.
- */
 export default CreateGame;

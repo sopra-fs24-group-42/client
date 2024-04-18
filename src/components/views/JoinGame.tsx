@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { api, handleError } from "helpers/api";
 import Player from "models/Player";
-import Lobby from "models/Lobby";
 import {useNavigate} from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/JoinGame.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import {connect, subscribe, send} from "helpers/stompClient"
 
 const FormField = (props) => {
 
@@ -35,19 +33,6 @@ const JoinGame = () => {
   const [lobbyCode, setLobbyCode] = useState<string>(null);
   const [username, setUsername] = useState<string>(null);
 
-  async function subscribeToLobby() {
-    const lobbyId = localStorage.getItem("lobbyId");
-    await subscribe(`/topic/lobby/${lobbyId}`, sendUsername);
-  }
-
-  function sendUsername() {
-    const lobbyId = localStorage.getItem("lobbyId");
-    const username = localStorage.getItem("user");
-    let selection = "none" // note: not actually making a selection here, just need to trigger lobby broadcast
-    let body = JSON.stringify({username, selection}); 
-    send("/app/test", body);
-  }
-
   const doJoinGame = async () => {
     try {
       // creating a new Player object out of the joining player
@@ -56,10 +41,7 @@ const JoinGame = () => {
       localStorage.setItem("user", player.username);
       localStorage.setItem("lobbyCode", player.lobbyCode);
       localStorage.setItem("lobbyId", player.lobbyId);
-      // upgrading to a websocket connection over Sockjs
-      await connect(subscribeToLobby);
-      console.log("I waited: CONNECT, SUBSCRIBE AND SEND FINISHED?");
-      navigate("/waitingroom");
+      navigate("/waitingroom");            
     } catch (error) {
       alert(
         `Something went wrong during the creation of the game: \n${handleError(error)}`
@@ -108,7 +90,4 @@ const JoinGame = () => {
   );
 };
 
-/**
- * You can get access to the history object's properties via the useLocation, useNavigate, useParams, ... hooks.
- */
 export default JoinGame;

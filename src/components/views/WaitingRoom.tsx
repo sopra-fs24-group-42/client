@@ -1,104 +1,106 @@
 import React, { useState, useEffect } from "react";
+import SockJS from "sockjs-client";
+import { over } from "stompjs";
+import { getDomain } from "../../helpers/getDomain";
 import { api, handleError } from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
-import Player from "models/Player";
-import Lobby from "models/Lobby";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useLocation} from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/WaitingRoom.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import { User, GameRoom } from "types";
-import {connect, subscribe, send, getLobby, getLobbySize} from "helpers/stompClient"
+import { User } from "types";
 
-const Member = ({ user }: {user: User}) => (
+const LobbyMember = ({ user }: { user: User }) => (
   <div className="player container">
     <div className="player username">{user.username}</div>
   </div>
 );
-Member.propTypes = {
+
+LobbyMember.propTypes = {
   user: PropTypes.object,
 };
 
-const gameRoom = ({ lobs }: {lobs: Lobby}) => (
-  <div className="player container">
-    <div className="player username">{lobs.lobbyCode}</div>
-  </div>
-);
-gameRoom.propTypes = {
-  lobs: PropTypes.object,
-};
-
-
-const FormField = (props) => {
-
-  return (
-    <div className="joinGame field">
-      <label className="joinGame label">{props.label}</label>
-      <input
-        className="joinGame input"
-        placeholder="enter here.."
-        value={props.value}
-        onChange={(e) => props.onChange(e.target.value)}
-      />
-    </div>
-  );
-};
-
-FormField.propTypes = {
-  label: PropTypes.string,
-  value: PropTypes.string,
-  onChange: PropTypes.func,
-};
-
-//var lobby = null;
-
-
 const WaitingRoom = () => {
-  var storedLobby = localStorage.getItem("lobby");
-  var playersInLobby = 0;
-  setTimeout(function() {
-    storedLobby = localStorage.getItem("lobby");
-  }, 800);
-  
-  //const { lobby } = useLobby();
-  //var lobby = null;
+
+  // variables needed for establishing websocket connection
+  var connection = false;
+  const baseURL = getDomain();
+  var stompClient = null;
+
   const navigate = useNavigate();
-  //var playersInLobby = 0;
-  //const [players, setPlayers] = useState<Player[]>([]);
-  //var [playersInLobby, setPlayersInLobby] = useState(0);
-  //var [lobby, setLobby] = useState<Lobby>({});
-  const [selection, setSelection] = useState<string>(null);
-  const lobbyCode = localStorage.getItem("lobbyCode");
-  console.log("inside waiting room: first?")
+  var [messageReceived, setMessageReceived] = useState(null);
+  const [playersInLobby, setPlayersInLobby] = useState<User []>([]); // this variable will store the list of players currently in the lobby
+
+  const lobbyCode = localStorage.getItem("lobbyCode"); // need this to display at the top of the waitingRoom
+  //const lobbyCode = getLobby().lobbyCode; // need this to display at the top of the waitingRoom
+  const lobbyId = localStorage.getItem("lobbyId");
+
+  const connect = async () => {
+    return new Promise((resolve, reject) => {
+      var socket = new SockJS(baseURL+"/game"); // creating a new SockJS object (essentially a websocket object)
+      stompClient = over(socket); // specifying that it's a special type of websocket connection (i.e. using sockJS)
+      stompClient.connect({}, function (frame) { // connecting to server websocket: instructions inside "function" will only be executed once we get something (i.e. a connect frame back from the server). Parameter "frame" is what we get from the server. 
+        console.log("socket was successfully connected: " + frame);
+        connection = true;
+        setTimeout(async function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
+          //const response = await callback();
+          console.log("I waited: I received  MESSAGE frame back based on subscribing!!");
+          resolve(stompClient);
+        }, 500);
+      })
+    });
+  };
+
+  const subscribe = async (destination) => { 
+    return new Promise( (resolve, reject) => {
+      stompClient.subscribe(destination, async function(message) { 
+        // all of this only gets executed when message is received
+        console.log("MESSAGE IN SUBSCRIBE: " + JSON.stringify(message));
+        localStorage.setItem("lobby", message.body);
+        setMessageReceived(JSON.parse(message.body));
+        setPlayersInLobby(JSON.parse(message.body).players);
+        resolve(JSON.parse(message.body));
+      });
+    }); 
+  }
 
   useEffect(() => {
-    setTimeout(function() {
-      try{
-        storedLobby = localStorage.getItem("lobby");
-        playersInLobby = storedLobby["players"].length;
-        console.log("playersssss: " + playersInLobby);
-      } catch (e) { playersInLobby = 0;
-        console.log("no players yet: " + playersInLobby);}
-    }, 800);
+    if(!connection) { 
+      const connectAndSubscribe = async () => { 
+        try {
+          await connect();
+          await subscribe(`/topic/lobby/${lobbyId}`);      
+        } catch (error) {
+          console.error("There was an error connecting or subscribing: ", error);
+        }
+      };
+      connectAndSubscribe();}
 
-  },[playersInLobby]);
+    if (messageReceived && messageReceived.players) {
+      setPlayersInLobby(messageReceived.players);
+    }
+  }, []);
 
-  const doSelection = () => {
-    const lobbyId = localStorage.getItem("lobbyId");
-    let username = localStorage.getItem("user");
-    let body = JSON.stringify({username, selection});
-    send(`/topic/lobby/${lobbyId}`, body);
-  }
+  useEffect(() => {
+    console.log("something is hapaapapapeenning");
+    if (messageReceived && messageReceived.players) {
+      setPlayersInLobby(messageReceived.players);
+    }
+  }, [messageReceived]);  // Proper handling when messageReceived updates
 
   let content = <Spinner />;
 
-  if (playersInLobby !== 0) {
+  if (messageReceived !== null) {
     content = (
       <div className ="game">
-        <div className= "WaitingRoom header">there are players here!</div>
-        <div className= "WaitingRoom header">{storedLobby}</div>
-
+        <ul className= "game user-list">
+          {playersInLobby.map((user: User) => (
+            <li key={user.username}>
+              < LobbyMember user={user} />
+            </li>
+          ))}
+        </ul>
       </div>
     );
   }
@@ -112,21 +114,14 @@ const WaitingRoom = () => {
       </div>
       <div className= "waitingRoom container">
         {content}
-        <div className="joinGame form">
-          <FormField
-            label="Who is your selection?"
-            value={selection}
-            onChange={(e: string) => setSelection(e)}
-          />
-          <div className="joinGame button-container">
-            <Button
-              width="100%"
-              height="40px"
-              onClick={() => doSelection()}
-            >
-              send selection
-            </Button>
-          </div>
+        <div className="waitingRoom button-container">
+          <Button
+            width="100%"
+            height="40px"
+            disabled={true}
+          >
+            Start Game
+          </Button>
         </div>
       </div>
     </BaseContainer>
