@@ -96,7 +96,7 @@ const WaitingRoom = () => {
       setNumberOfPlayers(messageReceived.numberOfPlayers);
       setHostName(messageReceived.hostName);
     }
-  }, [disconnected===true]);
+  }, []);
 
   useEffect(() => { // This useEffect tracks changes in the lobby
     console.log("something is hapaapapapeenning");
@@ -107,7 +107,7 @@ const WaitingRoom = () => {
       setHostName(messageReceived.hostName);
       console.log("number of players in lobby: " + numberOfPlayersInLobby);
     }
-  }, [messageReceived]); 
+  }, [messageReceived, disconnected===true]); 
 
   const checkIfAllPlayersHere = () => {
     if(numberOfPlayers === numberOfPlayersInLobby) {
