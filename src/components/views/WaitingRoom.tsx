@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import SockJS from "sockjs-client";
+import { over, client } from "stompjs";
+import { getDomain } from "../../helpers/getDomain";
 import { api, handleError } from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
 import Lobby from "models/Lobby";
@@ -8,7 +11,7 @@ import "styles/views/WaitingRoom.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { User } from "types";
-import { connect, subscribe, getLobby, getLobbySize, getConnection} from "helpers/stompClient";
+import { getLobby, getLobbySize, getConnection} from "helpers/stompClient";
 import { useLobby} from "helpers/lobbyContext";
 
 const LobbyMember = ({ user }: { user: User }) => (
@@ -22,84 +25,77 @@ LobbyMember.propTypes = {
 };
 
 const WaitingRoom = () => {
+
+  // variables needed for establishing websocket connection
+  var ws = null;
+  var connection = false;
+  const baseURL = getDomain();
+  var stompClient = null;
+
   const navigate = useNavigate();
-  //const location = useLocation();
-  //let data = location.state;
-  var [messageReceived, setMessageReceived] = useState();
+  var [messageReceived, setMessageReceived] = useState(null);
   const [playersInLobby, setPlayersInLobby] = useState<User []>([]); // this variable will store the list of players currently in the lobby
-  //localStorage.setItem("data", data);
-  //console.log("DATA: " + JSON.stringify(data));
-  const lobbyCode = getLobby().lobbyCode; // need this to display at the top of the waitingRoom
-  //var messageReceived = null; 
-  //const [currentLobby, setCurrentLobby] = useState({}); // this variable will store the lobby object (dictionary)
-  //const [messageReceived, setMessageReceived] = useState(null);
-  //const [numberOfPlayersInLobby, setNumberOfPlayersInLobby] = useState(0);
+
+  const lobbyCode = localStorage.getItem("lobbyCode"); // need this to display at the top of the waitingRoom
+  //const lobbyCode = getLobby().lobbyCode; // need this to display at the top of the waitingRoom
+  const lobbyId = localStorage.getItem("lobbyId");
+
+  const connect = async () => {
+    return new Promise((resolve, reject) => {
+      var socket = new SockJS(baseURL+"/game"); // creating a new SockJS object (essentially a websocket object)
+      stompClient = over(socket); // specifying that it's a special type of websocket connection (i.e. using sockJS)
+      stompClient.connect({}, function (frame) { // connecting to server websocket: instructions inside "function" will only be executed once we get something (i.e. a connect frame back from the server). Parameter "frame" is what we get from the server. 
+        console.log("socket was successfully connected: " + frame);
+        connection = true;
+        setTimeout(async function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
+          //const response = await callback();
+          console.log("I waited: I received  MESSAGE frame back based on subscribing!!");
+          resolve(stompClient);
+        }, 500);
+      })
+    });
+  };
+
+  const subscribe = async (destination) => { // we call this function with destination and sendUsername as parameters (where sendUsername is a function that sends the user's username)
+    return new Promise( (resolve, reject) => {
+      stompClient.subscribe(destination, async function(message) { // all of this only gets executed when message is received
+        console.log("MESSAGE IN SUBSCRIBE: " + JSON.stringify(message));
+        localStorage.setItem("lobby", message.body);
+        setMessageReceived(JSON.parse(message.body));
+        setPlayersInLobby(JSON.parse(message.body).players);
+        //console.log("I set messageReceived: " + messageReceived);
+        resolve(JSON.parse(message.body));
+      });
+    }); 
+  }
 
   useEffect(() => {
-    if(!getConnection()) {
-    const connectAndSubscribe = async () => {
+    if(!connection) { // TODO: make this async function?
+    const connectAndSubscribe = async () => { // try calling subscribe explicitly and handling updates inside callback!
       try {
-        await connect(subscribeToLobby);
+        await connect();
+        await subscribe(`/topic/lobby/${lobbyId}`);      
       } catch (error) {
         console.error("There was an error connecting or subscribing: ", error);
       }
     };
     connectAndSubscribe();}
-    //setPlayersInLobby(messageReceived.players);
-    //return {};
+
+    if (messageReceived && messageReceived.players) {
+      setPlayersInLobby(messageReceived.players);
+    }
   }, []);
 
   useEffect(() => {
-    if (messageReceived) {
+    console.log("something is hapaapapapeenning");
+    if (messageReceived && messageReceived.players) {
       setPlayersInLobby(messageReceived.players);
     }
   }, [messageReceived]);  // Proper handling when messageReceived updates
 
-  //try {
-    //await connect(subscribeToLobby);
-    //console.log("I waited: CONNECT, SUBSCRIBE AND SEND FINISHED?");
-  //} catch (e) {
-    //console.log("There was an errror: " + e);
-  //};
-
-  async function subscribeToLobby() {
-    const lobbyId = localStorage.getItem("lobbyId");
-    const message = await subscribe(`/topic/lobby/${lobbyId}`);
-    console.log("MESSAGE IN SUBSCRIBE: " + JSON.stringify(message));
-    setMessageReceived(message);
-    //messageReceived = message;
-    //setNumberOfPlayersInLobby(message.players.length);
-    //setCurrentLobby(message);
-    console.log("I set messageReceived: " + messageReceived);
-  }
-
-  //useEffect(() => {
-    //setPlayersInLobby(messageReceived.players);
-  //}, [messageReceived]);
-  
-  //async function doSetup() {
-    //return new Promise((resolve, reject) => {
-      //try {
-        //await connect(subscribeToLobby);
-      //} catch (e) {
-        //console.log("There was an error: " + e);
-      //}
-    //}, function(error) {
-
-    //});
-  //}
-
-
-  //useEffect( () => {
-
-   // data = location.state
-    //setPlayersInLobby(data.players);
-    //console.log("something's happening");
-  //}, [location]);
-
   let content = <Spinner />;
 
-  if (messageReceived) {
+  if (messageReceived !== null) {
     content = (
       <div className ="game">
         <ul className= "game user-list">
