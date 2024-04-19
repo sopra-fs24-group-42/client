@@ -94,7 +94,9 @@ const WaitingRoom = () => {
           console.error("There was an error connecting or subscribing: ", error);
         }
       };
-      connectAndSubscribe();}
+      setTimeout(async function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
+        connectAndSubscribe();
+      }, 1000);}
 
     if (messageReceived && messageReceived.players) {
       setPlayersInLobby(messageReceived.players);
@@ -139,7 +141,9 @@ const WaitingRoom = () => {
     }
   }
 
-  useEffect
+  const doTest = () => {
+    navigate("/rolereveal", {});
+  }
 
   let content = <Spinner />;
 
@@ -174,10 +178,14 @@ const WaitingRoom = () => {
             width="100%"
             height="40px"
             disabled={checkIfAllPlayersHere() === false}
-            onClick={doStartGame()}
+            onClick={() => doStartGame()}
           >
             Start Game
           </Button>}
+          <Button
+          onClick={() => doTest()}>
+            Test: will remove later
+          </Button>
         </div>
       </div>
     </BaseContainer>
