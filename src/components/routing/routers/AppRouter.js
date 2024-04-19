@@ -9,8 +9,6 @@ import JoinGame from "../../views/JoinGame";
 import WaitingRoom from "../../views/WaitingRoom";
 import RoleReveal from "../../views/RoleReveal";
 
-
-
 /**
  * Main router of your application.
  * In the following class, different routes are rendered. In our case, there is a Login Route with matches the path "/login"
