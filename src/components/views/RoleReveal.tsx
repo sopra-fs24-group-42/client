@@ -13,7 +13,7 @@ import { User } from "types";
 
 
 const RoleReveal = () => {
-    console.log("I AM ON PAGE ROLE REVEAL NOW");
+  console.log("I AM ON PAGE ROLE REVEAL NOW");
 
   // variables needed for establishing websocket connection
   const baseURL = getDomain();
@@ -69,15 +69,15 @@ const RoleReveal = () => {
 
   useEffect(() => { // This is executed once upon mounting of waitingRoom --> establishes ws connection & subscribes
     //if(!connection) { 
-      //const connectAndSubscribe = async () => { 
-        //try {
-          //await connect();
-          //await subscribe(`/topic/lobby/${lobbyId}`);      
-        //} catch (error) {
-          //console.error("There was an error connecting or subscribing: ", error);
-        //}
-      //};
-      //connectAndSubscribe();}
+    //const connectAndSubscribe = async () => { 
+    //try {
+    //await connect();
+    //await subscribe(`/topic/lobby/${lobbyId}`);      
+    //} catch (error) {
+    //console.error("There was an error connecting or subscribing: ", error);
+    //}
+    //};
+    //connectAndSubscribe();}
 
     if (messageReceived && messageReceived.players) {
       console.log("I received a MESSAGE AGAIN!")
