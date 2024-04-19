@@ -7,6 +7,8 @@ import FrontPage from "../../views/FrontPage";
 import CreateGame from "../../views/CreateGame";
 import JoinGame from "../../views/JoinGame";
 import WaitingRoom from "../../views/WaitingRoom";
+import RoleReveal from "../../views/RoleReveal";
+
 
 
 /**
@@ -41,6 +43,10 @@ const AppRouter = () => {
 
         <Route path="/waitingroom" element={<LoginGuard />}>
           <Route path="/waitingroom" element={<WaitingRoom />} />
+        </Route>
+
+        <Route path="/rolereveal" element={<LoginGuard />}>
+          <Route path="/rolereveal" element={<RoleReveal />} />
         </Route>
 
         <Route path="/" element={
