@@ -183,7 +183,7 @@ const WaitingRoom = () => {
             Start Game
           </Button>}
           <Button
-          onClick={() => doTest()}>
+            onClick={() => doTest()}>
             Test: will remove later
           </Button>
         </div>
