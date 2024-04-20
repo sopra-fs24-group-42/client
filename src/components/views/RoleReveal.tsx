@@ -6,11 +6,10 @@ import { api, handleError } from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
 import {useNavigate, useLocation} from "react-router-dom";
 import { Button } from "components/ui/Button";
-import "styles/views/WaitingRoom.scss";
+import "styles/views/RoleReveal.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { User } from "types";
-
 
 const RoleReveal = () => {
   console.log("I AM ON PAGE ROLE REVEAL NOW");
@@ -18,18 +17,31 @@ const RoleReveal = () => {
   // variables needed for establishing websocket connection
   const baseURL = getDomain();
   const navigate = useNavigate();
+  const role = useLocation().state; //this is the player's role
+  console.log(role);
+
+  let connection = false;
   var stompClient = null;
+  var subscription = null;
 
   // variables needed for dynamic rendering of waitingRoom
   const [messageReceived, setMessageReceived] = useState(null);
-  const [numberOfPlayers, setNumberOfPlayers] = useState(0);
   const [hostName, setHostName] = useState(null);
-  const [disconnected, setDisconnected] = useState(false);
+  //const [disconnected, setDisconnected] = useState(false);
 
   // variables needed for UI
-  const waitingHeading = "Waiting for all players to join...";
-  const readyHeading = `Everyone's here! ${hostName}, start the game.`;
-  const lobbyCode = localStorage.getItem("lobbyCode"); // need this to display at the top of the waitingRoom
+  const werewolfText = "Werewolf";
+  const werewolfImage = "roleReveal werewolf";
+  const werewolfInstructions = "As a werewolf, your goal is to kill\n everyone without them realizing it's you!";
+  const villagerText = "Villager";
+  const villagerImage = "roleReveal villager";
+  const villagerInstructions = "As a villager, your goal is to survive and identify the werewolves!";
+  const seerText = "Seer";
+  const seerImage = "roleReveal seer";
+  const seerInstructions = "As a seer, you can choose to see a player's role during the night.";
+  let displayText = "";
+  let displayImage = "";
+  let displayInstructions = "";
   
   // variables needed for conditional button display
   const lobbyId = localStorage.getItem("lobbyId");
@@ -48,7 +60,6 @@ const RoleReveal = () => {
         }, 500);
       });
       stompClient.onclose = reason => {
-        setDisconnected(true);
         console.log("Socket was closed, Reason: " + reason);
         reject(reason);}
     });
@@ -56,43 +67,49 @@ const RoleReveal = () => {
 
   const subscribe = async (destination) => { 
     return new Promise( (resolve, reject) => {
-      stompClient.subscribe(destination, async function(message) { 
+      subscription = stompClient.subscribe(destination, async function(message) { 
         console.log("I AM STILL SUBSCRIBED AND RECEIVED A MESSAGE");
         // all of this only gets executed when message is received
         console.log("this is the message: " + JSON.stringify(message));
         //localStorage.setItem("lobby", message.body);
         setMessageReceived(JSON.parse(message.body));
-        resolve(JSON.parse(message.body));
+        resolve(subscription);
       });
     }); 
   }
 
-  useEffect(() => { // This is executed once upon mounting of waitingRoom --> establishes ws connection & subscribes
-    //if(!connection) { 
-    //const connectAndSubscribe = async () => { 
-    //try {
-    //await connect();
-    //await subscribe(`/topic/lobby/${lobbyId}`);      
-    //} catch (error) {
-    //console.error("There was an error connecting or subscribing: ", error);
-    //}
-    //};
-    //connectAndSubscribe();}
+  useEffect(() => { // This is executed once upon mounting of roleReveal --> establishes ws connection & subscribes
+    if(!connection) { 
+      const connectAndSubscribe = async () => { 
+        try {
+          await connect();
+          subscription = await subscribe(`/topic/lobby/${lobbyId}`);
+          //stompClient.send(`/topic/lobby/${lobbyId}`, headers, body);     
+        } catch (error) {
+          console.error("There was an error connecting or subscribing: ", error);
+        }
+      };
+      connectAndSubscribe();
+    }
+    if (messageReceived) {
+      console.log("I received a MESSAGE AGAIN!");
+    }
 
-    if (messageReceived && messageReceived.players) {
-      console.log("I received a MESSAGE AGAIN!")
+    return () => {
+      if(subscription) {
+        subscription.unsubscribe();
+      }
+      if(stompClient) {
+        stompClient.disconnect();
+      }
     }
   }, []);
 
-  useEffect(() => { // This useEffect tracks changes in the lobby
+  useEffect(() => { // This useEffect tracks changes in the lobby --> do I need this for roleReveal??
     console.log("I am in Role reveal useEffect now!");
     if (messageReceived && messageReceived.players) {
-      // TODO: include if statement here that checks if the role field of the user (i.e. the user that is you, not the one who joined) is null or not
-      // and if not, then navigate to roleReveal and pass role as props.
-      // Also, might have to unsubscribe at this point here as well (depends on if I can (re)subscribe multiple times w/o consequences and always trigger broadcast or not!)
-      // if(messageReceived.players.${user}.role !== null) {navigate("/rolereveal", {state: messageReceived.players.${user}.role});}
     }
-  }, [messageReceived, disconnected===true]); //disconnected===true is a WIP: hoping this will update the lobby view to show that a user dropped out.
+  }, [messageReceived]); //disconnected===true is a WIP: hoping this will update the lobby view to show that a user dropped out.
 
   const doSendMessageToServer = () => {
     const headers = {
@@ -107,25 +124,38 @@ const RoleReveal = () => {
     }
   }
 
-  const doTest = () => {
-    navigate("/rolereveal");
+  let content = <Spinner />;
+  if (role === "Werewolf") {
+    displayText = werewolfText;
+    content = <div className="roleReveal werewolf"></div>
+    displayInstructions = werewolfInstructions;
   }
-
+  else if (role === "seer") {
+    displayText = seerText;
+    content = <div className="roleReveal seer"></div>
+    displayInstructions = seerInstructions;
+  }
+  else if (role === "villager") {
+    displayText = villagerText;
+    content = <div className="roleReveal villager"></div>
+    displayInstructions = villagerInstructions;
+  }
 
   return (
     <BaseContainer>
-      <div className= "waitingRoom header">This is the role reveal page 
-        <div className= "waitingRoom highlight">Under construction!
-        </div>
+      <div className= "roleReveal header1">Shhhh! Keep this a secret. 
+        <div className= "roleReveal header2" >Your role is...</div>
       </div>
-      <div className= "waitingRoom container">
-        <div className="waitingRoom button-container">
+      <div className= "roleReveal container">
+        <div className= "roleReveal highlight" >{displayText}</div>
+        <div className= "roleReveal instructions" >{displayInstructions}</div>
+        <div className="roleReveal button-container">
           <Button
             width="100%"
             height="40px"
-            onClick={() => doSendMessageToServer()}
+            onClick={()=> doSendMessageToServer()}
           >
-            Test Send Message to Server
+            Ok, got it!
           </Button>
         </div>
       </div>

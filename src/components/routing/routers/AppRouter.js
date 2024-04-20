@@ -22,8 +22,24 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Navigate to="/frontpage" replace />} />
+        <Route path="/frontpage" element={<FrontPage />} />
+        <Route path="/creategame" element={<CreateGame />} />
+        <Route path="/joingame" element={<JoinGame />} />
+        <Route path="/waitingroom" element={<WaitingRoom />} />
+        <Route path="/rolereveal" element={<RoleReveal />} />
 
-        <Route path="/frontpage/*" element={<GameGuard />}>
+        <Route path="/game/*" element={<GameGuard><GameRouter /></GameGuard>} />
+
+      </Routes>
+    </BrowserRouter>
+  );
+};
+
+//TO INCLUDE A GUARD, THIS IS THE NOTATION: 
+// <Route path="/frontpage" element={<LoginGuard><FrontPage /></LoginGuard>} />
+
+/*<Route path="/frontpage/*" element={<GameGuard />}>
           <Route path="/frontpage/*" element={<GameRouter base="/game"/>} />
         </Route>
 

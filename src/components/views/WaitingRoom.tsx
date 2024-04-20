@@ -22,11 +22,14 @@ LobbyMember.propTypes = {
 };
 
 const WaitingRoom = () => {
-
   // variables needed for establishing websocket connection
-  let connection = false;
+  const [connection, setConnection] = useState(null);
+  //const [stompClient, setStompClient] = useState(null);
+  //const [subscription, setSubscription] = useState(null);
+  //let connection = false;
   const baseURL = getDomain();
   var stompClient = null;
+  var subscription = null;
 
   const navigate = useNavigate();
 
@@ -49,19 +52,22 @@ const WaitingRoom = () => {
 
   const connect = async () => {
     return new Promise((resolve, reject) => {
-      var socket = new SockJS(baseURL+"/game"); // creating a new SockJS object (essentially a websocket object)
+      const socket = new SockJS(baseURL+"/game"); // creating a new SockJS object (essentially a websocket object)
+      //const client = over(socket); // specifying that it's a special type of websocket connection (i.e. using sockJS)
       stompClient = over(socket); // specifying that it's a special type of websocket connection (i.e. using sockJS)
       stompClient.connect({}, function (frame) { // connecting to server websocket: instructions inside "function" will only be executed once we get something (i.e. a connect frame back from the server). Parameter "frame" is what we get from the server. 
         console.log("socket was successfully connected: " + frame);
-        connection = true;
-        setTimeout( function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
+        setConnection(true);
+        //connection = true;
+        setTimeout(function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
           //const response = await callback();
           console.log("I waited: I received  MESSAGE frame back based on subscribing!!");
           resolve(stompClient);
         }, 500);
       });
       stompClient.onclose = reason => {
-        connection = false;
+        setConnection(false);
+        //connection = false;
         setDisconnected(true);
         console.log("Socket was closed, Reason: " + reason);
         reject(reason);}
@@ -70,7 +76,9 @@ const WaitingRoom = () => {
 
   const subscribe = async (destination) => { 
     return new Promise( (resolve, reject) => {
-      stompClient.subscribe(destination, async function(message) { 
+      //stompClient.subscribe(destination, async function(message) {
+      subscription = stompClient.subscribe(destination, async function(message) { 
+        console.log("Subscription: " + JSON.stringify(subscription));
         // all of this only gets executed when message is received
         console.log("MESSAGE IN SUBSCRIBE: " + JSON.stringify(message));
         //localStorage.setItem("lobby", message.body);
@@ -79,7 +87,7 @@ const WaitingRoom = () => {
         setNumberOfPlayersInLobby(JSON.parse(message.body).players.length);
         setNumberOfPlayers(JSON.parse(message.body).numberOfPlayers);
         setHostName(JSON.parse(message.body).hostName);
-        resolve(JSON.parse(message.body));
+        resolve(subscription);
       });
     }); 
   }
@@ -89,22 +97,33 @@ const WaitingRoom = () => {
       const connectAndSubscribe = async () => { 
         try {
           await connect();
-          await subscribe(`/topic/lobby/${lobbyId}`);      
+          subscription = await subscribe(`/topic/lobby/${lobbyId}`);     
         } catch (error) {
           console.error("There was an error connecting or subscribing: ", error);
         }
       };
-      setTimeout(async function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
-        connectAndSubscribe();
-      }, 1000);}
-
-    if (messageReceived && messageReceived.players) {
-      setPlayersInLobby(messageReceived.players);
-      setNumberOfPlayersInLobby((messageReceived.players).length);
-      setNumberOfPlayers(messageReceived.numberOfPlayers);
-      setHostName(messageReceived.hostName);
+      connectAndSubscribe();
+      if (messageReceived && messageReceived.players) {
+        setPlayersInLobby(messageReceived.players);
+        setNumberOfPlayersInLobby((messageReceived.players).length);
+        setNumberOfPlayers(messageReceived.numberOfPlayers);
+        setHostName(messageReceived.hostName);
+      }
     }
-  }, []);
+
+    return () => {
+      if(subscription) {
+        subscription.unsubscribe();
+      }
+      if(stompClient) {
+        stompClient.disconnect();
+      }
+    }
+
+    //return (subscription);
+    //ACHTUNG: added disconnected === true and stompClient === null here to try and implement automatic reconnection upon loss of connection to websockets
+    // I cannot test it without deploying though... So if the code breaks it's likely because of this 
+  }, [connection === false]);
 
   useEffect(() => { // This useEffect tracks changes in the lobby
     console.log("something is hapaapapapeenning");
@@ -141,11 +160,16 @@ const WaitingRoom = () => {
     }
   }
 
-  const doTest = () => {
-    navigate("/rolereveal", {});
+  const doTest = (subscription) => {
+    let role = "Werewolf";
+    console.log("Now stompClient object is:" + stompClient);
+    console.log("Now subscription object is:" + subscription);
+    //subscription.unsubscribe();
+    navigate("/rolereveal", {state: role});
   }
 
   let content = <Spinner />;
+  let headerMessage = "";
 
   if (messageReceived !== null) {
     content = (
@@ -159,13 +183,17 @@ const WaitingRoom = () => {
         </ul>
       </div>
     );
+    if (checkIfAllPlayersHere() === true) {
+      headerMessage = readyHeading;}
+    else {headerMessage = waitingHeading;}
   }
 
+  //content checkIfAllPlayersHere() ? readyHeading : waitingHeading}
   return (
     <BaseContainer>
       <div className= "waitingRoom header">Welcome to game 
         <div className= "waitingRoom highlight">{lobbyCode}
-          <div className= "waitingRoom heading"> {checkIfAllPlayersHere() ? readyHeading : waitingHeading}</div>
+          <div className= "waitingRoom heading"> {headerMessage}</div>
         </div>
       </div>
       <div>
@@ -183,7 +211,7 @@ const WaitingRoom = () => {
             Start Game
           </Button>}
           <Button
-            onClick={() => doTest()}>
+            onClick={() => doTest(subscription)}>
             Test: will remove later
           </Button>
         </div>
