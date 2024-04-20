@@ -31,19 +31,15 @@ const AppRouter = () => {
 
         <Route path="/game/*" element={<GameGuard><GameRouter /></GameGuard>} />
 
-        </Routes>
+      </Routes>
     </BrowserRouter>
   );
 };
 
-
-
-
-
 //TO INCLUDE A GUARD, THIS IS THE NOTATION: 
 // <Route path="/frontpage" element={<LoginGuard><FrontPage /></LoginGuard>} />
 
-        /*<Route path="/frontpage/*" element={<GameGuard />}>
+/*<Route path="/frontpage/*" element={<GameGuard />}>
           <Route path="/frontpage/*" element={<GameRouter base="/game"/>} />
         </Route>
 

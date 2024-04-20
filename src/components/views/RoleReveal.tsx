@@ -97,13 +97,13 @@ const RoleReveal = () => {
     }
 
     return () => {
-        if(subscription) {
-          subscription.unsubscribe();
-        }
-        if(stompClient) {
-          stompClient.disconnect();
-        }
+      if(subscription) {
+        subscription.unsubscribe();
       }
+      if(stompClient) {
+        stompClient.disconnect();
+      }
+    }
   }, []);
 
   useEffect(() => { // This useEffect tracks changes in the lobby --> do I need this for roleReveal??
@@ -148,8 +148,8 @@ const RoleReveal = () => {
         <div className= "roleReveal header2" >Your role is...</div>
       </div>
       <div className= "roleReveal container">
-      <div className= "roleReveal highlight" >{displayText}</div>
-      <div className= "roleReveal instructions" >{displayInstructions}</div>
+        <div className= "roleReveal highlight" >{displayText}</div>
+        <div className= "roleReveal instructions" >{displayInstructions}</div>
         <div className="roleReveal button-container">
           <Button
             width="100%"

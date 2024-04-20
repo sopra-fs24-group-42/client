@@ -102,14 +102,13 @@ const WaitingRoom = () => {
           console.error("There was an error connecting or subscribing: ", error);
         }
       };
-        connectAndSubscribe();
-    if (messageReceived && messageReceived.players) {
-      setPlayersInLobby(messageReceived.players);
-      setNumberOfPlayersInLobby((messageReceived.players).length);
-      setNumberOfPlayers(messageReceived.numberOfPlayers);
-      setHostName(messageReceived.hostName);
-    }
-      
+      connectAndSubscribe();
+      if (messageReceived && messageReceived.players) {
+        setPlayersInLobby(messageReceived.players);
+        setNumberOfPlayersInLobby((messageReceived.players).length);
+        setNumberOfPlayers(messageReceived.numberOfPlayers);
+        setHostName(messageReceived.hostName);
+      }
     }
 
     return () => {
@@ -212,7 +211,7 @@ const WaitingRoom = () => {
             Start Game
           </Button>}
           <Button
-          onClick={() => doTest(subscription)}>
+            onClick={() => doTest(subscription)}>
             Test: will remove later
           </Button>
         </div>
