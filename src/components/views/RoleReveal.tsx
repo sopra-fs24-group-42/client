@@ -17,19 +17,19 @@ const RoleReveal = () => {
   // variables needed for establishing websocket connection
   const baseURL = getDomain();
   const navigate = useNavigate();
-  const role = useLocation().state; //this is the player's role
-  console.log(role);
 
-  let connection = false;
+  const [connection, setConnection] = useState(false);
   var stompClient = null;
   var subscription = null;
 
-  // variables needed for dynamic rendering of waitingRoom
+  // variables needed for role reveal
   const [messageReceived, setMessageReceived] = useState(null);
-  const [hostName, setHostName] = useState(null);
+  const username = localStorage.getItem("user");
+  const [role, setRole] = useState(null); 
   //const [disconnected, setDisconnected] = useState(false);
 
   // variables needed for UI
+  // TODO: Move text variables to another file so it's not so cluttered here
   const werewolfText = "Werewolf";
   const werewolfImage = "roleReveal werewolf";
   const werewolfInstructions = "As a werewolf, your goal is to kill\n everyone without them realizing it's you!";
@@ -39,11 +39,10 @@ const RoleReveal = () => {
   const seerText = "Seer";
   const seerImage = "roleReveal seer";
   const seerInstructions = "As a seer, you can choose to see a player's role during the night.";
-  let displayText = "";
   let displayImage = "";
-  let displayInstructions = "";
+  let displayText = "";
+
   
-  // variables needed for conditional button display
   const lobbyId = localStorage.getItem("lobbyId");
   const user = localStorage.getItem("user");
 
@@ -53,6 +52,7 @@ const RoleReveal = () => {
       stompClient = over(socket); // specifying that it's a special type of websocket connection (i.e. using sockJS)
       stompClient.connect({}, function (frame) { // connecting to server websocket: instructions inside "function" will only be executed once we get something (i.e. a connect frame back from the server). Parameter "frame" is what we get from the server. 
         console.log("socket was successfully connected: " + frame);
+        setConnection(true);
         setTimeout( function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
           //const response = await callback();
           console.log("I waited: I received  MESSAGE frame back based on subscribing!!");
@@ -61,6 +61,7 @@ const RoleReveal = () => {
       });
       stompClient.onclose = reason => {
         console.log("Socket was closed, Reason: " + reason);
+        setConnection(false);
         reject(reason);}
     });
   };
@@ -73,6 +74,7 @@ const RoleReveal = () => {
         console.log("this is the message: " + JSON.stringify(message));
         //localStorage.setItem("lobby", message.body);
         setMessageReceived(JSON.parse(message.body));
+        setRole(JSON.parse(message.body).playerMap[`${username}`].roleName);
         resolve(subscription);
       });
     }); 
@@ -89,11 +91,13 @@ const RoleReveal = () => {
           console.error("There was an error connecting or subscribing: ", error);
         }
       };
-      connectAndSubscribe();
+      setTimeout(function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
+        connectAndSubscribe();}, 600);
     }
-
     if (messageReceived) {
       console.log("I received a MESSAGE AGAIN!");
+      setRole(messageReceived.playerMap[`${username}`].roleName);
+      console.log(role);
     }
 
     return () => {
@@ -106,39 +110,42 @@ const RoleReveal = () => {
     }
   }, []);
 
-  useEffect(() => { // This useEffect tracks changes in the lobby --> do I need this for roleReveal??
+  useEffect(() => { // This useEffect tracks changes in the lobby --> do I need this for roleReveal?
     console.log("I am in Role reveal useEffect now!");
     if (messageReceived && messageReceived.players) {
+      setRole(messageReceived.playerMap[`${username}`].roleName);
+      console.log(role);
     }
-  }, [messageReceived]); //disconnected===true is a WIP: hoping this will update the lobby view to show that a user dropped out.
+  }, [messageReceived]); 
 
   const doSendMessageToServer = () => {
     const headers = {
       "Content-type": "application/json"
     };
     const body = JSON.stringify({lobbyId});
+    // Again, this does not work here. For some reason StompClient becomes null. 
     try{
-      stompClient.send(`/topic/lobby/${lobbyId}`, headers, body);
-      console.log("message sent!");
+      //stompClient.send(`/topic/lobby/${lobbyId}`, headers, body);
+      //console.log("message sent!");
     } catch (e) {
       console.log("Something went wrong while sending a message to the server :/ " + e);
     }
   }
 
-  let content = <Spinner />;
+  let displayInstructions = <Spinner />;
   if (role === "Werewolf") {
     displayText = werewolfText;
-    content = <div className="roleReveal werewolf"></div>
+    //content = <div className="roleReveal werewolf"></div>
     displayInstructions = werewolfInstructions;
   }
-  else if (role === "seer") {
+  else if (role === "Seer") {
     displayText = seerText;
-    content = <div className="roleReveal seer"></div>
+    //content = <div className="roleReveal seer"></div>
     displayInstructions = seerInstructions;
   }
-  else if (role === "villager") {
+  else if (role === "Villager") {
     displayText = villagerText;
-    content = <div className="roleReveal villager"></div>
+    //content = <div className="roleReveal villager"></div>
     displayInstructions = villagerInstructions;
   }
 
