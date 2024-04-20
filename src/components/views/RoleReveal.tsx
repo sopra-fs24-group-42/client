@@ -21,12 +21,15 @@ const RoleReveal = () => {
   const [connection, setConnection] = useState(false);
   var stompClient = null;
   var subscription = null;
+  //var socket = new SockJS(baseURL+"/game"); // creating a new SockJS object (essentially a websocket object)
+  //var stompClient = over(socket); // specifying that it's a special type of websocket connection (i.e. using sockJS)
 
   // variables needed for role reveal
   const [messageReceived, setMessageReceived] = useState(null);
   const username = localStorage.getItem("user");
   const [role, setRole] = useState(null); 
-  //const [disconnected, setDisconnected] = useState(false);
+  const [ready, setReady] = useState(false);
+  let gameState = "WAITINGROOM";
 
   // variables needed for UI
   // TODO: Move text variables to another file so it's not so cluttered here
@@ -42,13 +45,12 @@ const RoleReveal = () => {
   let displayImage = "";
   let displayText = "";
 
-  
   const lobbyId = localStorage.getItem("lobbyId");
   const user = localStorage.getItem("user");
 
   const connect = async () => {
     return new Promise((resolve, reject) => {
-      var socket = new SockJS(baseURL+"/game"); // creating a new SockJS object (essentially a websocket object)
+      const socket = new SockJS(baseURL+"/game"); // creating a new SockJS object (essentially a websocket object)
       stompClient = over(socket); // specifying that it's a special type of websocket connection (i.e. using sockJS)
       stompClient.connect({}, function (frame) { // connecting to server websocket: instructions inside "function" will only be executed once we get something (i.e. a connect frame back from the server). Parameter "frame" is what we get from the server. 
         console.log("socket was successfully connected: " + frame);
@@ -80,13 +82,27 @@ const RoleReveal = () => {
     }); 
   }
 
+  const sendMessage = () => {
+    try{
+      const headers = {
+        "Content-type": "application/json"
+      };
+      const body = JSON.stringify({user, gameState});
+      // Again, this does not work here. For some reason StompClient becomes null. 
+      stompClient.send("/app/ready", headers, body);
+      console.log("omg i sent a message!");
+    } catch (e) {
+      console.log("Something went wrong while sending a message to the server :/ " + e);
+    }
+  }
+
   useEffect(() => { // This is executed once upon mounting of roleReveal --> establishes ws connection & subscribes
     if(!connection) { 
       const connectAndSubscribe = async () => { 
         try {
           await connect();
           subscription = await subscribe(`/topic/lobby/${lobbyId}`);
-          //stompClient.send(`/topic/lobby/${lobbyId}`, headers, body);     
+          //stompClient.send(`/topic/lobby/${lobbyId}`, headers, body);
         } catch (error) {
           console.error("There was an error connecting or subscribing: ", error);
         }
@@ -95,41 +111,46 @@ const RoleReveal = () => {
         connectAndSubscribe();}, 600);
     }
     if (messageReceived) {
+      console.log("GAME STATE: " + messageReceived.gameState);
+      if (messageReceived.gameState === "NIGHT") {
+        navigate("/nightaction");
+      }
       console.log("I received a MESSAGE AGAIN!");
       setRole(messageReceived.playerMap[`${username}`].roleName);
       console.log(role);
+
     }
 
     return () => {
-      if(subscription) {
-        subscription.unsubscribe();
-      }
-      if(stompClient) {
-        stompClient.disconnect();
+      try{
+        const headers = {
+          "Content-type": "application/json"
+        };
+        const body = JSON.stringify({user, gameState});
+        // Again, this does not work here. For some reason StompClient becomes null. 
+        stompClient.send("/app/ready", headers, body);
+        console.log("omg i sent a message!");
+      } catch (e) {
+        console.log("Something went wrong while sending a message to the server :/ " + e);
       }
     }
-  }, []);
+
+  }, [ready]);
 
   useEffect(() => { // This useEffect tracks changes in the lobby --> do I need this for roleReveal?
     console.log("I am in Role reveal useEffect now!");
     if (messageReceived && messageReceived.players) {
+      console.log("GAME STATE: " + messageReceived.gameState);
+      if (messageReceived.gameState === "NIGHT") {
+        navigate("/nightaction");
+      }
       setRole(messageReceived.playerMap[`${username}`].roleName);
       console.log(role);
     }
   }, [messageReceived]); 
 
-  const doSendMessageToServer = () => {
-    const headers = {
-      "Content-type": "application/json"
-    };
-    const body = JSON.stringify({lobbyId});
-    // Again, this does not work here. For some reason StompClient becomes null. 
-    try{
-      //stompClient.send(`/topic/lobby/${lobbyId}`, headers, body);
-      //console.log("message sent!");
-    } catch (e) {
-      console.log("Something went wrong while sending a message to the server :/ " + e);
-    }
+  const doSendReady = () => {
+    setReady(true);
   }
 
   let displayInstructions = <Spinner />;
@@ -158,13 +179,16 @@ const RoleReveal = () => {
         <div className= "roleReveal highlight" >{displayText}</div>
         <div className= "roleReveal instructions" >{displayInstructions}</div>
         <div className="roleReveal button-container">
-          <Button
-            width="100%"
-            height="40px"
-            onClick={()=> doSendMessageToServer()}
-          >
-            Ok, got it!
-          </Button>
+          { ready ?
+            <div className= "roleReveal header3" >
+            Waiting until all players are ready...</div> :
+            <Button
+              width="100%"
+              height="40px"
+              onClick={()=> doSendReady()}
+            >
+              Ok, got it!
+            </Button>} 
         </div>
       </div>
     </BaseContainer>
