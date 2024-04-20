@@ -91,7 +91,6 @@ const RoleReveal = () => {
       };
       connectAndSubscribe();
     }
-
     if (messageReceived) {
       console.log("I received a MESSAGE AGAIN!");
     }
