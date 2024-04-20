@@ -39,7 +39,7 @@ const WaitingRoom = () => {
   const [numberOfPlayersInLobby, setNumberOfPlayersInLobby] = useState(0);
   const [numberOfPlayers, setNumberOfPlayers] = useState(0);
   const [hostName, setHostName] = useState(null);
-  const [disconnected, setDisconnected] = useState(false);
+  const [role, setRole] = useState(null);
 
   // variables needed for UI
   const waitingHeading = "Waiting for all players to join...";
@@ -67,8 +67,6 @@ const WaitingRoom = () => {
       });
       stompClient.onclose = reason => {
         setConnection(false);
-        //connection = false;
-        setDisconnected(true);
         console.log("Socket was closed, Reason: " + reason);
         reject(reason);}
     });
@@ -103,7 +101,14 @@ const WaitingRoom = () => {
         }
       };
       connectAndSubscribe();
+
       if (messageReceived && messageReceived.players) {
+        console.log("checking role:" + messageReceived.playerMap[`${user}`].roleName);
+        if ((messageReceived.playerMap[`${user}`].roleName) !== null) { //checking if role has been assigned
+          setRole(messageReceived.playerMap[`${user}`].roleName);
+          console.log("MY ROLE: " + role);
+          navigate("/rolereveal");
+        }
         setPlayersInLobby(messageReceived.players);
         setNumberOfPlayersInLobby((messageReceived.players).length);
         setNumberOfPlayers(messageReceived.numberOfPlayers);
@@ -112,33 +117,34 @@ const WaitingRoom = () => {
     }
 
     return () => {
-      if(subscription) {
-        subscription.unsubscribe();
-      }
-      if(stompClient) {
-        stompClient.disconnect();
+      const headers = {
+        "Content-type": "application/json"
+      };
+      const body = JSON.stringify({lobbyId});
+      try{
+        stompClient.send("/app/startgame", headers, body);
+      } catch (e) {
+        console.log("Something went wrong starting the game :/");
       }
     }
-
-    //return (subscription);
-    //ACHTUNG: added disconnected === true and stompClient === null here to try and implement automatic reconnection upon loss of connection to websockets
-    // I cannot test it without deploying though... So if the code breaks it's likely because of this 
-  }, [connection === false]);
+  }, []);
 
   useEffect(() => { // This useEffect tracks changes in the lobby
     console.log("something is hapaapapapeenning");
     if (messageReceived && messageReceived.players) {
-      // TODO: include if statement here that checks if the role field of the user (i.e. the user that is you, not the one who joined) is null or not
-      // and if not, then navigate to roleReveal and pass role as props.
-      // Also, might have to unsubscribe at this point here as well (depends on if I can (re)subscribe multiple times w/o consequences and always trigger broadcast or not!)
-      // if(messageReceived.players.${user}.role !== null) {navigate("/rolereveal", {state: messageReceived.players.${user}.role});}
+      console.log("checking role:" + messageReceived.playerMap[`${user}`].roleName);
+      if ((messageReceived.playerMap[`${user}`].roleName) !== null) { //checking if role has been assigned
+        setRole(messageReceived.playerMap[`${user}`].roleName);
+        console.log("MY ROLE: " + role);
+        navigate("/rolereveal");
+      }
       setPlayersInLobby(messageReceived.players);
       setNumberOfPlayersInLobby((messageReceived.players).length);
       setNumberOfPlayers(messageReceived.numberOfPlayers);
       setHostName(messageReceived.hostName);
       console.log("number of players in lobby: " + numberOfPlayersInLobby);
     }
-  }, [messageReceived, disconnected===true]); //disconnected===true is a WIP: hoping this will update the lobby view to show that a user dropped out.
+  }, [messageReceived]); 
 
   const checkIfAllPlayersHere = () => {
     if(numberOfPlayers === numberOfPlayersInLobby) {
@@ -149,23 +155,16 @@ const WaitingRoom = () => {
   }
 
   const doStartGame = () => {
-    const headers = {
+    // Calling send here does not work, because the stompClient variable is null for some reason.
+    // This is very strange, because the connection (and subscription) is still active and stompClient is a global variable..
+    // I cannot explain why it's null.
+    // --> workaround: calling it in the useEffect unmount (return) works. 
+    /*const headers = {
       "Content-type": "application/json"
     };
     const body = JSON.stringify({lobbyId});
-    try{
-      stompClient.send("/app/startgame", headers, body);
-    } catch (e) {
-      console.log("Something went wrong while starting the game: " + e);
-    }
-  }
-
-  const doTest = (subscription) => {
-    let role = "Werewolf";
-    console.log("Now stompClient object is:" + stompClient);
-    console.log("Now subscription object is:" + subscription);
-    //subscription.unsubscribe();
-    navigate("/rolereveal", {state: role});
+    stompClient.send("/app/startgame", headers, body);*/
+    navigate("/rolereveal"); //--> This triggers dismount of this component, which triggers return value of first useEffect, which triggers a send message to /app/startgame which triggers a broadcast to all players which gets caught in subscribe callback and set as MessageReceived, where I check if role is null, which if it isn't, everyone gets rerouted to /rolereveal
   }
 
   let content = <Spinner />;
@@ -188,7 +187,6 @@ const WaitingRoom = () => {
     else {headerMessage = waitingHeading;}
   }
 
-  //content checkIfAllPlayersHere() ? readyHeading : waitingHeading}
   return (
     <BaseContainer>
       <div className= "waitingRoom header">Welcome to game 
@@ -210,10 +208,6 @@ const WaitingRoom = () => {
           >
             Start Game
           </Button>}
-          <Button
-            onClick={() => doTest(subscription)}>
-            Test: will remove later
-          </Button>
         </div>
       </div>
     </BaseContainer>
