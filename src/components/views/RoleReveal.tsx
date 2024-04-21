@@ -46,7 +46,6 @@ const RoleReveal = () => {
   let displayText = "";
 
   const lobbyId = localStorage.getItem("lobbyId");
-  const user = localStorage.getItem("user");
 
   const connect = async () => {
     return new Promise((resolve, reject) => {
@@ -87,7 +86,7 @@ const RoleReveal = () => {
       const headers = {
         "Content-type": "application/json"
       };
-      const body = JSON.stringify({user, gameState});
+      const body = JSON.stringify({username, gameState});
       // Again, this does not work here. For some reason StompClient becomes null. 
       stompClient.send("/app/ready", headers, body);
       console.log("omg i sent a message!");
@@ -126,7 +125,7 @@ const RoleReveal = () => {
         const headers = {
           "Content-type": "application/json"
         };
-        const body = JSON.stringify({user, gameState});
+        const body = JSON.stringify({username, gameState});
         // Again, this does not work here. For some reason StompClient becomes null. 
         stompClient.send("/app/ready", headers, body);
         console.log("omg i sent a message!");

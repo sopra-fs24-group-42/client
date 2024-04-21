@@ -39,7 +39,7 @@ const NightAction = () => {
   const [numberOfPlayersInLobby, setNumberOfPlayersInLobby] = useState(0);
   const [numberOfPlayers, setNumberOfPlayers] = useState(0);
   const [hostName, setHostName] = useState(null);
-  const [role, setRole] = useState(null);
+  const [selection, setSelection] = useState(null);
 
   // variables needed for UI
   const waitingHeading = "Waiting for all players to join...";
@@ -104,13 +104,8 @@ const NightAction = () => {
 
       if (messageReceived && messageReceived.players) {
         console.log("checking role:" + messageReceived.playerMap[`${user}`].roleName);
-        if ((messageReceived.playerMap[`${user}`].roleName) !== null) { //checking if role has been assigned
-          setRole(messageReceived.playerMap[`${user}`].roleName);
-          console.log("MY ROLE: " + role);
-          navigate("/rolereveal");
-        }
         setPlayersInLobby(messageReceived.players);
-        setNumberOfPlayersInLobby((messageReceived.players).length);
+        setNumberOfPlayersInLobby((messageReceived.players).length); // need this to 
         setNumberOfPlayers(messageReceived.numberOfPlayers);
         setHostName(messageReceived.hostName);
       }
@@ -132,15 +127,10 @@ const NightAction = () => {
   useEffect(() => { // This useEffect tracks changes in the lobby
     console.log("something is hapaapapapeenning");
     if (messageReceived && messageReceived.players) {
-      console.log("checking role:" + messageReceived.playerMap[`${user}`].roleName);
-      if ((messageReceived.playerMap[`${user}`].roleName) !== null) { //checking if role has been assigned
-        setRole(messageReceived.playerMap[`${user}`].roleName);
-        console.log("MY ROLE: " + role);
-        navigate("/rolereveal");
-      }
       setPlayersInLobby(messageReceived.players);
       setNumberOfPlayersInLobby((messageReceived.players).length);
       setNumberOfPlayers(messageReceived.numberOfPlayers);
+
       setHostName(messageReceived.hostName);
       console.log("number of players in lobby: " + numberOfPlayersInLobby);
     }
@@ -154,7 +144,8 @@ const NightAction = () => {
     return false;
   }
 
-  const doStartGame = () => {
+  const doSelection = (user) => {
+    setSelection(user.username);
     // Calling send here does not work, because the stompClient variable is null for some reason.
     // This is very strange, because the connection (and subscription) is still active and stompClient is a global variable..
     // I cannot explain why it's null.
@@ -164,7 +155,6 @@ const NightAction = () => {
     };
     const body = JSON.stringify({lobbyId});
     stompClient.send("/app/startgame", headers, body);*/
-    navigate("/rolereveal"); //--> This triggers dismount of this component, which triggers return value of first useEffect, which triggers a send message to /app/startgame which triggers a broadcast to all players which gets caught in subscribe callback and set as MessageReceived, where I check if role is null, which if it isn't, everyone gets rerouted to /rolereveal
   }
 
   let content = <Spinner />;
@@ -175,7 +165,8 @@ const NightAction = () => {
       <div className ="game">
         <ul className= "game user-list">
           {playersInLobby.map((user: User) => (
-            <li key={user.username}>
+            <li key={user.username}
+              onClick={() => doSelection(user)}>
               < LobbyMember user={user} />
             </li>
           ))}
