@@ -103,10 +103,8 @@ const WaitingRoom = () => {
       connectAndSubscribe();
 
       if (messageReceived && messageReceived.players) {
-        console.log("checking role:" + messageReceived.playerMap[`${user}`].roleName);
         if ((messageReceived.playerMap[`${user}`].roleName) !== null) { //checking if role has been assigned
           setRole(messageReceived.playerMap[`${user}`].roleName);
-          console.log("MY ROLE: " + role);
           navigate("/rolereveal");
         }
         setPlayersInLobby(messageReceived.players);
@@ -132,10 +130,8 @@ const WaitingRoom = () => {
   useEffect(() => { // This useEffect tracks changes in the lobby
     console.log("something is hapaapapapeenning");
     if (messageReceived && messageReceived.players) {
-      console.log("checking role:" + messageReceived.playerMap[`${user}`].roleName);
       if ((messageReceived.playerMap[`${user}`].roleName) !== null) { //checking if role has been assigned
         setRole(messageReceived.playerMap[`${user}`].roleName);
-        console.log("MY ROLE: " + role);
         navigate("/rolereveal");
       }
       setPlayersInLobby(messageReceived.players);
