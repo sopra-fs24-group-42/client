@@ -6,10 +6,11 @@ import { api, handleError } from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
 import {useNavigate, useLocation} from "react-router-dom";
 import { Button } from "components/ui/Button";
-import "styles/views/WaitingRoom.scss";
 import BaseContainer from "components/ui/BaseContainer";
+import "styles/views/NightAction.scss";
 import PropTypes from "prop-types";
 import { User } from "types";
+import RoleReveal from "./RoleReveal";
 
 const LobbyMember = ({ user }: { user: User }) => (
   <div className="player container">
@@ -21,34 +22,31 @@ LobbyMember.propTypes = {
   user: PropTypes.object,
 };
 
+
 const NightAction = () => {
   // variables needed for establishing websocket connection
   const [connection, setConnection] = useState(null);
-  //const [stompClient, setStompClient] = useState(null);
-  //const [subscription, setSubscription] = useState(null);
-  //let connection = false;
+
   const baseURL = getDomain();
   var stompClient = null;
   var subscription = null;
-
+  
   const navigate = useNavigate();
+  let gameState = "NIGHT";
 
   // variables needed for dynamic rendering of waitingRoom
   const [messageReceived, setMessageReceived] = useState(null);
-  const [playersInLobby, setPlayersInLobby] = useState<User []>([]); // this variable will store the list of players currently in the lobby
-  const [numberOfPlayersInLobby, setNumberOfPlayersInLobby] = useState(0);
-  const [numberOfPlayers, setNumberOfPlayers] = useState(0);
-  const [hostName, setHostName] = useState(null);
-  const [selection, setSelection] = useState(null);
+  const [playersInLobby, setPlayersInLobby] = useState(null);
 
-  // variables needed for UI
-  const waitingHeading = "Waiting for all players to join...";
-  const readyHeading = `Everyone's here! ${hostName}, start the game.`;
-  const lobbyCode = localStorage.getItem("lobbyCode"); // need this to display at the top of the waitingRoom
-  
-  // variables needed for conditional button display
+  const [selection, setSelection] = useState(null);
+  const [ready, setReady] = useState(false);
+  const [seerReveal, setSeerReveal] = useState(null);
+  const [revealRole, setRevealRole] = useState(null);
+
+  // variables needed for UI  
   const lobbyId = localStorage.getItem("lobbyId");
-  const user = localStorage.getItem("user");
+  const username = localStorage.getItem("user");
+  const role = localStorage.getItem("role");
 
   const connect = async () => {
     return new Promise((resolve, reject) => {
@@ -82,9 +80,6 @@ const NightAction = () => {
         //localStorage.setItem("lobby", message.body);
         setMessageReceived(JSON.parse(message.body));
         setPlayersInLobby(JSON.parse(message.body).players);
-        setNumberOfPlayersInLobby(JSON.parse(message.body).players.length);
-        setNumberOfPlayers(JSON.parse(message.body).numberOfPlayers);
-        setHostName(JSON.parse(message.body).hostName);
         resolve(subscription);
       });
     }); 
@@ -102,12 +97,12 @@ const NightAction = () => {
       };
       connectAndSubscribe();
 
-      if (messageReceived && messageReceived.players) {
-        console.log("checking role:" + messageReceived.playerMap[`${user}`].roleName);
+      if (messageReceived) {
+        if (messageReceived.gameState === "REVEALNIGHT") {
+            localStorage.setItem("role", role);
+            //navigate("/nightreveal");
+          }
         setPlayersInLobby(messageReceived.players);
-        setNumberOfPlayersInLobby((messageReceived.players).length); // need this to 
-        setNumberOfPlayers(messageReceived.numberOfPlayers);
-        setHostName(messageReceived.hostName);
       }
     }
 
@@ -115,50 +110,43 @@ const NightAction = () => {
       const headers = {
         "Content-type": "application/json"
       };
-      const body = JSON.stringify({lobbyId});
-      try{
-        stompClient.send("/app/startgame", headers, body);
+      const selectionRequest = selection
+      const body = JSON.stringify({username, selectionRequest});
+      try {
+        stompClient.send(`/app/${role}/nightaction`, headers, body);
+        stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
       } catch (e) {
-        console.log("Something went wrong starting the game :/");
+        console.log("Something went wrong sending selection information: " + e);
       }
     }
-  }, []);
+  }, [ready]);
 
   useEffect(() => { // This useEffect tracks changes in the lobby
     console.log("something is hapaapapapeenning");
-    if (messageReceived && messageReceived.players) {
+    if (messageReceived) {
+      if (messageReceived.gameState === "REVEALNIGHT") {
+        localStorage.setItem("role", role);
+        //navigate("/nightreveal");
+      }
       setPlayersInLobby(messageReceived.players);
-      setNumberOfPlayersInLobby((messageReceived.players).length);
-      setNumberOfPlayers(messageReceived.numberOfPlayers);
-
-      setHostName(messageReceived.hostName);
-      console.log("number of players in lobby: " + numberOfPlayersInLobby);
     }
   }, [messageReceived]); 
 
-  const checkIfAllPlayersHere = () => {
-    if(numberOfPlayers === numberOfPlayersInLobby) {
-      return true;
-    }
-    
-    return false;
+
+  //const doReveal = () => {
+    //setRevealRole(messageReceived.playerMap[`${selection}`].roleName);
+    //setSeerReveal(true);
+  //}
+
+  const doSendSelection = () => {
+    setReady(true);
   }
 
   const doSelection = (user) => {
     setSelection(user.username);
-    // Calling send here does not work, because the stompClient variable is null for some reason.
-    // This is very strange, because the connection (and subscription) is still active and stompClient is a global variable..
-    // I cannot explain why it's null.
-    // --> workaround: calling it in the useEffect unmount (return) works. 
-    /*const headers = {
-      "Content-type": "application/json"
-    };
-    const body = JSON.stringify({lobbyId});
-    stompClient.send("/app/startgame", headers, body);*/
   }
-
+  
   let content = <Spinner />;
-  let headerMessage = "";
 
   if (messageReceived !== null) {
     content = (
@@ -166,40 +154,77 @@ const NightAction = () => {
         <ul className= "game user-list">
           {playersInLobby.map((user: User) => (
             <li key={user.username}
-              onClick={() => doSelection(user)}>
+              onClick={() => doSelection(user)}
+              className={`player container ${selection === user.username ? 'selected' : ''}`}
+              >
               < LobbyMember user={user} />
             </li>
           ))}
         </ul>
       </div>
-    );
-    if (checkIfAllPlayersHere() === true) {
-      headerMessage = readyHeading;}
-    else {headerMessage = waitingHeading;}
-  }
+    );}
 
   return (
     <BaseContainer>
-      <div className= "waitingRoom header">NIGHT ACTION PAGE!!!
-        <div className= "waitingRoom highlight">{lobbyCode}
-          <div className= "waitingRoom heading"> {headerMessage}</div>
-        </div>
-      </div>
-      <div>
-      </div>
-      <div className= "waitingRoom container">
-        {content}
-        <div className="waitingRoom button-container">
-          { user === hostName &&
-          <Button
-            width="100%"
-            height="40px"
-            disabled={checkIfAllPlayersHere() === false}
-            onClick={() => doStartGame()}
-          >
-            Start Game
-          </Button>}
-        </div>
+      <div className= "nightAction header">Night has fallen...
+            {(() => {
+                if(role === "Werewolf") {
+                    return (
+                    <BaseContainer>
+                      <div className= "nightAction heading">{username}, select someone to kill.</div>
+                      {selection && <div className= "nightAction heading2">You have selected {selection} </div>}
+                      <div className= "nightAction container">{content}
+                        <div className="nightAction button-container">
+                            {selection &&
+                          <Button
+                            width="100%"
+                            height="40px"
+                            onClick={() => doSendSelection()}
+                            >Kill {selection}
+                          </Button>}
+                        </div>
+                    </div>
+                    </BaseContainer>
+                    )
+                } else if (role === "Seer") {
+                    return (
+                        <BaseContainer>
+                        <div className= "nightAction heading">{username}, select someone whose role you want to see.</div>
+                        {selection && <div className= "nightAction heading2">You have selected {selection} </div>}
+                        {seerReveal && <div className= "nightAction highlight">{selection} is a {revealRole}</div>}
+                        <div className= "nightAction container">{content}
+                          <div className="nightAction button-container">
+                            {selection &&    
+                                <Button
+                                width="100%"
+                                height="40px"
+                                onClick={() => doSendSelection()}
+                                >See who {selection} is
+                                </Button>}
+                          </div>
+                      </div>
+                      </BaseContainer>
+                    )
+                } else {
+                    return (
+                        <BaseContainer>
+                        <div className= "nightAction heading">{username}, select someone so as not to arouse suspicion.</div>
+                        {selection && <div className= "nightAction heading2">You have selected {selection} </div>}
+                        <div className= "nightAction container">{content}
+                          <div className="nightAction button-container">
+                          {selection &&
+                            <Button
+                              width="100%"
+                              height="40px"
+                              onClick={() => doSendSelection()}
+                              >Click me to avoid suspicion
+                            </Button>}
+                          </div>
+                      </div>
+                      </BaseContainer>
+                    )
+                }
+             })()}
       </div>
     </BaseContainer>
   );

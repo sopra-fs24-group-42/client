@@ -21,9 +21,7 @@ const RoleReveal = () => {
   const [connection, setConnection] = useState(false);
   var stompClient = null;
   var subscription = null;
-  //var socket = new SockJS(baseURL+"/game"); // creating a new SockJS object (essentially a websocket object)
-  //var stompClient = over(socket); // specifying that it's a special type of websocket connection (i.e. using sockJS)
-
+  
   // variables needed for role reveal
   const [messageReceived, setMessageReceived] = useState(null);
   const username = localStorage.getItem("user");
@@ -81,20 +79,6 @@ const RoleReveal = () => {
     }); 
   }
 
-  const sendMessage = () => {
-    try{
-      const headers = {
-        "Content-type": "application/json"
-      };
-      const body = JSON.stringify({username, gameState});
-      // Again, this does not work here. For some reason StompClient becomes null. 
-      stompClient.send("/app/ready", headers, body);
-      console.log("omg i sent a message!");
-    } catch (e) {
-      console.log("Something went wrong while sending a message to the server :/ " + e);
-    }
-  }
-
   useEffect(() => { // This is executed once upon mounting of roleReveal --> establishes ws connection & subscribes
     if(!connection) { 
       const connectAndSubscribe = async () => { 
@@ -112,12 +96,11 @@ const RoleReveal = () => {
     if (messageReceived) {
       console.log("GAME STATE: " + messageReceived.gameState);
       if (messageReceived.gameState === "NIGHT") {
+        localStorage.setItem("role", role);
         navigate("/nightaction");
       }
       console.log("I received a MESSAGE AGAIN!");
       setRole(messageReceived.playerMap[`${username}`].roleName);
-      console.log(role);
-
     }
 
     return () => {
@@ -141,6 +124,7 @@ const RoleReveal = () => {
     if (messageReceived && messageReceived.players) {
       console.log("GAME STATE: " + messageReceived.gameState);
       if (messageReceived.gameState === "NIGHT") {
+        localStorage.setItem("role", role);
         navigate("/nightaction");
       }
       setRole(messageReceived.playerMap[`${username}`].roleName);
