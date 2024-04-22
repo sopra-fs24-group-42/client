@@ -114,11 +114,11 @@ const NightAction = () => {
       let selection = localStorage.getItem("selected");
       const body = JSON.stringify({username, selection});                        
       try {
-      stompClient.send(`/app/${role}/nightaction`, headers, body);
-      stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
-      sentReady = true;
+        stompClient.send(`/app/${role}/nightaction`, headers, body);
+        stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
+        sentReady = true;
       } catch (e) {
-      console.log("Something went wrong sending selection information: " + e);
+        console.log("Something went wrong sending selection information: " + e);
       }
     }
   }, [ready, connection]);
@@ -171,32 +171,32 @@ const NightAction = () => {
           if(role === "Werewolf") {
             return (
               <BaseContainer>
-                  {(() => {
-                    if(ready && selected) {
-                      return (
-                        <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>)}
-                    else if (selected && !ready) {
-                      return (
-                        <div>
-                          <div className= "nightAction heading2">You have selected {selected} </div>
-                          <div className= "nightAction container">{content}
-                            <Button
-                              width="100%"
-                              height="40px"
-                              onClick={() => doSendSelected()}
-                            >Kill {selected}
-                            </Button>
-                          </div>
-                        </div>)
-                    } else { 
-                      return (
-                        <div>
+                {(() => {
+                  if(ready && selected) {
+                    return (
+                      <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>)}
+                  else if (selected && !ready) {
+                    return (
+                      <div>
+                        <div className= "nightAction heading2">You have selected {selected} </div>
+                        <div className= "nightAction container">{content}
+                          <Button
+                            width="100%"
+                            height="40px"
+                            onClick={() => doSendSelected()}
+                          >Kill {selected}
+                          </Button>
+                        </div>
+                      </div>)
+                  } else { 
+                    return (
+                      <div>
                         <div className= "nightAction heading">{username}, select someone to kill.</div>    
                         <div className= "nightAction container">{content} </div>
-                        </div>
-                      )
-                    }
-                  })()}
+                      </div>
+                    )
+                  }
+                })()}
               </BaseContainer>
             )
           } else if (role === "Seer") {
@@ -221,14 +221,14 @@ const NightAction = () => {
                     return (
                       <div className="nightAction container">
                         <div className="nightAction highlight">{selected} is a {revealRole}</div>
-                          <Button
-                            width="100%"
-                            height="40px"
-                            onClick={() => doSendSelected()}
-                          >
-                            Ok, got it
-                          </Button>
-                        </div>
+                        <Button
+                          width="100%"
+                          height="40px"
+                          onClick={() => doSendSelected()}
+                        >
+                          Ok, got it
+                        </Button>
+                      </div>
                     );
                   }
                   else {
@@ -246,31 +246,30 @@ const NightAction = () => {
               <BaseContainer>
                 {(() => {
                   if(ready && selected) {
-                      return (
-                        <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>)}
-                    else if (selected && !ready) {
-                      return (
-                        <div>
-                          <div className= "nightAction heading2">You have selected {selected} </div>
-                          <div className= "nightAction container">{content}
-                            <Button
-                              width="100%"
-                              height="40px"
-                              onClick={() => doSendSelected()}
-                            >Click me to avoid suspicion
-                            </Button>
-                          </div>
-                        </div>)
-                    } else { 
-                      return (
-                        <div>
+                    return (
+                      <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>)}
+                  else if (selected && !ready) {
+                    return (
+                      <div>
+                        <div className= "nightAction heading2">You have selected {selected} </div>
+                        <div className= "nightAction container">{content}
+                          <Button
+                            width="100%"
+                            height="40px"
+                            onClick={() => doSendSelected()}
+                          >Click me to avoid suspicion
+                          </Button>
+                        </div>
+                      </div>)
+                  } else { 
+                    return (
+                      <div>
                         <div className= "nightAction heading">{username}, select someone to avoid suspicion.</div>    
                         <div className= "nightAction container">{content} </div>
-                        </div>
-                      )
-                    }
-
-                  })()}
+                      </div>
+                    )
+                  }
+                })()}
               </BaseContainer>
             )
           }
