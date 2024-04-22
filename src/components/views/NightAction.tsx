@@ -36,7 +36,8 @@ const NightAction = () => {
   const [messageReceived, setMessageReceived] = useState(null);
   const [playersInLobby, setPlayersInLobby] = useState(null);
 
-  const [selection, setSelection] = useState(null);
+  const [selected, setSelected] = useState(null);
+
   const [ready, setReady] = useState(false);
 
   const [revealRole, setRevealRole] = useState(null);
@@ -108,8 +109,8 @@ const NightAction = () => {
       const headers = {
         "Content-type": "application/json"
       };
-      let selectionRequest = localStorage.getItem("selection");
-      const body = JSON.stringify({username, selectionRequest});
+      let selection = localStorage.getItem("selected");
+      const body = JSON.stringify({username, selection});                        
       try {
         stompClient.send(`/app/${role}/nightaction`, headers, body);
         stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
@@ -131,18 +132,15 @@ const NightAction = () => {
 
   const doReveal = () => {
     try{
-      setRevealRole(messageReceived.playerMap[`${selection}`].roleName);
+      setRevealRole(messageReceived.playerMap[`${selected}`].roleName);
     } catch (e) {
       console.log("Could not fetch role: " + e);
     }
   }
 
-  const doSendSelection = () => {
-    localStorage.setItem("selection", selection);
-    //selectionRequest = selection;
+  const doSendSelected = () => {
+    localStorage.setItem("selected", selected);
     setReady(true);
-    //console.log("INSIDE DOSENDSELECTION: " + selection);
-    //console.log("selection request" + selectionRequest);
   }
   
   let content = <Spinner />;
@@ -153,8 +151,8 @@ const NightAction = () => {
         <ul className= "game user-list">
           {playersInLobby.map((user: User) => (
             <li key={user.username}
-              onClick={() => setSelection(user.username)}
-              className={`player container ${selection === user.username ? "selected" : ""}`}
+              onClick={() => setSelected(user.username)}
+              className={`player container ${selected === user.username ? "selected" : ""}`}
             >
               < LobbyMember user={user} />
             </li>
@@ -171,14 +169,14 @@ const NightAction = () => {
             return (
               <BaseContainer>
                 <div className= "nightAction heading">{username}, select someone to kill.</div>
-                {selection && <div className= "nightAction heading2">You have selected {selection} </div>}
+                {selected && <div className= "nightAction heading2">You have selected {selected} </div>}
                 <div className= "nightAction container">{content}
-                  {selection &&
+                  {selected &&
                     <Button
                       width="100%"
                       height="40px"
-                      onClick={() => doSendSelection()}
-                    >Kill {selection}
+                      onClick={() => doSendSelected()}
+                    >Kill {selected}
                     </Button>}
                 </div>
               </BaseContainer>
@@ -187,29 +185,29 @@ const NightAction = () => {
             return (
               <BaseContainer>
                 {(() => {
-                  if (selection && !revealRole) {
+                  if (selected && !revealRole) {
                     return (
-                      <div className="nightAction heading2">You have selected {selection}
+                      <div className="nightAction heading2">You have selected {selected}
                         <div className="nightAction container">{content}
                           <Button
                             width="100%"
                             height="40px"
                             onClick={() => doReveal()}
                           >
-                            See who {selection} is
+                            See who {selected} is
                           </Button>
                         </div>
                       </div>
                     );
-                  } else if (selection && revealRole) {
+                  } else if (selected && revealRole) {
                     return (
                       <div className="nightAction container">
-                        <div className="nightAction highlight">{selection} is a {revealRole}</div>
+                        <div className="nightAction highlight">{selected} is a {revealRole}</div>
                         <div className="nightAction button-container">
                           <Button
                             width="100%"
                             height="40px"
-                            onClick={() => doSendSelection()}
+                            onClick={() => doSendSelected()}
                           >
                             Ok, got it
                           </Button>
@@ -231,13 +229,13 @@ const NightAction = () => {
             return (
               <BaseContainer>
                 <div className= "nightAction heading">{username}, select someone so as not to arouse suspicion.</div>
-                {selection && <div className= "nightAction heading2">You have selected {selection} </div>}
+                {selected && <div className= "nightAction heading2">You have selected {selected} </div>}
                 <div className= "nightAction container">{content}
-                  {selection &&
+                  {selected &&
                     <Button
                       width="100%"
                       height="40px"
-                      onClick={() => doSendSelection()}
+                      onClick={() => doSendSelected()}
                     >Click me to avoid suspicion
                     </Button>}
                 </div>
