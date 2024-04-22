@@ -35,9 +35,7 @@ const NightReveal = () => {
     console.log("Inside findKilledPlayer");
     for(let i=0; i<messageReceived.players.length; i++) { // iterating through list of players to check their isKilled field 
       let currentPlayer = messageReceived.players[i];
-      //console.log("CURRENT PLAYER: " + currentPlayer);
-      //console.log("isKilledField: " + messageReceived.playerMap[`${currentPlayer.username}`].isKilled);
-      if(messageReceived.playerMap[`${currentPlayer.username}`].isKilled){ 
+      if(messageReceived.playerMap[`${currentPlayer.username}`].isKilled) {
         killedPlayer = currentPlayer;
       }
     }

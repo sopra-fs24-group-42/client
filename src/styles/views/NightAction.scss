@@ -36,6 +36,7 @@
       width: 100%;            // Optional: ensure it spans full width if needed for design
       margin-top: 40px;
     }
+    
     &.heading {
       @include center;
       display: flex;
@@ -92,9 +93,9 @@
     padding-right: 37px;
     border-radius: 0.75em;
     background-color: E72929;
-    transition: opacity 0.5s ease, transform 0.5s ease;
-    
+    transition: opacity 0.5s ease, transform 0.5s ease; 
   }
+
   &.field {
     display: flex;
     flex-direction: column;
