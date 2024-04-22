@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SockJS from "sockjs-client";
 import { over } from "stompjs";
 import { getDomain } from "../../helpers/getDomain";
@@ -30,6 +30,9 @@ const NightAction = () => {
   var subscription = null;
   
   const navigate = useNavigate();
+  const Ref = useRef(null);
+  const [timer, setTimer] = useState("00:00:00");
+
   let gameState = "NIGHT";
 
   // variables needed for dynamic rendering of waitingRoom
@@ -42,6 +45,62 @@ const NightAction = () => {
   const [ready, setReady] = useState(false);
 
   const [revealRole, setRevealRole] = useState(null);
+
+  const getTimeRemaining = (e) => {
+    const total = Date.parse(e) - Date.parse(new Date());
+    const seconds = Math.floor((total / 1000) % 60);
+    const minutes = Math.floor((total / 1000 / 60) % 60);
+    const hours = Math.floor((total / 1000 / 60 / 60) % 24);
+
+    return {
+      total,
+      hours,
+      minutes,
+      seconds,
+    };
+  };
+
+  const startTimer = (e) => {
+    let { total, hours, minutes, seconds } = getTimeRemaining(e);
+    if (total >= 0) {
+      // Continue updating the timer
+      setTimer(
+        `${hours > 9 ? hours : "0" + hours}:${
+          minutes > 9 ? minutes : "0" + minutes}:${
+          seconds > 9 ? seconds : "0" + seconds}`
+      );
+    } else {
+      // Timer expires, navigate to another page
+      navigate("/voting");
+      clearInterval(Ref.current);
+    }
+  };
+
+  const clearTimer = (e) => {
+    setTimer("00:00:10");
+    if (Ref.current) clearInterval(Ref.current);
+    const id = setInterval(() => {
+      startTimer(e);
+    }, 1000);
+    Ref.current = id;
+  };
+
+  const getDeadTime = () => {
+    let deadline = new Date();
+    deadline.setSeconds(deadline.getSeconds() + 120);
+
+    return deadline;
+  };
+
+  useEffect(() => {
+    clearTimer(getDeadTime());
+
+    return () => {
+      if (Ref.current) {
+        clearInterval(Ref.current);
+      }
+    };
+  }, []);
 
   // variables needed for UI  
   const lobbyId = localStorage.getItem("lobbyId");
@@ -199,6 +258,9 @@ const NightAction = () => {
                       <div>
                         <div className= "nightAction heading">{username}, select someone to kill.</div>    
                         <div className= "nightAction container">{content} </div>
+                        <div className="waitingRoom container">
+                          <div className="waitingRoom highlight">{timer}</div>
+                        </div>
                       </div>
                     )
                   }
@@ -247,6 +309,9 @@ const NightAction = () => {
                     return (
                       <div className="nightAction heading2">{username}, whose role do you want to see?
                         <div className="nightAction container">{content} </div>
+                        <div className="waitingRoom container">
+                          <div className="waitingRoom highlight">{timer}</div>
+                        </div>
                       </div>
                     );
                   }
@@ -278,6 +343,9 @@ const NightAction = () => {
                       <div>
                         <div className= "nightAction heading">{username}, select someone to avoid suspicion.</div>    
                         <div className= "nightAction container">{content} </div>
+                        <div className="waitingRoom container">
+                          <div className="waitingRoom highlight">{timer}</div>
+                        </div>
                       </div>
                     )
                   }
