@@ -21,7 +21,7 @@ LobbyMember.propTypes = {
   user: PropTypes.object,
 };
 
-const NightAction = () => {
+const Voting = () => {
   // variables needed for establishing websocket connection
   var connection = false;
 
@@ -217,7 +217,7 @@ const NightAction = () => {
                         </div>
                       </div>
                     );
-                  } else if (selected && revealRole && !ready) {
+                  } else if (selected && revealRole) {
                     return (
                       <div className="nightAction container">
                         <div className="nightAction highlight">{selected} is a {revealRole}</div>
@@ -228,12 +228,6 @@ const NightAction = () => {
                         >
                           Ok, got it
                         </Button>
-                      </div>
-                    );
-                  } else if (selected && revealRole && ready) {
-                    return (
-                      <div className="nightAction container">
-                        <div className="nightAction heading2">Waiting for all players to complete their night action</div>
                       </div>
                     );
                   }
@@ -285,4 +279,4 @@ const NightAction = () => {
   );
 };
 
-export default NightAction;
+export default Voting;
