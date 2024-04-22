@@ -10,6 +10,8 @@ import WaitingRoom from "../../views/WaitingRoom";
 import RoleReveal from "../../views/RoleReveal";
 import NightAction from "../../views/NightAction";
 import NightReveal from "../../views/NightReveal";
+import Discussion from "../../views/Discussion";
+
 
 /**
  * Main router of your application.
@@ -32,6 +34,8 @@ const AppRouter = () => {
         <Route path="/rolereveal" element={<RoleReveal />} />
         <Route path="/nightaction" element={<NightAction />} />
         <Route path="/nightreveal" element={<NightReveal />} />
+        <Route path="/discussion" element={<Discussion />} />
+
 
         <Route path="/game/*" element={<GameGuard><GameRouter /></GameGuard>} />
 

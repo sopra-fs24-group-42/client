@@ -155,7 +155,8 @@ const NightAction = () => {
           {playersInLobby.map((user: User) => (
             <li key={user.username}
               onClick={() => setSelected(user.username)}
-              className={`player container ${selected === user.username ? "selected" : ""}`}
+              className={`player container ${selected === user.username ? "selected" : ""}`
+            }
             >
               < LobbyMember user={user} />
             </li>

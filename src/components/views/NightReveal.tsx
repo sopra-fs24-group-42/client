@@ -12,46 +12,50 @@ import PropTypes from "prop-types";
 import { User } from "types";
 
 const NightReveal = () => {
-  console.log("I AM ON PAGE ROLE REVEAL NOW");
+  console.log("I AM ON PAGE NIGHT REVEAL NOW");
 
   // variables needed for establishing websocket connection
   const baseURL = getDomain();
   const navigate = useNavigate();
 
-  const [connection, setConnection] = useState(false);
+  var connection = false;
   var stompClient = null;
   var subscription = null;
   
   // variables needed for role reveal
   const [messageReceived, setMessageReceived] = useState(null);
-  const username = localStorage.getItem("user");
+  var killedPlayer = null;
+  const username = localStorage.getItem("user"); //fetching username from localstorage
   const [role, setRole] = useState(null); 
   const [ready, setReady] = useState(false);
-  let gameState = "WAITINGROOM";
-
-  // variables needed for UI
-  // TODO: Move text variables to another file so it's not so cluttered here
-  const werewolfText = "Werewolf";
-  const werewolfImage = "roleReveal werewolf";
-  const werewolfInstructions = "As a werewolf, your goal is to kill\n everyone without them realizing it's you!";
-  const villagerText = "Villager";
-  const villagerImage = "roleReveal villager";
-  const villagerInstructions = "As a villager, your goal is to survive and identify the werewolves!";
-  const seerText = "Seer";
-  const seerImage = "roleReveal seer";
-  const seerInstructions = "As a seer, you can choose to see a player's role during the night.";
-  let displayImage = "";
-  let displayText = "";
+  let gameState = "REVEALNIGHT";
 
   const lobbyId = localStorage.getItem("lobbyId");
 
+  const findKilledPlayer = () => {
+    console.log("Inside findKilledPlayer");
+    for(let i=0; i<messageReceived.players.length; i++) {
+        console.log("LENGTH: " + messageReceived.players.length);
+      let currentPlayer = messageReceived.players[i];
+      console.log("CURRENT PLAYER: " + currentPlayer);
+      console.log("isKilledField: " + messageReceived.playerMap[`${currentPlayer.username}`].isKilled);
+      if(messageReceived.playerMap[`${currentPlayer.username}`].isKilled){
+        killedPlayer = currentPlayer;
+      }
+    }
+    console.log("KILLED PLAYER: " + JSON.stringify(killedPlayer));
+    console.log("KILLED PLAYER USERNAME:" + killedPlayer.username);
+    console.log("KILLED PLAYER ROLE:" + killedPlayer.roleName);
+  }
+
   const connect = async () => {
     return new Promise((resolve, reject) => {
+        console.log("INSIDE CONNECT");
       const socket = new SockJS(baseURL+"/game"); // creating a new SockJS object (essentially a websocket object)
       stompClient = over(socket); // specifying that it's a special type of websocket connection (i.e. using sockJS)
       stompClient.connect({}, function (frame) { // connecting to server websocket: instructions inside "function" will only be executed once we get something (i.e. a connect frame back from the server). Parameter "frame" is what we get from the server. 
         console.log("socket was successfully connected: " + frame);
-        setConnection(true);
+        connection = true;
         setTimeout( function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
           //const response = await callback();
           console.log("I waited: I received  MESSAGE frame back based on subscribing!!");
@@ -60,7 +64,7 @@ const NightReveal = () => {
       });
       stompClient.onclose = reason => {
         console.log("Socket was closed, Reason: " + reason);
-        setConnection(false);
+        connection = false;
         reject(reason);}
     });
   };
@@ -73,62 +77,54 @@ const NightReveal = () => {
         console.log("this is the message: " + JSON.stringify(message));
         //localStorage.setItem("lobby", message.body);
         setMessageReceived(JSON.parse(message.body));
-        setRole(JSON.parse(message.body).playerMap[`${username}`].roleName);
+        //findKilledPlayer();
+        //console.log("THIS IS THE KILLED PLAYER " + killedPlayer);
+        //setRole(JSON.parse(message.body).playerMap[`${username}`].roleName);
         resolve(subscription);
       });
     }); 
   }
 
   useEffect(() => { // This is executed once upon mounting of roleReveal --> establishes ws connection & subscribes
-    if(!connection) { 
-      const connectAndSubscribe = async () => { 
+    console.log("INSIDE USEEFFECT");
+    if(!connection) {  
+    const connectAndSubscribe = async () => { 
         try {
           await connect();
           subscription = await subscribe(`/topic/lobby/${lobbyId}`);
-          //stompClient.send(`/topic/lobby/${lobbyId}`, headers, body);
         } catch (error) {
           console.error("There was an error connecting or subscribing: ", error);
         }
       };
-      setTimeout(function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
-        connectAndSubscribe();}, 600);
-    }
+        connectAndSubscribe();}
+        console.log("I connected?");
+
     if (messageReceived) {
-      console.log("GAME STATE: " + messageReceived.gameState);
-      if (messageReceived.gameState === "NIGHT") {
-        localStorage.setItem("role", role);
-        navigate("/nightaction");
+      if (messageReceived.gameState === "DISCUSSION") { // happens after ready was sent by all
+        navigate("/discussion");
       }
       console.log("I received a MESSAGE AGAIN!");
-      setRole(messageReceived.playerMap[`${username}`].roleName);
+        findKilledPlayer();
+        console.log("KILLED PLAYER:" + killedPlayer);
+        console.log("KILLED PLAYER USERNAME:" + killedPlayer.username);
+        console.log("KILLED PLAYER ROLE:" + killedPlayer.roleName);
+
+
     }
 
     return () => {
-      try{
-        const headers = {
-          "Content-type": "application/json"
-        };
-        const body = JSON.stringify({username, gameState});
-        // Again, this does not work here. For some reason StompClient becomes null. 
-        stompClient.send("/app/ready", headers, body);
-        console.log("omg i sent a message!");
-      } catch (e) {
-        console.log("Something went wrong while sending a message to the server :/ " + e);
-      }
     }
 
   }, [ready]);
 
   useEffect(() => { // This useEffect tracks changes in the lobby --> do I need this for roleReveal?
     console.log("I am in Role reveal useEffect now!");
-    if (messageReceived && messageReceived.players) {
-      console.log("GAME STATE: " + messageReceived.gameState);
-      if (messageReceived.gameState === "NIGHT") {
-        localStorage.setItem("role", role);
-        navigate("/nightaction");
+    if (messageReceived) {
+      if (messageReceived.gameState === "DISCUSSION") {
+        navigate("/discussion");
       }
-      setRole(messageReceived.playerMap[`${username}`].roleName);
-      console.log(role);
+      findKilledPlayer();
+      console.log("Killed player: " + killedPlayer);
     }
   }, [messageReceived]); 
 
@@ -136,43 +132,31 @@ const NightReveal = () => {
     setReady(true);
   }
 
-  let displayInstructions = <Spinner />;
-  if (role === "Werewolf") {
-    displayText = werewolfText;
-    //content = <div className="roleReveal werewolf"></div>
-    displayInstructions = werewolfInstructions;
+  let content = <Spinner />;
+  if(killedPlayer !== null) {
+    content = (
+    <div className = "rolereveal highlight">
+      {killedPlayer.username}, a {killedPlayer.roleName} was killed!        
+    </div>
+    );
   }
-  else if (role === "Seer") {
-    displayText = seerText;
-    //content = <div className="roleReveal seer"></div>
-    displayInstructions = seerInstructions;
-  }
-  else if (role === "Villager") {
-    displayText = villagerText;
-    //content = <div className="roleReveal villager"></div>
-    displayInstructions = villagerInstructions;
-  }
+
+  //        <div className= "roleReveal highlight" >
+  //{killedPlayer.username}, a {killedPlayer.roleName} was killed!
+  //</div>
 
   return (
     <BaseContainer>
-      <div className= "roleReveal header1">NIGHT REVEAL PAGE YAY 
-        <div className= "roleReveal header2" >Under construction!</div>
+      <div className= "roleReveal header1">Something happened during the night...
       </div>
       <div className= "roleReveal container">
-        <div className= "roleReveal highlight" >{displayText}</div>
-        <div className= "roleReveal instructions" >{displayInstructions}</div>
-        <div className="roleReveal button-container">
-          { ready ?
-            <div className= "roleReveal header3" >
-            Waiting until all players are ready...</div> :
-            <Button
-              width="100%"
-              height="40px"
-              onClick={()=> doSendReady()}
-            >
-              Ok, got it!
-            </Button>} 
-        </div>
+        {content}
+        <Button
+          width="100%"
+          height="40px"
+          onClick={()=> doSendReady()}
+        >Ok, got it!
+        </Button> 
       </div>
     </BaseContainer>
   );

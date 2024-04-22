@@ -171,6 +171,10 @@
       display: flex;
       align-items: center;
       background: lighten($background, 5);
+      &:disabled {
+        cursor: default;
+        opacity: 0.4;}
+
       &:hover {
         transform: translateY(-2px);
       }
