@@ -163,7 +163,8 @@ const NightAction = () => {
                 </li>
               );
             }
-              return null; // Do not render anything if the condition is true
+        
+            return null; // Do not render anything if the condition is true
           })}
         </ul>
       </div>
