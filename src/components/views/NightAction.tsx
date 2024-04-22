@@ -121,7 +121,7 @@ const NightAction = () => {
         console.log("Something went wrong sending selection information: " + e);
       }
     }
-  }, [ready, connection]);
+  }, [ready]);
 
   useEffect(() => { // This useEffect tracks changes in the lobby
     console.log("something is hapaapapapeenning");

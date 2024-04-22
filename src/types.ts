@@ -1,7 +1,7 @@
 export type User = {
   playerId: string;
   username: string;
-  alive: string;
+  isAlive: string;
   isProtected: string;
   isKilled: string;
   ready: string;

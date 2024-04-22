@@ -137,14 +137,20 @@ const Voting = () => {
     content = (
       <div className ="game">
         <ul className= "game user-list">
-          {playersInLobby.map((user: User) => (
-            <li key={user.username}
-              onClick={() => setSelected(user.username)}
-              className={`player container ${selected === user.username ? "selected" : ""}`}
-            >
-              < LobbyMember user={user} />
-            </li>
-          ))}
+          {playersInLobby.map((user: User) => {
+            if(user.isAlive && user.username !== username) { // only display other players that are still alive and also not yourself
+              return (
+                <li key={user.username}
+                  onClick={() => setSelected(user.username)}
+                  className={`player container ${selected === user.username ? "selected" : ""}`}
+                >
+                  < LobbyMember user={user} />
+                </li>
+              );
+            }
+
+            return null;
+          })}
         </ul>
       </div>
     );}
