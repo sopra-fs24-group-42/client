@@ -23,7 +23,7 @@ LobbyMember.propTypes = {
 
 const NightAction = () => {
   // variables needed for establishing websocket connection
-  const [connection, setConnection] = useState(null);
+  var connection = false;
 
   const baseURL = getDomain();
   var stompClient = null;
@@ -54,7 +54,7 @@ const NightAction = () => {
       stompClient = over(socket); // specifying that it's a special type of websocket connection (i.e. using sockJS)
       stompClient.connect({}, function (frame) { // connecting to server websocket: instructions inside "function" will only be executed once we get something (i.e. a connect frame back from the server). Parameter "frame" is what we get from the server. 
         console.log("socket was successfully connected: " + frame);
-        setConnection(true);
+        connection = true;
         //connection = true;
         setTimeout(function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
           //const response = await callback();
@@ -63,7 +63,7 @@ const NightAction = () => {
         }, 500);
       });
       stompClient.onclose = reason => {
-        setConnection(false);
+        connection = false;
         console.log("Socket was closed, Reason: " + reason);
         reject(reason);}
     });
@@ -94,6 +94,7 @@ const NightAction = () => {
         console.error("There was an error connecting or subscribing: ", error);
       }
     };
+    
     connectAndSubscribe();
 
     if (messageReceived) {
@@ -103,7 +104,7 @@ const NightAction = () => {
       setPlayersInLobby(messageReceived.players);
     }
     //}
-    console.log("IM IN USEEFFFFFEECT")
+    console.log("IM IN USEEFFFFFEECT");
 
     return () => {
       const headers = {
@@ -112,13 +113,13 @@ const NightAction = () => {
       let selection = localStorage.getItem("selected");
       const body = JSON.stringify({username, selection});                        
       try {
-        stompClient.send(`/app/${role}/nightaction`, headers, body);
-        stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
+      stompClient.send(`/app/${role}/nightaction`, headers, body);
+      stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
       } catch (e) {
-        console.log("Something went wrong sending selection information: " + e);
+      console.log("Something went wrong sending selection information: " + e);
       }
     }
-  }, [ready]);
+  }, [ready, connection]);
 
   useEffect(() => { // This useEffect tracks changes in the lobby
     console.log("something is hapaapapapeenning");
@@ -203,7 +204,6 @@ const NightAction = () => {
                     return (
                       <div className="nightAction container">
                         <div className="nightAction highlight">{selected} is a {revealRole}</div>
-                        <div className="nightAction button-container">
                           <Button
                             width="100%"
                             height="40px"
@@ -212,7 +212,6 @@ const NightAction = () => {
                             Ok, got it
                           </Button>
                         </div>
-                      </div>
                     );
                   }
                   else {
