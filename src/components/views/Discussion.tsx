@@ -1,42 +1,83 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Header from "./Header";
-import { api, handleError } from "helpers/api";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "components/ui/Button";
-import "styles/views/FrontPage.scss";
+import "styles/views/WaitingRoom.scss";
 import BaseContainer from "components/ui/BaseContainer";
-import PropTypes from "prop-types";
-
-/*
-It is possible to add multiple components inside a single file,
-however be sure not to clutter your files with an endless amount!
-As a rule of thumb, use one file per component and only add small,
-specific components that belong to the main one in the same file.
- */
 
 const Discussion = () => {
   const navigate = useNavigate();
-  
+  const Ref = useRef(null);
+  const [timer, setTimer] = useState("00:00:00");
+
+  const getTimeRemaining = (e) => {
+    const total = Date.parse(e) - Date.parse(new Date());
+    const seconds = Math.floor((total / 1000) % 60);
+    const minutes = Math.floor((total / 1000 / 60) % 60);
+    const hours = Math.floor((total / 1000 / 60 / 60) % 24);
+
+    return {
+      total,
+      hours,
+      minutes,
+      seconds,
+    };
+  };
+
+  const startTimer = (e) => {
+    let { total, hours, minutes, seconds } = getTimeRemaining(e);
+    if (total >= 0) {
+      // Continue updating the timer
+      setTimer(
+        `${hours > 9 ? hours : "0" + hours}:${
+          minutes > 9 ? minutes : "0" + minutes}:${
+          seconds > 9 ? seconds : "0" + seconds}`
+      );
+    } else {
+      // Timer expires, navigate to another page
+      navigate("/voting");
+      clearInterval(Ref.current);
+    }
+  };
+
+  const clearTimer = (e) => {
+    setTimer("00:00:10");
+    if (Ref.current) clearInterval(Ref.current);
+    const id = setInterval(() => {
+      startTimer(e);
+    }, 1000);
+    Ref.current = id;
+  };
+
+  const getDeadTime = () => {
+    let deadline = new Date();
+    deadline.setSeconds(deadline.getSeconds() + 120);
+
+    return deadline;
+  };
+
+  useEffect(() => {
+    clearTimer(getDeadTime());
+
+    return () => {
+      if (Ref.current) {
+        clearInterval(Ref.current);
+      }
+    };
+  }, []);
+
   return (
-    <div>
-      <Header height="100" /> 
+    <div style={{ textAlign: "center", margin: "auto" }}>
       <BaseContainer>
-        <Button 
-          onClick = {()=> navigate("/joingame")}> 
-          ON DISCUSSION PAGE
-        </Button>
-        <Button 
-          style={{"margin-top": "70px"}}
-          onClick = {()=> navigate("/creategame")}
-        > 
-        UNDER CONSTRUCTION
-        </Button>
+        <div className="waitingRoom container">
+          <h1>Who was it?</h1>
+          <h1>Discuss</h1>
+          <h3></h3>
+          <div className="waitingRoom highlight">{timer}</div>
+        </div>
       </BaseContainer>
     </div>
   );
 };
 
-/**
- * You can get access to the history object's properties via the useLocation, useNavigate, useParams, ... hooks.
- */
 export default Discussion;
