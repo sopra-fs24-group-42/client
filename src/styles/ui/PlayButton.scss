@@ -1,0 +1,14 @@
+.play-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #abc2db;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .play-button.playing {
+    background-color: #28a745;
+    transform: scale(1.1); /* Slightly enlarge the button when playing */
+  }

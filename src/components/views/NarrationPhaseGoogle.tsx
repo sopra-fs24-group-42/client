@@ -8,6 +8,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import Base64ToMp3Decoder from "helpers/Base64ToMp3Decoder";
 import Fetcher from "helpers/Fetcher";
+import PlayButton from "helpers/PlayButton";
 
 
 function App() {
@@ -18,6 +19,8 @@ function App() {
         <Base64ToMp3Decoder />
         <h1>Fetcher</h1>
         <Fetcher />
+        <h1>Music Player</h1>
+        <PlayButton />
       </header>
     </div>
   );
