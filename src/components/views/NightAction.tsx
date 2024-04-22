@@ -23,7 +23,7 @@ LobbyMember.propTypes = {
 
 const NightAction = () => {
   // variables needed for establishing websocket connection
-  const [connection, setConnection] = useState(null);
+  var connection = false;
 
   const baseURL = getDomain();
   var stompClient = null;
@@ -36,7 +36,9 @@ const NightAction = () => {
   const [messageReceived, setMessageReceived] = useState(null);
   const [playersInLobby, setPlayersInLobby] = useState(null);
 
-  const [selection, setSelection] = useState(null);
+  const [selected, setSelected] = useState(null);
+  var sentReady = false;
+
   const [ready, setReady] = useState(false);
 
   const [revealRole, setRevealRole] = useState(null);
@@ -53,7 +55,7 @@ const NightAction = () => {
       stompClient = over(socket); // specifying that it's a special type of websocket connection (i.e. using sockJS)
       stompClient.connect({}, function (frame) { // connecting to server websocket: instructions inside "function" will only be executed once we get something (i.e. a connect frame back from the server). Parameter "frame" is what we get from the server. 
         console.log("socket was successfully connected: " + frame);
-        setConnection(true);
+        connection = true;
         //connection = true;
         setTimeout(function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
           //const response = await callback();
@@ -62,7 +64,7 @@ const NightAction = () => {
         }, 500);
       });
       stompClient.onclose = reason => {
-        setConnection(false);
+        connection = false;
         console.log("Socket was closed, Reason: " + reason);
         reject(reason);}
     });
@@ -93,6 +95,7 @@ const NightAction = () => {
         console.error("There was an error connecting or subscribing: ", error);
       }
     };
+
     connectAndSubscribe();
 
     if (messageReceived) {
@@ -102,22 +105,23 @@ const NightAction = () => {
       setPlayersInLobby(messageReceived.players);
     }
     //}
-    console.log("IM IN USEEFFFFFEECT")
+    console.log("IM IN USEEFFFFFEECT");
 
     return () => {
       const headers = {
         "Content-type": "application/json"
       };
-      let selectionRequest = localStorage.getItem("selection");
-      const body = JSON.stringify({username, selectionRequest});
+      let selection = localStorage.getItem("selected");
+      const body = JSON.stringify({username, selection});                        
       try {
         stompClient.send(`/app/${role}/nightaction`, headers, body);
         stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
+        sentReady = true;
       } catch (e) {
         console.log("Something went wrong sending selection information: " + e);
       }
     }
-  }, [ready]);
+  }, [ready, connection]);
 
   useEffect(() => { // This useEffect tracks changes in the lobby
     console.log("something is hapaapapapeenning");
@@ -131,18 +135,15 @@ const NightAction = () => {
 
   const doReveal = () => {
     try{
-      setRevealRole(messageReceived.playerMap[`${selection}`].roleName);
+      setRevealRole(messageReceived.playerMap[`${selected}`].roleName);
     } catch (e) {
       console.log("Could not fetch role: " + e);
     }
   }
 
-  const doSendSelection = () => {
-    localStorage.setItem("selection", selection);
-    //selectionRequest = selection;
+  const doSendSelected = () => {
+    localStorage.setItem("selected", selected);
     setReady(true);
-    //console.log("INSIDE DOSENDSELECTION: " + selection);
-    //console.log("selection request" + selectionRequest);
   }
   
   let content = <Spinner />;
@@ -153,8 +154,8 @@ const NightAction = () => {
         <ul className= "game user-list">
           {playersInLobby.map((user: User) => (
             <li key={user.username}
-              onClick={() => setSelection(user.username)}
-              className={`player container ${selection === user.username ? "selected" : ""}`}
+              onClick={() => setSelected(user.username)}
+              className={`player container ${selected === user.username ? "selected" : ""}`}
             >
               < LobbyMember user={user} />
             </li>
@@ -170,50 +171,63 @@ const NightAction = () => {
           if(role === "Werewolf") {
             return (
               <BaseContainer>
-                <div className= "nightAction heading">{username}, select someone to kill.</div>
-                {selection && <div className= "nightAction heading2">You have selected {selection} </div>}
-                <div className= "nightAction container">{content}
-                  {selection &&
-                    <Button
-                      width="100%"
-                      height="40px"
-                      onClick={() => doSendSelection()}
-                    >Kill {selection}
-                    </Button>}
-                </div>
+                {(() => {
+                  if(ready && selected) {
+                    return (
+                      <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>)}
+                  else if (selected && !ready) {
+                    return (
+                      <div>
+                        <div className= "nightAction heading2">You have selected {selected} </div>
+                        <div className= "nightAction container">{content}
+                          <Button
+                            width="100%"
+                            height="40px"
+                            onClick={() => doSendSelected()}
+                          >Kill {selected}
+                          </Button>
+                        </div>
+                      </div>)
+                  } else { 
+                    return (
+                      <div>
+                        <div className= "nightAction heading">{username}, select someone to kill.</div>    
+                        <div className= "nightAction container">{content} </div>
+                      </div>
+                    )
+                  }
+                })()}
               </BaseContainer>
             )
           } else if (role === "Seer") {
             return (
               <BaseContainer>
                 {(() => {
-                  if (selection && !revealRole) {
+                  if (selected && !revealRole) {
                     return (
-                      <div className="nightAction heading2">You have selected {selection}
+                      <div className="nightAction heading2">You have selected {selected}
                         <div className="nightAction container">{content}
                           <Button
                             width="100%"
                             height="40px"
                             onClick={() => doReveal()}
                           >
-                            See who {selection} is
+                            See who {selected} is
                           </Button>
                         </div>
                       </div>
                     );
-                  } else if (selection && revealRole) {
+                  } else if (selected && revealRole) {
                     return (
                       <div className="nightAction container">
-                        <div className="nightAction highlight">{selection} is a {revealRole}</div>
-                        <div className="nightAction button-container">
-                          <Button
-                            width="100%"
-                            height="40px"
-                            onClick={() => doSendSelection()}
-                          >
-                            Ok, got it
-                          </Button>
-                        </div>
+                        <div className="nightAction highlight">{selected} is a {revealRole}</div>
+                        <Button
+                          width="100%"
+                          height="40px"
+                          onClick={() => doSendSelected()}
+                        >
+                          Ok, got it
+                        </Button>
                       </div>
                     );
                   }
@@ -230,17 +244,32 @@ const NightAction = () => {
           } else {
             return (
               <BaseContainer>
-                <div className= "nightAction heading">{username}, select someone so as not to arouse suspicion.</div>
-                {selection && <div className= "nightAction heading2">You have selected {selection} </div>}
-                <div className= "nightAction container">{content}
-                  {selection &&
-                    <Button
-                      width="100%"
-                      height="40px"
-                      onClick={() => doSendSelection()}
-                    >Click me to avoid suspicion
-                    </Button>}
-                </div>
+                {(() => {
+                  if(ready && selected) {
+                    return (
+                      <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>)}
+                  else if (selected && !ready) {
+                    return (
+                      <div>
+                        <div className= "nightAction heading2">You have selected {selected} </div>
+                        <div className= "nightAction container">{content}
+                          <Button
+                            width="100%"
+                            height="40px"
+                            onClick={() => doSendSelected()}
+                          >Click me to avoid suspicion
+                          </Button>
+                        </div>
+                      </div>)
+                  } else { 
+                    return (
+                      <div>
+                        <div className= "nightAction heading">{username}, select someone to avoid suspicion.</div>    
+                        <div className= "nightAction container">{content} </div>
+                      </div>
+                    )
+                  }
+                })()}
               </BaseContainer>
             )
           }
