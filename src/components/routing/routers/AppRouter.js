@@ -11,6 +11,7 @@ import RoleReveal from "../../views/RoleReveal";
 import NightAction from "../../views/NightAction";
 import NightReveal from "../../views/NightReveal";
 import Discussion from "../../views/Discussion";
+import Voting from "../../views/Voting";
 
 
 /**
@@ -35,7 +36,7 @@ const AppRouter = () => {
         <Route path="/nightaction" element={<NightAction />} />
         <Route path="/nightreveal" element={<NightReveal />} />
         <Route path="/discussion" element={<Discussion />} />
-
+        <Route path="/voting" element={<Voting />} />
 
         <Route path="/game/*" element={<GameGuard><GameRouter /></GameGuard>} />
 

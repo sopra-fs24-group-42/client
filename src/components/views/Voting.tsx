@@ -21,7 +21,7 @@ LobbyMember.propTypes = {
   user: PropTypes.object,
 };
 
-const NightAction = () => {
+const Voting = () => {
   // variables needed for establishing websocket connection
   var connection = false;
 
@@ -152,19 +152,14 @@ const NightAction = () => {
     content = (
       <div className ="game">
         <ul className= "game user-list">
-          {playersInLobby.map((user: User) => {
-          if(user.username !== username) {
-          return (
+          {playersInLobby.map((user: User) => (
             <li key={user.username}
               onClick={() => setSelected(user.username)}
               className={`player container ${selected === user.username ? "selected" : ""}`}
             >
               < LobbyMember user={user} />
             </li>
-          );
-          }
-          return null; // Do not render anything if the condition is true
-          })}
+          ))}
         </ul>
       </div>
     );}
@@ -222,7 +217,7 @@ const NightAction = () => {
                         </div>
                       </div>
                     );
-                  } else if (selected && revealRole && !ready) {
+                  } else if (selected && revealRole) {
                     return (
                       <div className="nightAction container">
                         <div className="nightAction highlight">{selected} is a {revealRole}</div>
@@ -233,12 +228,6 @@ const NightAction = () => {
                         >
                           Ok, got it
                         </Button>
-                      </div>
-                    );
-                  } else if (selected && revealRole && ready) {
-                    return (
-                      <div className="nightAction container">
-                        <div className="nightAction heading2">Waiting for all players to complete their night action</div>
                       </div>
                     );
                   }
@@ -290,4 +279,4 @@ const NightAction = () => {
   );
 };
 
-export default NightAction;
+export default Voting;
