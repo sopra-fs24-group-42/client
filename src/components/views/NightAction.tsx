@@ -151,14 +151,19 @@ const NightAction = () => {
     content = (
       <div className ="game">
         <ul className= "game user-list">
-          {playersInLobby.map((user: User) => (
+          {playersInLobby.map((user: User) => {
+          if(user.username !== username) {
+          return (
             <li key={user.username}
               onClick={() => setSelection(user.username)}
               className={`player container ${selection === user.username ? "selected" : ""}`}
             >
               < LobbyMember user={user} />
             </li>
-          ))}
+          );
+          }
+          return null; // Do not render anything if the condition is true
+          })}
         </ul>
       </div>
     );}
