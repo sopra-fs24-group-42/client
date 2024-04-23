@@ -46,6 +46,8 @@ const NightAction = () => {
 
   const [revealRole, setRevealRole] = useState(null);
 
+  localStorage.setItem("selected", null);
+
   const getTimeRemaining = (e) => {
     const total = Date.parse(e) - Date.parse(new Date());
     const seconds = Math.floor((total / 1000) % 60);
@@ -71,7 +73,8 @@ const NightAction = () => {
       );
     } else {
       // Timer expires, navigate to another page
-      navigate("/voting");
+      setReady(true);
+      //navigate("/voting");
       clearInterval(Ref.current);
     }
   };
@@ -87,7 +90,7 @@ const NightAction = () => {
 
   const getDeadTime = () => {
     let deadline = new Date();
-    deadline.setSeconds(deadline.getSeconds() + 120);
+    deadline.setSeconds(deadline.getSeconds() + 15);
 
     return deadline;
   };
@@ -97,8 +100,7 @@ const NightAction = () => {
 
     return () => {
       if (Ref.current) {
-        clearInterval(Ref.current);
-      }
+        clearInterval(Ref.current);}
     };
   }, []);
 
@@ -201,10 +203,17 @@ const NightAction = () => {
   }
 
   const doSendSelected = () => {
-    localStorage.setItem("selected", selected);
     setReady(true);
   }
-  
+
+  const onPressingUser = (user) => {
+   setSelected(user.username);
+  }
+
+  useEffect(() => {
+    localStorage.setItem("selected", selected);
+  },[selected])
+
   let content = <Spinner />;
 
   if (messageReceived !== null) {
@@ -215,7 +224,7 @@ const NightAction = () => {
             if(user.username !== username) {
               return (
                 <li key={user.username}
-                  onClick={() => setSelected(user.username)}
+                  onClick={() => onPressingUser(user)}
                   className={`player container ${selected === user.username ? "selected" : ""}`}
                 >
                   < LobbyMember user={user} />
@@ -239,7 +248,10 @@ const NightAction = () => {
                 {(() => {
                   if(ready && selected) {
                     return (
-                      <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>)}
+                    <div className="waitingRoom container">
+                      <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>
+                          <div className="waitingRoom highlight">{timer}</div>
+                     </div>)}
                   else if (selected && !ready) {
                     return (
                       <div>
@@ -251,6 +263,7 @@ const NightAction = () => {
                             onClick={() => doSendSelected()}
                           >Kill {selected}
                           </Button>
+                          <div className="waitingRoom highlight">{timer}</div>
                         </div>
                       </div>)
                   } else { 
@@ -282,6 +295,7 @@ const NightAction = () => {
                           >
                             See who {selected} is
                           </Button>
+                           <div className="waitingRoom highlight">{timer}</div>
                         </div>
                       </div>
                     );
@@ -296,12 +310,14 @@ const NightAction = () => {
                         >
                           Ok, got it
                         </Button>
+                           <div className="waitingRoom highlight">{timer}</div>
                       </div>
                     );
                   } else if (selected && revealRole && ready) {
                     return (
                       <div className="nightAction container">
                         <div className="nightAction heading2">Waiting for all players to complete their night action</div>
+                        <div className="waitingRoom highlight">{timer}</div>
                       </div>
                     );
                   }
@@ -324,7 +340,10 @@ const NightAction = () => {
                 {(() => {
                   if(ready && selected) {
                     return (
-                      <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>)}
+                    <div className= "nightAction container">
+                      <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>
+                      <div className="waitingRoom highlight">{timer}</div>
+                      </div>)}
                   else if (selected && !ready) {
                     return (
                       <div>
@@ -336,6 +355,7 @@ const NightAction = () => {
                             onClick={() => doSendSelected()}
                           >Click me to avoid suspicion
                           </Button>
+                          <div className="waitingRoom highlight">{timer}</div>
                         </div>
                       </div>)
                   } else { 

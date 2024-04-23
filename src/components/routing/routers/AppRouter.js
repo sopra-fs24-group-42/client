@@ -10,7 +10,7 @@ import WaitingRoom from "../../views/WaitingRoom";
 import RoleReveal from "../../views/RoleReveal";
 import NightAction from "../../views/NightAction";
 import NightReveal from "../../views/NightReveal";
-import NightReveal from "../../views/VotingReveal";
+import VotingReveal from "../../views/VotingReveal";
 import Discussion from "../../views/Discussion";
 import Voting from "../../views/Voting";
 
