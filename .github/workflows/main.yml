@@ -38,6 +38,8 @@ jobs:
       - run: npm install stompjs --save
       - run: npm install net --save
       - run: npm run build
+        env:
+          REACT_APP_API_KEY: ${{ secrets.REACT_APP_API_KEY }}
 
       - name: Deploy to App Engine
         id: deploy
