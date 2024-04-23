@@ -24,24 +24,24 @@ const VotingReveal = () => {
 
   // variables needed for role reveal
   const [messageReceived, setMessageReceived] = useState(null);
-  var killedPlayer = null;
+  var votedPlayer = null;
   const username = localStorage.getItem("user"); //fetching username from localstorage
   const [ready, setReady] = useState(false);
   let gameState = "REVEALVOTING";
 
   const lobbyId = localStorage.getItem("lobbyId");
 
-  const findKilledPlayer = () => {
+  const findVotedPlayer = () => {
     console.log("Inside findKilledPlayer");
     for(let i=0; i<messageReceived.players.length; i++) { // iterating through list of players to check their isKilled field
       let currentPlayer = messageReceived.players[i];
       if(messageReceived.playerMap[`${currentPlayer.username}`].isKilled) {
-        killedPlayer = currentPlayer;
+        votedPlayer = currentPlayer;
       }
     }
-    console.log("KILLED PLAYER: " + JSON.stringify(killedPlayer));
-    console.log("KILLED PLAYER USERNAME:" + killedPlayer.username);
-    console.log("KILLED PLAYER ROLE:" + killedPlayer.roleName);
+    //console.log("KILLED PLAYER: " + JSON.stringify(killedPlayer));
+    //console.log("KILLED PLAYER USERNAME:" + killedPlayer.username);
+    //console.log("KILLED PLAYER ROLE:" + killedPlayer.roleName);
   }
 
   const connect = async () => {
@@ -123,10 +123,10 @@ const VotingReveal = () => {
 
   let content = <Spinner />;
   if(messageReceived !== null) {
-    findKilledPlayer();
+    findVotedPlayer();
     content = (
       <div className = "nightAction highlight">
-        {killedPlayer.username}, a {killedPlayer.roleName} was killed!
+        {votedPlayer.username}, a {votedPlayer.roleName} was killed!
       </div>
     );
   }
@@ -152,7 +152,7 @@ const VotingReveal = () => {
           } else {
             return (
               <div className="votingReveal header2">
-                Waiting for all players to acknowledge the death of {killedPlayer.username}
+                Waiting for all players to acknowledge the death of {votedPlayer.username}
               </div>
             );
           }

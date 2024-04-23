@@ -27,6 +27,7 @@ const NightReveal = () => {
   var killedPlayer = null;
   const username = localStorage.getItem("user"); //fetching username from localstorage
   const [ready, setReady] = useState(false);
+  const [alreadySent, setAlreadySent] = useState(false);
   let gameState = "REVEALNIGHT";
 
   const lobbyId = localStorage.getItem("lobbyId");
@@ -91,7 +92,9 @@ const NightReveal = () => {
     if (messageReceived) {
       if (messageReceived.gameState === "DISCUSSION") { // happens after ready was sent by all
         navigate("/discussion");
-      } 
+      } else if (messageReceived.gameState === "WAITINGROOM"){
+        navigate("/end");
+      }
     }
 
     return () => {
@@ -100,8 +103,9 @@ const NightReveal = () => {
       };
       const body = JSON.stringify({username, gameState});
       try{
-        if(!ready) { // to avoid SEND frames being sent doubled
-          stompClient.send("/app/ready", headers, body);}
+        if(!alreadySent) { // to avoid SEND frames being sent doubled
+          stompClient.send("/app/ready", headers, body);
+          setAlreadySent(true);}
       } catch (e) {
         console.log("Something went wrong starting the game :/");
       }
@@ -114,6 +118,8 @@ const NightReveal = () => {
     if (messageReceived) {
       if (messageReceived.gameState === "DISCUSSION") {
         navigate("/discussion");
+      } else if (messageReceived.gameState === "WAITINGROOM"){
+        navigate("/end");
       }
     }
   }, [messageReceived]); 

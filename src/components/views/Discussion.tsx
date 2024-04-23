@@ -22,6 +22,7 @@ const Discussion = () => {
   const [messageReceived, setMessageReceived] = useState(null);
   const [playersInLobby, setPlayersInLobby] = useState(null);
   const [ready, setReady] = useState(false);
+  const [alreadySent, setAlreadySent] = useState(false);
   const lobbyId = localStorage.getItem("lobbyId");
 
   const connect = async () => {
@@ -90,8 +91,9 @@ const Discussion = () => {
       let selection = localStorage.getItem("selected");
       const body = JSON.stringify({username, selection});                        
       try {
-        if(!ready) { // to stop sending SEND frames doubled
-          stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));} 
+        if(!alreadySent) { // to stop sending SEND frames doubled
+          stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
+          setAlreadySent(true);} 
       } catch (e) {
         console.log("Something went wrong sending selection information: " + e);
       }

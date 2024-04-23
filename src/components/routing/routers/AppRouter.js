@@ -14,7 +14,7 @@ import VotingReveal from "../../views/VotingReveal";
 import Discussion from "../../views/Discussion";
 import Voting from "../../views/Voting";
 import NarrationPhase from "../../views/NarrationPhase";
-
+import End from "../../views/End";
 
 /**
  * Main router of your application.
@@ -39,8 +39,10 @@ const AppRouter = () => {
         <Route path="/nightreveal" element={<NightReveal />} />
         <Route path="/discussion" element={<Discussion />} />
         <Route path="/voting" element={<Voting />} />
-        <Route path="/votingreveal" element={<VotingReveal />} />
+        <Route path="/revealvoting" element={<VotingReveal />} />
         <Route path="/NarrationPhase" element={<NarrationPhase />} />
+        <Route path="/end" element={<End />} />
+
         <Route path="/game/*" element={<GameGuard><GameRouter /></GameGuard>} />
 
       </Routes>
