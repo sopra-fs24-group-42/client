@@ -41,7 +41,6 @@ const AppRouter = () => {
         <Route path="/voting" element={<Voting />} />
         <Route path="/votingreveal" element={<VotingReveal />} />
         <Route path="/NarrationPhase" element={<NarrationPhase />} />
-        </Route>
         <Route path="/game/*" element={<GameGuard><GameRouter /></GameGuard>} />
 
       </Routes>
