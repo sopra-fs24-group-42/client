@@ -46,8 +46,6 @@ const NightAction = () => {
 
   const [revealRole, setRevealRole] = useState(null);
 
-  localStorage.setItem("selected", null);
-
   const getTimeRemaining = (e) => {
     const total = Date.parse(e) - Date.parse(new Date());
     const seconds = Math.floor((total / 1000) % 60);
@@ -73,6 +71,11 @@ const NightAction = () => {
       );
     } else {
       // Timer expires, navigate to another page
+      try {
+      let selection = localStorage.getItem("selected");}
+      catch (e) {
+      localStorage.setItem("selected", null);}
+
       setReady(true);
       //navigate("/voting");
       clearInterval(Ref.current);
@@ -172,8 +175,10 @@ const NightAction = () => {
       const headers = {
         "Content-type": "application/json"
       };
-      let selection = localStorage.getItem("selected");
-      const body = JSON.stringify({username, selection});                        
+       let selection = localStorage.getItem("selected");
+       console.log("THIS IS THE SELECTION: " + localStorage.getItem("selection"));
+       console.log("THIS IS SELECTION" + selection);
+       const body = JSON.stringify({username, selection});
       try {
         stompClient.send(`/app/${role}/nightaction`, headers, body);
         stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
@@ -206,12 +211,9 @@ const NightAction = () => {
     setReady(true);
   }
 
-  const onPressingUser = (user) => {
-   setSelected(user.username);
-  }
-
   useEffect(() => {
     localStorage.setItem("selected", selected);
+    console.log("SELECTED SOMEONE JUST NOW: " + localStorage.getItem("selected"));
   },[selected])
 
   let content = <Spinner />;
@@ -224,7 +226,7 @@ const NightAction = () => {
             if(user.username !== username) {
               return (
                 <li key={user.username}
-                  onClick={() => onPressingUser(user)}
+                  onClick={() => setSelected(user.username)}
                   className={`player container ${selected === user.username ? "selected" : ""}`}
                 >
                   < LobbyMember user={user} />
@@ -241,6 +243,7 @@ const NightAction = () => {
   return (
     <BaseContainer>
       <div className= "nightAction header">Night has fallen...
+        <div className="waitingRoom highlight">{timer}</div>
         {(() => {
           if(role === "Werewolf") {
             return (
@@ -250,7 +253,6 @@ const NightAction = () => {
                     return (
                     <div className="waitingRoom container">
                       <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>
-                          <div className="waitingRoom highlight">{timer}</div>
                      </div>)}
                   else if (selected && !ready) {
                     return (
@@ -263,7 +265,6 @@ const NightAction = () => {
                             onClick={() => doSendSelected()}
                           >Kill {selected}
                           </Button>
-                          <div className="waitingRoom highlight">{timer}</div>
                         </div>
                       </div>)
                   } else { 
@@ -271,9 +272,6 @@ const NightAction = () => {
                       <div>
                         <div className= "nightAction heading">{username}, select someone to kill.</div>    
                         <div className= "nightAction container">{content} </div>
-                        <div className="waitingRoom container">
-                          <div className="waitingRoom highlight">{timer}</div>
-                        </div>
                       </div>
                     )
                   }
@@ -295,7 +293,6 @@ const NightAction = () => {
                           >
                             See who {selected} is
                           </Button>
-                           <div className="waitingRoom highlight">{timer}</div>
                         </div>
                       </div>
                     );
@@ -310,14 +307,12 @@ const NightAction = () => {
                         >
                           Ok, got it
                         </Button>
-                           <div className="waitingRoom highlight">{timer}</div>
                       </div>
                     );
                   } else if (selected && revealRole && ready) {
                     return (
                       <div className="nightAction container">
                         <div className="nightAction heading2">Waiting for all players to complete their night action</div>
-                        <div className="waitingRoom highlight">{timer}</div>
                       </div>
                     );
                   }
@@ -325,9 +320,6 @@ const NightAction = () => {
                     return (
                       <div className="nightAction heading2">{username}, whose role do you want to see?
                         <div className="nightAction container">{content} </div>
-                        <div className="waitingRoom container">
-                          <div className="waitingRoom highlight">{timer}</div>
-                        </div>
                       </div>
                     );
                   }
@@ -342,7 +334,6 @@ const NightAction = () => {
                     return (
                     <div className= "nightAction container">
                       <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>
-                      <div className="waitingRoom highlight">{timer}</div>
                       </div>)}
                   else if (selected && !ready) {
                     return (
@@ -355,7 +346,6 @@ const NightAction = () => {
                             onClick={() => doSendSelected()}
                           >Click me to avoid suspicion
                           </Button>
-                          <div className="waitingRoom highlight">{timer}</div>
                         </div>
                       </div>)
                   } else { 
@@ -363,9 +353,6 @@ const NightAction = () => {
                       <div>
                         <div className= "nightAction heading">{username}, select someone to avoid suspicion.</div>    
                         <div className= "nightAction container">{content} </div>
-                        <div className="waitingRoom container">
-                          <div className="waitingRoom highlight">{timer}</div>
-                        </div>
                       </div>
                     )
                   }
