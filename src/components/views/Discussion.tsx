@@ -90,7 +90,8 @@ const Discussion = () => {
       let selection = localStorage.getItem("selected");
       const body = JSON.stringify({username, selection});                        
       try {
-        stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
+        if(!ready) { // to stop sending SEND frames doubled
+          stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));} 
       } catch (e) {
         console.log("Something went wrong sending selection information: " + e);
       }
@@ -132,7 +133,8 @@ const Discussion = () => {
       );
     } else {
       // Timer expires, navigate to another page
-      navigate("/voting");
+      setReady(true);
+      //navigate("/voting");
       clearInterval(Ref.current);
     }
   };

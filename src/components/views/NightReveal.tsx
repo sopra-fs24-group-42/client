@@ -39,9 +39,6 @@ const NightReveal = () => {
         killedPlayer = currentPlayer;
       }
     }
-    //console.log("KILLED PLAYER: " + JSON.stringify(killedPlayer));
-    //console.log("KILLED PLAYER USERNAME:" + killedPlayer.username);
-    //console.log("KILLED PLAYER ROLE:" + killedPlayer.roleName);
   }
 
   const connect = async () => {
@@ -103,7 +100,8 @@ const NightReveal = () => {
       };
       const body = JSON.stringify({username, gameState});
       try{
-        stompClient.send("/app/ready", headers, body);
+        if(!ready) { // to avoid SEND frames being sent doubled
+          stompClient.send("/app/ready", headers, body);}
       } catch (e) {
         console.log("Something went wrong starting the game :/");
       }
@@ -145,31 +143,30 @@ const NightReveal = () => {
   return (
     <BaseContainer>
       <div className="nightReveal container">
-              <div>
-                <div className="nightReveal header">Something happened during the night...</div>
-                {(() => {
-                  if (!ready) {
-                    return (
-                      <div className="nightReveal container">
-                        {content}
-                        <Button
-                          width="100%"
-                          height="40px"
-                          onClick={() => doSendReady()}
-                        >
-                          Ok
-                        </Button>
-                      </div>
-                    );
-                  } else {
-                    return (
-                      <div className="nightReveal header2">
-                        Waiting for all players to press ok
-                      </div>
-                    );
-                  }
-                })()}
-              </div>
+        <div>
+          <div className="nightReveal header">Something happened during the night...</div>
+          {(() => {
+            if (!ready) {
+              return (
+                <div className="nightReveal container">
+                  {content}
+                  <Button
+                    width="100%"
+                    height="40px"
+                    onClick={() => doSendReady()}
+                  >Ok
+                  </Button>
+                </div>
+              );
+            } else {
+              return (
+                <div className="nightReveal header2">
+                  Waiting for all players to press ok
+                </div>
+              );
+            }
+          })()}
+        </div>
       </div>
     </BaseContainer>
   );

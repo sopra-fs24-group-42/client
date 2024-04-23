@@ -36,7 +36,6 @@ const Voting = () => {
   const [playersInLobby, setPlayersInLobby] = useState(null);
 
   const [selected, setSelected] = useState(null);
-  var sentReady = false;
 
   const [ready, setReady] = useState(false);
 
@@ -107,9 +106,9 @@ const Voting = () => {
       let selection = localStorage.getItem("selected");
       const body = JSON.stringify({username, selection});                        
       try {
-        stompClient.send("/app/voting", headers, body);
-        stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
-        sentReady = true;
+        if(!ready) { // to avoid SEND frames being sent doubled
+          stompClient.send("/app/voting", headers, body);
+          stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));}
       } catch (e) {
         console.log("Something went wrong sending selection information: " + e);
       }
@@ -119,7 +118,7 @@ const Voting = () => {
   useEffect(() => { // This useEffect tracks changes in the lobby
     console.log("something is hapaapapapeenning");
     if (messageReceived) {
-      if (messageReceived.gameState === "REVEALNIGHT") {
+      if (messageReceived.gameState === "REVEALVOTING") {
         navigate("/revealvoting");
       }
       setPlayersInLobby(messageReceived.players);

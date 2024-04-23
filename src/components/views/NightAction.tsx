@@ -72,12 +72,10 @@ const NightAction = () => {
     } else {
       // Timer expires, navigate to another page
       try {
-      let selection = localStorage.getItem("selected");}
+        let selection = localStorage.getItem("selected");}
       catch (e) {
-      localStorage.setItem("selected", null);}
-
+        localStorage.setItem("selected", null);}
       setReady(true);
-      //navigate("/voting");
       clearInterval(Ref.current);
     }
   };
@@ -175,14 +173,15 @@ const NightAction = () => {
       const headers = {
         "Content-type": "application/json"
       };
-       let selection = localStorage.getItem("selected");
-       console.log("THIS IS THE SELECTION: " + localStorage.getItem("selection"));
-       console.log("THIS IS SELECTION" + selection);
-       const body = JSON.stringify({username, selection});
+      let selection = localStorage.getItem("selected");
+      console.log("THIS IS THE SELECTION: " + localStorage.getItem("selection"));
+      console.log("THIS IS SELECTION" + selection);
+      const body = JSON.stringify({username, selection});
       try {
-        stompClient.send(`/app/${role}/nightaction`, headers, body);
-        stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
-        sentReady = true;
+        if(!ready) { // to avoid SEND frames being sent doubled 
+          stompClient.send(`/app/${role}/nightaction`, headers, body);
+          stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
+          sentReady = true;}
       } catch (e) {
         console.log("Something went wrong sending selection information: " + e);
       }
@@ -251,9 +250,9 @@ const NightAction = () => {
                 {(() => {
                   if(ready && selected) {
                     return (
-                    <div className="waitingRoom container">
-                      <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>
-                     </div>)}
+                      <div className="waitingRoom container">
+                        <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>
+                      </div>)}
                   else if (selected && !ready) {
                     return (
                       <div>
@@ -332,8 +331,8 @@ const NightAction = () => {
                 {(() => {
                   if(ready && selected) {
                     return (
-                    <div className= "nightAction container">
-                      <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>
+                      <div className= "nightAction container">
+                        <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>
                       </div>)}
                   else if (selected && !ready) {
                     return (
