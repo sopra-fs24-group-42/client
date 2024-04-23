@@ -15,31 +15,31 @@ specific components that belong to the main one in the same file.
  */
 
 function TextToSpeech() {
-    const msg = new SpeechSynthesisUtterance();
-    msg.text = "This is the Narrationphase, listen carefully";
-    window.speechSynthesis.speak(msg);
+  const msg = new SpeechSynthesisUtterance();
+  msg.text = "This is the Narrationphase, listen carefully";
+  window.speechSynthesis.speak(msg);
 }
 
 const NarrationPhase = () => {
   const navigate = useNavigate();
   
   const msg = new SpeechSynthesisUtterance();
-    msg.text = "This is the Narrationphase, listen carefully";
+  msg.text = "This is the Narrationphase, listen carefully";
 
   return (
     <div>
       <Header height="100" /> 
       <BaseContainer>
-      <div className="NarrationPhase header">
-        Shhhh, be silent and listen
-      </div>
-      <Button
-              width="100%"
-              height="30px"
-              onClick={() => TextToSpeech()}
-            >
-              Play
-            </Button>
+        <div className="NarrationPhase header">
+          Shhhh, be silent and listen
+        </div>
+        <Button
+          width="100%"
+          height="30px"
+          onClick={() => TextToSpeech()}
+        >
+        Play
+        </Button>
       </BaseContainer>
     </div>
   );

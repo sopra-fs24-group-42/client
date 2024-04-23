@@ -2,13 +2,13 @@
     padding: 10px 20px;
     font-size: 16px;
     color: white;
-    background-color: #abc2db;
+    background-color: #3e444a;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.3s ease;
   }
   .play-button.playing {
-    background-color: #28a745;
+    background-color: #1c4225;
     transform: scale(1.1); /* Slightly enlarge the button when playing */
   }

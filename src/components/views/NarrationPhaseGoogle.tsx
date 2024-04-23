@@ -1,97 +1,94 @@
 import React, { useState, useEffect } from "react";
-import Header from "./Header";
-import { api, handleError } from "helpers/api";
 import {useNavigate} from "react-router-dom";
-import { Button } from "components/ui/Button";
-import "styles/views/FrontPage.scss";
-import BaseContainer from "components/ui/BaseContainer";
-import PropTypes from "prop-types";
-import Base64ToMp3Decoder from "helpers/Base64ToMp3Decoder";
-import Fetcher from "helpers/Fetcher";
-import PlayButton from "helpers/PlayButton";
+import "styles/views/NarrationViewGoogle.scss";
+import textSamples from "helpers/TextSamples";
 
 
-function App() {
+function NarrationPhaseGoogle() {
+  const [data, setData] = useState(null);
+  const [audioUrl, setAudioUrl] = useState(null);
+  
+  useEffect(() => {
+    const selectedText = textSamples[Math.floor(Math.random() * textSamples.length)];
+    const fetchData = async () => {
+      const baseURL = "https://texttospeech.googleapis.com/v1beta1/text:synthesize?fields=audioContent&key="
+      const URLSecret = process.env.REACT_APP_API_KEY;
+      var fetcherURL = baseURL.concat(URLSecret)
+      const requestBody = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify( {"audioConfig": {
+          "audioEncoding": "LINEAR16",
+          "pitch": 0,
+          "speakingRate": 1
+        },
+        "input": {
+          "text": selectedText
+        },
+        "voice": {
+          "languageCode": "en-US",
+          "name": "en-US-Standard-A"
+        }
+        })
+      };
+
+      try {
+        const response = await fetch(fetcherURL, requestBody);
+        if (!response.ok) {
+          throw new Error("Network response was not ok " + response.statusText);
+        }
+        const jsonData = await response.json();
+        let modifiedString = JSON.stringify(jsonData);
+        console.log(modifiedString);
+        let newstring = modifiedString.substring(17);
+        console.log("firts 17 Elements deleted",newstring);
+        newstring = newstring.slice(0, -2);
+        console.log("last 2 Elements deleted",newstring);
+        newstring = "data:audio/mp3;base64,".concat(newstring)   
+        console.log("concatenated",newstring);
+        
+        setData(newstring);  // Save the JSON response in state
+        console.log("Data saved in state:", newstring);
+      } catch (error) {
+        console.error("Error during fetching the audio file:", error);
+      }
+
+      return
+    }
+    fetchData();
+  }, [])
+
+  const DecodeAndPlay = () => {
+    // Assuming the base64 string is in the proper format with the data URL prefix
+    const base64Content = data.split(",")[1]; // This will ignore the data URL prefix if present
+    const byteCharacters = atob(base64Content);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "audio/mp3" });
+
+    // Create a URL for the Blob and set it for audio playback
+    const newAudioUrl = URL.createObjectURL(blob);
+    setAudioUrl(newAudioUrl);
+    
+  };
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Google Narration phase Night</h1>
-        <Base64ToMp3Decoder />
-        <h1>Fetcher</h1>
-        <Fetcher />
-        <h1>Music Player</h1>
-        <PlayButton />
-      </header>
+    <div className="container">
+      <button className="btn" onClick={DecodeAndPlay}>Decode and Play</button>
+      {audioUrl && <audio controls src={audioUrl} autoPlay />}
     </div>
+    /*
+    <div>
+    <button onClick={DecodeAndPlay}>Decode and Play</button>
+    {audioUrl && <audio controls src={audioUrl} autoPlay />}
+    <pre>{data}</pre>
+    </div>
+    */
   );
 }
 
-export default App;
-
-
-/*
-It is possible to add multiple components inside a single file,
-however be sure not to clutter your files with an endless amount!
-As a rule of thumb, use one file per component and only add small,
-specific components that belong to the main one in the same file.
- */
-
-/*
-
-const [srcFile, setsrcFile] = Usestate(null);
-
-var SecretURL = "https://texttospeech.googleapis.com/v1beta1/text:synthesize?fields=audioContent&key=AIzaSyBlJaTPDS1CFbQmJISrSR9_0NY3nu58U1k"
-
-(async () => {
-  var rawResponse = await fetch(SecretURL, {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: {
-      "audioConfig": {
-        "audioEncoding": "LINEAR16",
-        "pitch": 0,
-        "speakingRate": 1
-      },
-      "input": {
-        "text": "Night has fallen over the quiet village, and as the moon climbs high, a thick fog rolls in, shrouding everything in silence. Now is the time for secrets to come alive. While the villagers lay in restless slumber, those with hidden agendas rise. Wolves, awaken from your guise and prowl the misty shadows. Choose wisely whom you will visit tonight, for your survival hinges on your cunning. Seer, your time has come to peer beyond the veil. Gaze into the crystal orb and discern the true nature of one among us. Choose wisely, for knowledge is power. Witch, the potions on your shelf glimmer under the moon's pale light. Tonight, you may wield the power to save a life or take one. Consider your choices carefully, for each action reverberates through the shadows. Guardian, your watchful eyes and steady hands protect the innocent. Choose someone to shield from the night’s malevolent embrace. As the night deepens, let your decisions be guided by stealth and wisdom. Remember, the day will come soon, and with it, the time for reckoning. Close your eyes now, and fate will take its course. Good luck, villagers and creatures of the night. May the dawn find you all"
-      },
-      "voice": {
-        "languageCode": "en-US",
-        "name": "en-US-Neural2-J"
-      }
-    }
-
-  }')
-  });
-  const content = await rawResponse.json();
-
-  console.log(content);
-})();
-
-
-  return (
-    <div>
-      <Header height="100" /> 
-      <BaseContainer>
-      <div className="NarrationPhase header">
-        Shhhh, be silent and listen
-      </div>
-      <Button
-              width="100%"
-              height="30px"
-              onClick={() => TextToSpeech()}
-            >
-              Play
-            </Button>
-      </BaseContainer>
-    </div>
-  );
-};
-
-/**
- * You can get access to the history object's properties via the useLocation, useNavigate, useParams, ... hooks.
- */
+export default NarrationPhaseGoogle;
 
