@@ -39,9 +39,9 @@ const NightReveal = () => {
         killedPlayer = currentPlayer;
       }
     }
-    console.log("KILLED PLAYER: " + JSON.stringify(killedPlayer));
-    console.log("KILLED PLAYER USERNAME:" + killedPlayer.username);
-    console.log("KILLED PLAYER ROLE:" + killedPlayer.roleName);
+    //console.log("KILLED PLAYER: " + JSON.stringify(killedPlayer));
+    //console.log("KILLED PLAYER USERNAME:" + killedPlayer.username);
+    //console.log("KILLED PLAYER ROLE:" + killedPlayer.roleName);
   }
 
   const connect = async () => {
@@ -127,39 +127,49 @@ const NightReveal = () => {
   let content = <Spinner />;
   if(messageReceived !== null) {
     findKilledPlayer();
-    content = (
-      <div className = "nightAction highlight">
-        {killedPlayer.username}, a {killedPlayer.roleName} was killed!        
-      </div>
-    );
+    if(killedPlayer) { // killedPlayer is not null, i.e. someone was killed
+      content = (
+        <div className = "nightAction highlight">
+          {killedPlayer.username}, a {killedPlayer.roleName} was killed!
+        </div>
+      );
+    }
+    else {
+      content = (
+        <div className = "nightAction highlight">
+        Everyone survived last night!
+        </div>)
+    }
   }
 
   return (
     <BaseContainer>
       <div className="nightReveal container">
-        <div className="nightReveal header">Something happened during the night...</div>
-        {(() => {
-          if (!ready) {
-            return (
-              <div className="nightReveal container">
-                {content}
-                <Button
-                  width="100%"
-                  height="40px"
-                  onClick={() => doSendReady()}
-                >
-                  Ok, got it!
-                </Button>
+              <div>
+                <div className="nightReveal header">Something happened during the night...</div>
+                {(() => {
+                  if (!ready) {
+                    return (
+                      <div className="nightReveal container">
+                        {content}
+                        <Button
+                          width="100%"
+                          height="40px"
+                          onClick={() => doSendReady()}
+                        >
+                          Ok
+                        </Button>
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div className="nightReveal header2">
+                        Waiting for all players to press ok
+                      </div>
+                    );
+                  }
+                })()}
               </div>
-            );
-          } else {
-            return (
-              <div className="nightReveal header2">
-                Waiting for all players to acknowledge the death of {killedPlayer.username}
-              </div>
-            );
-          }
-        })()}
       </div>
     </BaseContainer>
   );

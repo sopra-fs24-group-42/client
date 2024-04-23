@@ -10,6 +10,7 @@ import WaitingRoom from "../../views/WaitingRoom";
 import RoleReveal from "../../views/RoleReveal";
 import NightAction from "../../views/NightAction";
 import NightReveal from "../../views/NightReveal";
+import VotingReveal from "../../views/VotingReveal";
 import Discussion from "../../views/Discussion";
 import Voting from "../../views/Voting";
 
@@ -37,6 +38,7 @@ const AppRouter = () => {
         <Route path="/nightreveal" element={<NightReveal />} />
         <Route path="/discussion" element={<Discussion />} />
         <Route path="/voting" element={<Voting />} />
+        <Route path="/votingreveal" element={<VotingReveal />} />
 
         <Route path="/game/*" element={<GameGuard><GameRouter /></GameGuard>} />
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SockJS from "sockjs-client";
 import { over } from "stompjs";
 import { getDomain } from "../../helpers/getDomain";
@@ -30,6 +30,9 @@ const NightAction = () => {
   var subscription = null;
   
   const navigate = useNavigate();
+  const Ref = useRef(null);
+  const [timer, setTimer] = useState("00:00:00");
+
   let gameState = "NIGHT";
 
   // variables needed for dynamic rendering of waitingRoom
@@ -42,6 +45,67 @@ const NightAction = () => {
   const [ready, setReady] = useState(false);
 
   const [revealRole, setRevealRole] = useState(null);
+
+  const getTimeRemaining = (e) => {
+    const total = Date.parse(e) - Date.parse(new Date());
+    const seconds = Math.floor((total / 1000) % 60);
+    const minutes = Math.floor((total / 1000 / 60) % 60);
+    const hours = Math.floor((total / 1000 / 60 / 60) % 24);
+
+    return {
+      total,
+      hours,
+      minutes,
+      seconds,
+    };
+  };
+
+  const startTimer = (e) => {
+    let { total, hours, minutes, seconds } = getTimeRemaining(e);
+    if (total >= 0) {
+      // Continue updating the timer
+      setTimer(
+        `${hours > 9 ? hours : "0" + hours}:${
+          minutes > 9 ? minutes : "0" + minutes}:${
+          seconds > 9 ? seconds : "0" + seconds}`
+      );
+    } else {
+      // Timer expires, navigate to another page
+      try {
+      let selection = localStorage.getItem("selected");}
+      catch (e) {
+      localStorage.setItem("selected", null);}
+
+      setReady(true);
+      //navigate("/voting");
+      clearInterval(Ref.current);
+    }
+  };
+
+  const clearTimer = (e) => {
+    setTimer("00:00:10");
+    if (Ref.current) clearInterval(Ref.current);
+    const id = setInterval(() => {
+      startTimer(e);
+    }, 1000);
+    Ref.current = id;
+  };
+
+  const getDeadTime = () => {
+    let deadline = new Date();
+    deadline.setSeconds(deadline.getSeconds() + 15);
+
+    return deadline;
+  };
+
+  useEffect(() => {
+    clearTimer(getDeadTime());
+
+    return () => {
+      if (Ref.current) {
+        clearInterval(Ref.current);}
+    };
+  }, []);
 
   // variables needed for UI  
   const lobbyId = localStorage.getItem("lobbyId");
@@ -111,8 +175,10 @@ const NightAction = () => {
       const headers = {
         "Content-type": "application/json"
       };
-      let selection = localStorage.getItem("selected");
-      const body = JSON.stringify({username, selection});                        
+       let selection = localStorage.getItem("selected");
+       console.log("THIS IS THE SELECTION: " + localStorage.getItem("selection"));
+       console.log("THIS IS SELECTION" + selection);
+       const body = JSON.stringify({username, selection});
       try {
         stompClient.send(`/app/${role}/nightaction`, headers, body);
         stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
@@ -142,10 +208,14 @@ const NightAction = () => {
   }
 
   const doSendSelected = () => {
-    localStorage.setItem("selected", selected);
     setReady(true);
   }
-  
+
+  useEffect(() => {
+    localStorage.setItem("selected", selected);
+    console.log("SELECTED SOMEONE JUST NOW: " + localStorage.getItem("selected"));
+  },[selected])
+
   let content = <Spinner />;
 
   if (messageReceived !== null) {
@@ -173,6 +243,7 @@ const NightAction = () => {
   return (
     <BaseContainer>
       <div className= "nightAction header">Night has fallen...
+        <div className="waitingRoom highlight">{timer}</div>
         {(() => {
           if(role === "Werewolf") {
             return (
@@ -180,7 +251,9 @@ const NightAction = () => {
                 {(() => {
                   if(ready && selected) {
                     return (
-                      <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>)}
+                    <div className="waitingRoom container">
+                      <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>
+                     </div>)}
                   else if (selected && !ready) {
                     return (
                       <div>
@@ -259,7 +332,9 @@ const NightAction = () => {
                 {(() => {
                   if(ready && selected) {
                     return (
-                      <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>)}
+                    <div className= "nightAction container">
+                      <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>
+                      </div>)}
                   else if (selected && !ready) {
                     return (
                       <div>
