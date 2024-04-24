@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SockJS from "sockjs-client";
 import { over } from "stompjs";
 import { getDomain } from "../../helpers/getDomain";
@@ -30,6 +30,8 @@ const Voting = () => {
   var subscription = null;
   
   const navigate = useNavigate();
+  const Ref = useRef(null);
+  const [timer, setTimer] = useState("00:00:00");
   let gameState = "VOTING";
 
   const [messageReceived, setMessageReceived] = useState(null);
@@ -44,6 +46,66 @@ const Voting = () => {
   // variables needed for UI  
   const lobbyId = localStorage.getItem("lobbyId");
   const username = localStorage.getItem("user");
+
+  const getTimeRemaining = (e) => {
+    const total = Date.parse(e) - Date.parse(new Date());
+    const seconds = Math.floor((total / 1000) % 60);
+    const minutes = Math.floor((total / 1000 / 60) % 60);
+    const hours = Math.floor((total / 1000 / 60 / 60) % 24);
+
+    return {
+      total,
+      hours,
+      minutes,
+      seconds,
+    };
+  };
+
+  const startTimer = (e) => {
+    let { total, hours, minutes, seconds } = getTimeRemaining(e);
+    if (total >= 0) {
+      // Continue updating the timer
+      setTimer(
+        `${hours > 9 ? hours : "0" + hours}:${
+          minutes > 9 ? minutes : "0" + minutes}:${
+          seconds > 9 ? seconds : "0" + seconds}`
+      );
+    } else {
+      // Timer expires, navigate to another page
+      try {
+        let selection = localStorage.getItem("selected");}
+      catch (e) {
+        localStorage.setItem("selected", null);}
+      setReady(true);
+      clearInterval(Ref.current);
+    }
+  };
+
+  const clearTimer = (e) => {
+    setTimer("00:00:10");
+    if (Ref.current) clearInterval(Ref.current);
+    const id = setInterval(() => {
+      startTimer(e);
+    }, 1000);
+    Ref.current = id;
+  };
+
+  const getDeadTime = () => {
+    let deadline = new Date();
+    deadline.setSeconds(deadline.getSeconds() + 15);
+
+    return deadline;
+  };
+
+  useEffect(() => {
+    clearTimer(getDeadTime());
+
+    return () => {
+      if (Ref.current) {
+        clearInterval(Ref.current);}
+    };
+  }, []);
+
 
   const connect = async () => {
     return new Promise((resolve, reject) => {
@@ -160,6 +222,7 @@ const Voting = () => {
   return (
     <BaseContainer>
       <div className= "nightAction header">Time to put it to a vote!
+        <div className="waitingRoom highlight">{timer}</div>
         <BaseContainer>
           {(() => {
             if(ready && selected) {

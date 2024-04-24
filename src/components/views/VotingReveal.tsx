@@ -10,6 +10,7 @@ import "styles/views/VotingReveal.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { User } from "types";
+import NightAction from "./NightAction";
 
 const VotingReveal = () => {
   console.log("I AM ON PAGE VOTING REVEAL NOW");
@@ -25,6 +26,7 @@ const VotingReveal = () => {
   // variables needed for role reveal
   const [messageReceived, setMessageReceived] = useState(null);
   var votedPlayer = null;
+  var tiedPlayers = [];
   const username = localStorage.getItem("user"); //fetching username from localstorage
   const [ready, setReady] = useState(false);
   let gameState = "REVEALVOTING";
@@ -32,16 +34,25 @@ const VotingReveal = () => {
   const lobbyId = localStorage.getItem("lobbyId");
 
   const findVotedPlayer = () => {
-    console.log("Inside findKilledPlayer");
+    console.log("Inside findVotedPlayer");
+    let max = messageReceived.players[0];
     for(let i=0; i<messageReceived.players.length; i++) { // iterating through list of players to check their isKilled field
       let currentPlayer = messageReceived.players[i];
-      if(messageReceived.playerMap[`${currentPlayer.username}`].isKilled) {
-        votedPlayer = currentPlayer;
+      if(messageReceived.playerMap[`${currentPlayer.username}`].numberOfVotes > messageReceived.playerMap[`${max.username}`].numberOfVotes) {
+        max = currentPlayer;
       }
     }
-    //console.log("KILLED PLAYER: " + JSON.stringify(killedPlayer));
-    //console.log("KILLED PLAYER USERNAME:" + killedPlayer.username);
-    //console.log("KILLED PLAYER ROLE:" + killedPlayer.roleName);
+    for(let i=0; i<messageReceived.players.length; i++) {
+      let currentPlayer = messageReceived.players[i];
+      if(messageReceived.playerMap[`${currentPlayer.username}`].numberOfVotes === messageReceived.playerMap[`${max.username}`].numberOfVotes) {
+        tiedPlayers.push(currentPlayer);
+      }
+    }
+    console.log("Voted PLAYER: " + JSON.stringify(max.username));
+    console.log("voted PLAYER votes:" + max.numberOfPlayers);
+    console.log("voted PLAYER ROLE:" + max.roleName);
+    console.log("tied players" + JSON.stringify(tiedPlayers));
+    votedPlayer = max;
   }
 
   const connect = async () => {
@@ -92,6 +103,8 @@ const VotingReveal = () => {
     if (messageReceived) {
       if (messageReceived.gameState === "NIGHT") { // happens after ready was sent by all
         navigate("/nightaction");
+      } else if (messageReceived.gameState === "WAITINGROOM") {
+        navigate("/end");
       }
     }
 
@@ -113,6 +126,8 @@ const VotingReveal = () => {
     if (messageReceived) {
       if (messageReceived.gameState === "NIGHT") {
         navigate("/nightaction");
+      } else if (messageReceived.gameState === "WAITINGROOM") {
+        navigate("/end");
       }
     }
   }, [messageReceived]);
@@ -121,20 +136,25 @@ const VotingReveal = () => {
     setReady(true);
   }
 
-  let content = <Spinner />;
+  let content = <Spinner />; // fetching data
   if(messageReceived !== null) {
     findVotedPlayer();
+    if(tiedPlayers.length > 1) { // i.e. there was at least one tie (no one gets voted out)
+      content = (
+        <div className="nightAction highlight"> There was a tie... No one was voted out!</div>
+      )
+    } else { // there was no tie: a player was voted out
     content = (
       <div className = "nightAction highlight">
-        {votedPlayer.username}, a {votedPlayer.roleName} was killed!
+        {votedPlayer.username}, a {votedPlayer.roleName} was voted out!
       </div>
-    );
+    );}
   }
 
   return (
     <BaseContainer>
       <div className="votingReveal container">
-        <div className="votingReveal header">Something happened during the night...</div>
+        <div className="votingReveal header">The voting results are in!</div>
         {(() => {
           if (!ready) {
             return (
@@ -152,7 +172,7 @@ const VotingReveal = () => {
           } else {
             return (
               <div className="votingReveal header2">
-                Waiting for all players to acknowledge the death of {votedPlayer.username}
+                Waiting for all players to press Ok
               </div>
             );
           }
