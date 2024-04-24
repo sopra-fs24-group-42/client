@@ -92,7 +92,7 @@ const NightReveal = () => {
     if (messageReceived) {
       if (messageReceived.gameState === "DISCUSSION") { // happens after ready was sent by all
         navigate("/discussion");
-      } else if (messageReceived.gameState === "WAITINGROOM"){
+      } else if (messageReceived.gameState === "ENDGAME"){
         navigate("/end");
       }
     }
@@ -118,7 +118,7 @@ const NightReveal = () => {
     if (messageReceived) {
       if (messageReceived.gameState === "DISCUSSION") {
         navigate("/discussion");
-      } else if (messageReceived.gameState === "WAITINGROOM"){
+      } else if (messageReceived.gameState === "ENDGAME"){
         navigate("/end");
       }
     }

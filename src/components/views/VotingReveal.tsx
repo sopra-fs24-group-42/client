@@ -91,7 +91,7 @@ const VotingReveal = () => {
     if (messageReceived) {
       if (messageReceived.gameState === "NIGHT") { // happens after ready was sent by all
         navigate("/nightaction");
-      } else if (messageReceived.gameState === "WAITINGROOM") {
+      } else if (messageReceived.gameState === "ENDGAME") {
         navigate("/end");
       }
     }
@@ -114,7 +114,7 @@ const VotingReveal = () => {
     if (messageReceived) {
       if (messageReceived.gameState === "NIGHT") {
         navigate("/nightaction");
-      } else if (messageReceived.gameState === "WAITINGROOM") {
+      } else if (messageReceived.gameState === "ENDGAME") {
         navigate("/end");
       }
     }
