@@ -86,7 +86,7 @@ function NarrationPhase() {
         <div className="title">Survive the Night</div>
         <div className="subtitle">Shhhhhhhhh. This is the Narration Phase, listen...</div>
         <button className="btn" onClick={DecodeAndPlay}>
-          Decode and Play
+          Press to Play
         </button>
         {audioUrl && (
           <audio controls src={audioUrl} autoPlay />
