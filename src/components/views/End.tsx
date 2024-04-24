@@ -102,8 +102,8 @@ const End = () => {
 
   useEffect(() => { // This useEffect tracks changes in the lobby
     if (messageReceived) {
-        if (messageReceived.gameState === "WAITINGROOM") {
-            navigate("/waitingroom");}
+      if (messageReceived.gameState === "WAITINGROOM") {
+        navigate("/waitingroom");}
       setWinningTeam(messageReceived.winnerSide);
     }
   }, [messageReceived]); 
@@ -122,25 +122,24 @@ const End = () => {
   return (
     <BaseContainer>
       <div className= "nightAction header">The game has ended!</div>
-          {(() => {
-            if(!ready) {
-              return (
-                <div className = "nightAction container">
-                  {content}
-                  <Button
-                    width="100%"
-                    height="40px"
-                    onClick={() => doSendReady()}
-                  >Ok
-                  </Button>
-                </div>
-              )
-            }
-            
-            else { 
-              return (
-                {content})}
-          })()}
+      {(() => {
+        if(!ready) {
+          return (
+            <div className = "nightAction container">
+              {content}
+              <Button
+                width="100%"
+                height="40px"
+                onClick={() => doSendReady()}
+              >Ok
+              </Button>
+            </div>
+          )
+        }    
+        else { 
+          return (
+            {content})}
+      })()}
     </BaseContainer>
   );
 };

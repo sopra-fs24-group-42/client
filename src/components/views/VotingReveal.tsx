@@ -132,11 +132,11 @@ const VotingReveal = () => {
         <div className="nightAction highlight"> There was a tie... No one was voted out!</div>
       )
     } else { // there was no tie: a player was voted out
-    content = (
-      <div className = "nightAction highlight">
-        {votedPlayer.username}, a {votedPlayer.roleName} was voted out!
-      </div>
-    );}
+      content = (
+        <div className = "nightAction highlight">
+          {votedPlayer.username}, a {votedPlayer.roleName} was voted out!
+        </div>
+      );}
   }
 
   return (
