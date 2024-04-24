@@ -38,6 +38,7 @@ const NightAction = () => {
   // variables needed for dynamic rendering of waitingRoom
   const [messageReceived, setMessageReceived] = useState(null);
   const [playersInLobby, setPlayersInLobby] = useState(null);
+  const [alreadySent, setAlreadySent] = useState(false);
 
   const [selected, setSelected] = useState(null);
   var sentReady = false;
@@ -178,10 +179,13 @@ const NightAction = () => {
       console.log("THIS IS SELECTION" + selection);
       const body = JSON.stringify({username, selection});
       try {
-        if(!ready) { // to avoid SEND frames being sent doubled 
+        if(!alreadySent) { // to avoid SEND frames being sent doubled 
           stompClient.send(`/app/${role}/nightaction`, headers, body);
-          stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
-          sentReady = true;}
+          setTimeout(function() {
+            stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
+            sentReady = true;
+            setAlreadySent(true);
+          },500);}
       } catch (e) {
         console.log("Something went wrong sending selection information: " + e);
       }
