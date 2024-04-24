@@ -7,7 +7,6 @@ import "../../styles/views/NarrationPhase.scss";
 import Header from "./Header";
 
 
-
 function NarrationPhase() {
   const [data, setData] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
