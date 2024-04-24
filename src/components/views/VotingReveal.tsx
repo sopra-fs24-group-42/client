@@ -35,24 +35,12 @@ const VotingReveal = () => {
 
   const findVotedPlayer = () => {
     console.log("Inside findVotedPlayer");
-    let max = messageReceived.players[0];
     for(let i=0; i<messageReceived.players.length; i++) { // iterating through list of players to check their isKilled field
       let currentPlayer = messageReceived.players[i];
-      if(messageReceived.playerMap[`${currentPlayer.username}`].numberOfVotes > messageReceived.playerMap[`${max.username}`].numberOfVotes) {
-        max = currentPlayer;
+      if(messageReceived.playerMap[`${currentPlayer.username}`].isKilled) {
+        votedPlayer = currentPlayer;
       }
     }
-    for(let i=0; i<messageReceived.players.length; i++) {
-      let currentPlayer = messageReceived.players[i];
-      if(messageReceived.playerMap[`${currentPlayer.username}`].numberOfVotes === messageReceived.playerMap[`${max.username}`].numberOfVotes) {
-        tiedPlayers.push(currentPlayer);
-      }
-    }
-    console.log("Voted PLAYER: " + JSON.stringify(max.username));
-    console.log("voted PLAYER votes:" + max.numberOfPlayers);
-    console.log("voted PLAYER ROLE:" + max.roleName);
-    console.log("tied players" + JSON.stringify(tiedPlayers));
-    votedPlayer = max;
   }
 
   const connect = async () => {
@@ -139,7 +127,7 @@ const VotingReveal = () => {
   let content = <Spinner />; // fetching data
   if(messageReceived !== null) {
     findVotedPlayer();
-    if(tiedPlayers.length > 1) { // i.e. there was at least one tie (no one gets voted out)
+    if(!votedPlayer) { // i.e. there was at least one tie (no one gets voted out)
       content = (
         <div className="nightAction highlight"> There was a tie... No one was voted out!</div>
       )
