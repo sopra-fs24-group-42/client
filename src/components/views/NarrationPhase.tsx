@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import {useNavigate} from "react-router-dom";
+import { getDomain } from "../../helpers/getDomain";
 import textSamples from "helpers/TextSamples";
+import { Button } from "components/ui/Button";
+import "../../styles/views/NarrationPhase.scss";
+import Header from "./Header";
+
 
 
 function NarrationPhase() {
@@ -71,21 +76,33 @@ function NarrationPhase() {
     // Create a URL for the Blob and set it for audio playback
     const newAudioUrl = URL.createObjectURL(blob);
     setAudioUrl(newAudioUrl);
+    console.log("File has been decoded and AudioURL has been set")
     
   };
   
   return (
-    <div className="container">
-      <button className="btn" onClick={DecodeAndPlay}>Decode and Play</button>
-      {audioUrl && <audio controls src={audioUrl} autoPlay />}
+    <div className="NarrationPhase">
+      <div className="container">
+        <div className="title">Survive the Night</div>
+        <div className="subtitle">Shhhhhhhhh. This is the Narration Phase, listen...</div>
+        <button className="btn" onClick={DecodeAndPlay}>
+          Decode and Play
+        </button>
+        {audioUrl && (
+          <audio controls src={audioUrl} autoPlay />
+        )}
+      </div>
     </div>
     /*
-    <div>
-    <button onClick={DecodeAndPlay}>Decode and Play</button>
-    {audioUrl && <audio controls src={audioUrl} autoPlay />}
-    <pre>{data}</pre>
-    </div>
+    <BaseContainer>
+      <div className="container">
+      <button className="btn" onClick={DecodeAndPlay}>Decode and Play</button>
+      {audioUrl && <audio controls src={audioUrl} autoPlay />}
+      </div>
+    </BaseContainer>
     */
+
+    
   );
 }
 
