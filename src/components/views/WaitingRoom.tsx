@@ -58,6 +58,9 @@ const WaitingRoom = () => {
       stompClient.connect({}, function (frame) { // connecting to server websocket: instructions inside "function" will only be executed once we get something (i.e. a connect frame back from the server). Parameter "frame" is what we get from the server. 
         console.log("socket was successfully connected: " + frame);
         setConnection(true);
+        //stompClient.heartbeat.outgoing = 20000;
+        //stompClient.heartbeat.incoming = 10000;
+        //stompClient.reconnect_delay = 5000;
         //connection = true;
         setTimeout(function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
           //const response = await callback();
