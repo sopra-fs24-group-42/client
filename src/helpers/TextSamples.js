@@ -37,11 +37,13 @@ const textSamples = [
   Witch, your potions bubble with potential. Tonight, your decision to protect or destroy will ripple through the village.
   Guardian, your watchful presence is our shield. Choose wisely whom to protect from the night’s dark intentions.
   Let the quiet of the night envelop your actions. When the light returns, it will reveal the results of your hidden endeavors. May the dawn be merciful to you all.",
-  */
   "1",
   "2",
   "3",
-  "4"
+  "4",
+  */
+  "Night has fallen over the quiet village and a large thick fog covers the fields",
+  "The blanket of night descends, and the village slips into a realm of dreams and dread"
 ];
   
 export default textSamples;
