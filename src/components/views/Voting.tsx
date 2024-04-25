@@ -181,7 +181,6 @@ const Voting = () => {
   }, [ready, connection]);
 
   useEffect(() => { // This useEffect tracks changes in the lobby
-    console.log("something is hapaapapapeenning");
     if (messageReceived) {
       if (messageReceived.gameState === "REVEALVOTING") {
         navigate("/revealvoting");
@@ -191,10 +190,13 @@ const Voting = () => {
   }, [messageReceived]); 
 
   const doSendSelected = () => {
-    localStorage.setItem("selected", selected);
     setReady(true);
   }
   
+  useEffect(() => {
+    localStorage.setItem("selected", selected);
+  },[selected])
+
   let content = <Spinner />;
 
   if (messageReceived !== null) {

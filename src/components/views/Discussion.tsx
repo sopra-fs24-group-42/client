@@ -185,7 +185,7 @@ const Discussion = () => {
                 <div className="waitingRoom container">
                   <Button
                     onClick={()=> doSendReady()}>
-                    Enough discussing!            
+                    Skip            
                   </Button>
                 </div>)
             }
