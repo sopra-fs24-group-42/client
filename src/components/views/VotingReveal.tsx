@@ -14,6 +14,7 @@ import NightAction from "./NightAction";
 
 const VotingReveal = () => {
   console.log("I AM ON PAGE VOTING REVEAL NOW");
+  localStorage.removeItem("selected");
 
   // variables needed for establishing websocket connection
   const baseURL = getDomain();
@@ -26,7 +27,6 @@ const VotingReveal = () => {
   // variables needed for role reveal
   const [messageReceived, setMessageReceived] = useState(null);
   var votedPlayer = null;
-  var tiedPlayers = [];
   const username = localStorage.getItem("user"); //fetching username from localstorage
   const [ready, setReady] = useState(false);
   let gameState = "REVEALVOTING";
@@ -39,6 +39,11 @@ const VotingReveal = () => {
       let currentPlayer = messageReceived.players[i];
       if(messageReceived.playerMap[`${currentPlayer.username}`].isKilled) {
         votedPlayer = currentPlayer;
+      }
+    }
+    if(votedPlayer) {
+      if (username === votedPlayer.username) {
+        navigate("/deadscreen", {state: votedPlayer});
       }
     }
   }

@@ -18,6 +18,8 @@ const NightReveal = () => {
   const baseURL = getDomain();
   const navigate = useNavigate();
 
+  localStorage.removeItem("selected");
+
   var connection = false;
   var stompClient = null;
   var subscription = null;
@@ -38,6 +40,11 @@ const NightReveal = () => {
       let currentPlayer = messageReceived.players[i];
       if(messageReceived.playerMap[`${currentPlayer.username}`].isKilled) {
         killedPlayer = currentPlayer;
+      }
+    }
+    if(killedPlayer) {
+      if (username === killedPlayer.username) {
+        navigate("/deadscreen", {state: killedPlayer});
       }
     }
   }

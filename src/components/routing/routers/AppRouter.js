@@ -15,6 +15,8 @@ import Discussion from "../../views/Discussion";
 import Voting from "../../views/Voting";
 import NarrationPhase from "../../views/NarrationPhase";
 import End from "../../views/End";
+import DeadScreen from "../../views/DeadPlayer";
+
 
 /**
  * Main router of your application.
@@ -42,6 +44,8 @@ const AppRouter = () => {
         <Route path="/revealvoting" element={<VotingReveal />} />
         <Route path="/NarrationPhase" element={<NarrationPhase />} />
         <Route path="/end" element={<End />} />
+        <Route path="/deadscreen" element={<DeadScreen />} />
+
 
         <Route path="/game/*" element={<GameGuard><GameRouter /></GameGuard>} />
 
