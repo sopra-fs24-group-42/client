@@ -41,7 +41,7 @@ const NightAction = () => {
   const [alreadySent, setAlreadySent] = useState(false);
 
   const [selected, setSelected] = useState(null);
-  var sentReady = false;
+  var sentReady = false; // for seer role
 
   const [ready, setReady] = useState(false);
 
