@@ -167,8 +167,6 @@ const NightAction = () => {
       }
       setPlayersInLobby(messageReceived.players);
     }
-    //}
-    console.log("IM IN USEEFFFFFEECT");
 
     return () => {
       const headers = {
@@ -193,7 +191,6 @@ const NightAction = () => {
   }, [ready]);
 
   useEffect(() => { // This useEffect tracks changes in the lobby
-    console.log("something is hapaapapapeenning");
     if (messageReceived) {
       if (messageReceived.gameState === "REVEALNIGHT") {
         navigate("/nightreveal");
@@ -226,7 +223,7 @@ const NightAction = () => {
       <div className ="game">
         <ul className= "game user-list">
           {playersInLobby.map((user: User) => {
-            if(user.username !== username) {
+            if(user.username !== username && user.isAlive) {
               return (
                 <li key={user.username}
                   onClick={() => setSelected(user.username)}
