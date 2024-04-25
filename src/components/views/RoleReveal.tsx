@@ -12,7 +12,6 @@ import PropTypes from "prop-types";
 import { User } from "types";
 
 const RoleReveal = () => {
-  console.log("I AM ON PAGE ROLE REVEAL NOW");
 
   // variables needed for establishing websocket connection
   const baseURL = getDomain();
@@ -68,9 +67,7 @@ const RoleReveal = () => {
   const subscribe = async (destination) => { 
     return new Promise( (resolve, reject) => {
       subscription = stompClient.subscribe(destination, async function(message) { 
-        console.log("I AM STILL SUBSCRIBED AND RECEIVED A MESSAGE");
         // all of this only gets executed when message is received
-        console.log("this is the message: " + JSON.stringify(message));
         //localStorage.setItem("lobby", message.body);
         setMessageReceived(JSON.parse(message.body));
         setRole(JSON.parse(message.body).playerMap[`${username}`].roleName);
@@ -99,7 +96,6 @@ const RoleReveal = () => {
         localStorage.setItem("role", role);
         navigate("/nightaction");
       }
-      console.log("I received a MESSAGE AGAIN!");
       setRole(messageReceived.playerMap[`${username}`].roleName);
     }
 
@@ -139,18 +135,21 @@ const RoleReveal = () => {
   let displayInstructions = <Spinner />;
   if (role === "Werewolf") {
     displayText = werewolfText;
-    //content = <div className="roleReveal werewolf"></div>
     displayInstructions = werewolfInstructions;
+    displayImage = (
+      <div className="roleReveal werewolf"></div>)
   }
   else if (role === "Seer") {
     displayText = seerText;
-    //content = <div className="roleReveal seer"></div>
     displayInstructions = seerInstructions;
+    displayImage = (
+      <div className="roleReveal seer"></div>)
   }
   else if (role === "Villager") {
     displayText = villagerText;
-    //content = <div className="roleReveal villager"></div>
     displayInstructions = villagerInstructions;
+    displayImage = (
+      <div className="roleReveal villager"></div>)
   }
 
   return (
@@ -159,11 +158,12 @@ const RoleReveal = () => {
         <div className= "roleReveal header2" >Your role is...</div>
       </div>
       <div className= "roleReveal container">
+        {displayImage}
         <div className= "roleReveal highlight" >{displayText}</div>
         <div className= "roleReveal instructions" >{displayInstructions}</div>
         <div className="roleReveal button-container">
           { ready ?
-            <div className= "roleReveal header3" >
+            <div className= "roleReveal header3">
             Waiting until all players are ready...</div> :
             <Button
               width="100%"

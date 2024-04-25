@@ -111,8 +111,6 @@ const DeadScreen = () => {
     }
   }, [messageReceived]); 
 
-
-
   let content = <Spinner />;
   if(messageReceived !== null) {
     if(deadPlayer.numberOfVotes !== 0) { // you were voted out
@@ -125,7 +123,7 @@ const DeadScreen = () => {
     else { // you were killed
       content = (
         <div className = "nightAction highlight">
-        {deadPlayer.username}, you were killed!
+          {deadPlayer.username}, you were killed!
         </div>)
     }
   }
