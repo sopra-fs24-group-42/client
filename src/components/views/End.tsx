@@ -22,6 +22,8 @@ const End = () => {
   
   const navigate = useNavigate();
 
+  localStorage.removeItem("role");
+
   const [messageReceived, setMessageReceived] = useState(null);
   const [winningTeam, setWinningTeam] = useState(null);
 

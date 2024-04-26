@@ -81,9 +81,7 @@ const Discussion = () => {
       }
       setPlayersInLobby(messageReceived.players);
     }
-    //}
-    console.log("IM IN USEEFFFFFEECT");
-
+  
     return () => {
       const headers = {
         "Content-type": "application/json"

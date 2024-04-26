@@ -26,7 +26,10 @@ const RoleReveal = () => {
   const username = localStorage.getItem("user");
   const [role, setRole] = useState(null); 
   const [ready, setReady] = useState(false);
+  const [alreadySent, setAlreadySent] = useState(false);
   let gameState = "WAITINGROOM";
+
+  localStorage.removeItem("role");
 
   // variables needed for UI
   // TODO: Move text variables to another file so it's not so cluttered here
@@ -77,19 +80,18 @@ const RoleReveal = () => {
   }
 
   useEffect(() => { // This is executed once upon mounting of roleReveal --> establishes ws connection & subscribes
-    if(!connection) { 
-      const connectAndSubscribe = async () => { 
-        try {
-          await connect();
-          subscription = await subscribe(`/topic/lobby/${lobbyId}`);
-          //stompClient.send(`/topic/lobby/${lobbyId}`, headers, body);
-        } catch (error) {
-          console.error("There was an error connecting or subscribing: ", error);
-        }
-      };
-      setTimeout(function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
-        connectAndSubscribe();}, 600);
-    }
+    //if(!connection) { 
+    const connectAndSubscribe = async () => { 
+      try {
+        await connect();
+        subscription = await subscribe(`/topic/lobby/${lobbyId}`);
+        //stompClient.send(`/topic/lobby/${lobbyId}`, headers, body);
+      } catch (error) {
+        console.error("There was an error connecting or subscribing: ", error);
+      }
+    };
+    setTimeout(function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
+      connectAndSubscribe();}, 600);
     if (messageReceived) {
       console.log("GAME STATE: " + messageReceived.gameState);
       if (messageReceived.gameState === "NIGHT") {
@@ -106,8 +108,9 @@ const RoleReveal = () => {
         };
         const body = JSON.stringify({username, gameState});
         // Again, this does not work here. For some reason StompClient becomes null. 
-        stompClient.send("/app/ready", headers, body);
-        console.log("omg i sent a message!");
+        if(!alreadySent){
+          stompClient.send("/app/ready", headers, body);
+          setAlreadySent(true);}
       } catch (e) {
         console.log("Something went wrong while sending a message to the server :/ " + e);
       }
