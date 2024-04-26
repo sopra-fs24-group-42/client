@@ -252,12 +252,11 @@ const NightAction = () => {
                   if(ready && selected) {
                     return (
                       <div className="waitingRoom container">
-                        <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>
+                        <div className= "nightAction heading">Waiting for all players to complete their night actions...</div>
                       </div>)}
                   else if (selected && !ready) {
                     return (
-                      <div>
-                        <div className= "nightAction heading2">You have selected {selected} </div>
+                      <div className= "nightAction heading">You have selected {selected} 
                         <div className= "nightAction container">{content}
                           <Button
                             width="100%"
@@ -269,8 +268,7 @@ const NightAction = () => {
                       </div>)
                   } else { 
                     return (
-                      <div>
-                        <div className= "nightAction heading">{username}, select someone to kill.</div>    
+                      <div className= "nightAction heading">{username}, select someone to kill.    
                         <div className= "nightAction container">{content} </div>
                       </div>
                     )
@@ -284,7 +282,7 @@ const NightAction = () => {
                 {(() => {
                   if (selected && !revealRole) {
                     return (
-                      <div className="nightAction heading2">You have selected {selected}
+                      <div className="nightAction heading">You have selected {selected}
                         <div className="nightAction container">{content}
                           <Button
                             width="100%"
@@ -312,13 +310,13 @@ const NightAction = () => {
                   } else if (selected && revealRole && ready) {
                     return (
                       <div className="nightAction container">
-                        <div className="nightAction heading2">Waiting for all players to complete their night action</div>
+                        <div className="nightAction heading">Waiting for all players to complete their night action</div>
                       </div>
                     );
                   }
                   else {
                     return (
-                      <div className="nightAction heading2">{username}, whose role do you want to see?
+                      <div className="nightAction heading">{username}, whose role do you want to see?
                         <div className="nightAction container">{content} </div>
                       </div>
                     );
@@ -333,12 +331,11 @@ const NightAction = () => {
                   if(ready && selected) {
                     return (
                       <div className= "nightAction container">
-                        <div className= "nightAction heading2">Waiting for all players to complete their night actions...</div>
+                        <div className= "nightAction heading">Waiting for all players to complete their night actions...</div>
                       </div>)}
                   else if (selected && !ready) {
                     return (
-                      <div>
-                        <div className= "nightAction heading2">You have selected {selected} </div>
+                      <div className= "nightAction heading">You have selected {selected}
                         <div className= "nightAction container">{content}
                           <Button
                             width="100%"
@@ -350,8 +347,7 @@ const NightAction = () => {
                       </div>)
                   } else { 
                     return (
-                      <div>
-                        <div className= "nightAction heading">{username}, select someone to avoid suspicion.</div>    
+                      <div className= "nightAction heading">{username}, select someone to avoid suspicion.    
                         <div className= "nightAction container">{content} </div>
                       </div>
                     )

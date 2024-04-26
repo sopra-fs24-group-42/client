@@ -15,7 +15,7 @@ import NightAction from "./NightAction";
 const VotingReveal = () => {
   console.log("I AM ON PAGE VOTING REVEAL NOW");
   localStorage.removeItem("selected");
-
+  
   // variables needed for establishing websocket connection
   const baseURL = getDomain();
   const navigate = useNavigate();
