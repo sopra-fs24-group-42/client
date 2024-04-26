@@ -29,12 +29,15 @@
       font-weight: bold;
       font-size: 25px;
       position: fixed; // makes header not scroll
-      z-index: 9999; // makes header be topmost layer
+      z-index: 10; // makes header be topmost layer
       top: 0;
       left: 50%;              // Positions the left edge of the element at the center of the container
       transform: translateX(-50%); // Shifts the element left by 50% of its own width, centering it
       width: 100%;            // Optional: ensure it spans full width if needed for design
       margin-top: 40px;
+      height: 100px;
+      //background-color: rgba(255, 255, 255, 0.3);
+
     }
     &.heading {
       @include center;
@@ -46,20 +49,23 @@
       font-size: 20px;
       position: fixed; // makes header not scroll
       top: 60px;
-      left: 50%;              // Positions the left edge of the element at the center of the container
-      transform: translateX(-50%); // Shifts the element left by 50% of its own width, centering it
-      width: 50%;            // Optional: ensure it spans full width if needed for design
+      //left: 50%;              // Positions the left edge of the element at the center of the container
+      //transform: translateX(-50%); // Shifts the element left by 50% of its own width, centering it
+      //width: 50%;            // Optional: ensure it spans full width if needed for design
       margin-top: 40px;
     }
 
     &.container {
-      margin-top: 190px;
+      margin-top: 150px;
       min-height: 100px;
+      top: 200px;
       /* we include the center mixin defined in _theme.scss and save three duplicate lines :) */
       @include center;
       display: flex;
       justify-content: center;
       flex-direction: column;
+      overflow-y: auto;
+      //height: calc(100vh - 200px); // Adjust based on header and button heights
   }
   &.form {
     margin-top: 10px;
@@ -103,17 +109,13 @@
   }
 
   &.button-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     margin-top: 20px;
-    position: fixed; // makes header not scroll
-    z-index: 9999; // makes button be topmost layer
-    bottom: 50px;
-    left: 50%;              // Positions the left edge of the element at the center of the container
-    transform: translateX(-50%); // Shifts the element left by 50% of its own width, centering it
-    width: 25%;            // Optional: ensure it spans full width if needed for design
+    z-index: 10; // makes button be topmost layer
+    bottom: 20px;
+    //left: 50%;              // Positions the left edge of the element at the center of the container
+    //transform: translateX(-50%); // Shifts the element left by 50% of its own width, centering it
     margin-top: 40px;
+    position: fixed;
   }
 }
 

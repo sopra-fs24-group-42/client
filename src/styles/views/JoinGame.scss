@@ -13,13 +13,17 @@
     font-size: 25px;
     }
     &.container {
-    margin-top: 155px;
-    min-height: 100px;
+    margin-top: 55px;
+    //min-height:200px;
+    //max-height: max-content;
     /* we include the center mixin defined in _theme.scss and save three duplicate lines :) */
     @include center;
     display: flex;
     justify-content: center;
     flex-direction: column;
+    border-radius: 8%;
+    //box-sizing: content-box;
+    box-shadow: inset;
   }
   &.form {
     margin-top: 10px;

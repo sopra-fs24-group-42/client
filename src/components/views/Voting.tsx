@@ -7,7 +7,7 @@ import { Spinner } from "components/ui/Spinner";
 import {useNavigate, useLocation} from "react-router-dom";
 import { Button } from "components/ui/Button";
 import BaseContainer from "components/ui/BaseContainer";
-import "styles/views/NightAction.scss";
+import "styles/views/Voting.scss";
 import PropTypes from "prop-types";
 import { User } from "types";
 
@@ -92,7 +92,7 @@ const Voting = () => {
 
   const getDeadTime = () => {
     let deadline = new Date();
-    deadline.setSeconds(deadline.getSeconds() + 15);
+    deadline.setSeconds(deadline.getSeconds() + 120);
 
     return deadline;
   };
@@ -223,18 +223,18 @@ const Voting = () => {
 
   return (
     <BaseContainer>
-      <div className= "nightAction header">Time to put it to a vote!
-        <div className="waitingRoom highlight">{timer}</div>
+      <div className= "voting header">Time to put it to a vote!
+        <div className="voting highlight">{timer}</div>
         <BaseContainer>
           {(() => {
             if(ready && selected) {
               return (
-                <div className= "nightAction heading2">Waiting for all players to submit their vote...</div>)}
+                <div className= "voting heading2">Waiting for all players to submit their vote...</div>)}
             else if (selected && !ready) {
               return (
                 <div>
-                  <div className= "nightAction heading2">You have selected {selected} </div>
-                  <div className= "nightAction container">{content}
+                  <div className= "voting heading">You have selected {selected} </div>
+                  <div className= "voting container">{content}
                     <Button
                       width="100%"
                       height="40px"
@@ -246,8 +246,8 @@ const Voting = () => {
             } else { 
               return (
                 <div>
-                  <div className= "nightAction heading">{username}, select who you want to vote out.</div>    
-                  <div className= "nightAction container">{content} </div>
+                  <div className= "voting heading">{username}, select who you want to vote out.</div>    
+                  <div className= "voting container">{content} </div>
                 </div>
               )
             }

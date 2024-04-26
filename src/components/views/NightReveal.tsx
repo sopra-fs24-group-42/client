@@ -12,8 +12,6 @@ import PropTypes from "prop-types";
 import { User } from "types";
 
 const NightReveal = () => {
-  console.log("I AM ON PAGE NIGHT REVEAL NOW");
-
   // variables needed for establishing websocket connection
   const baseURL = getDomain();
   const navigate = useNavigate();
@@ -173,8 +171,10 @@ const NightReveal = () => {
               );
             } else {
               return (
-                <div className="nightReveal header2">
+                <div className="nightReveal container">
+                  <div className="nightReveal header2">
                   Waiting for all players to press ok
+                  </div>
                 </div>
               );
             }

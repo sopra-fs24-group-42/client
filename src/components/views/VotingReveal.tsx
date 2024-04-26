@@ -13,7 +13,6 @@ import { User } from "types";
 import NightAction from "./NightAction";
 
 const VotingReveal = () => {
-  console.log("I AM ON PAGE VOTING REVEAL NOW");
   localStorage.removeItem("selected");
 
   // variables needed for establishing websocket connection
@@ -164,8 +163,10 @@ const VotingReveal = () => {
             );
           } else {
             return (
-              <div className="votingReveal header2">
-                Waiting for all players to press Ok
+              <div className="votingReveal container">
+                <div className="votingReveal heading">
+                  Waiting for all players to press Ok
+                </div>
               </div>
             );
           }

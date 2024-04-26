@@ -4,7 +4,7 @@ import { over } from "stompjs";
 import { getDomain } from "../../helpers/getDomain";
 import { useNavigate } from "react-router-dom";
 import { Button } from "components/ui/Button";
-import "styles/views/WaitingRoom.scss";
+import "styles/views/Discussion.scss";
 import BaseContainer from "components/ui/BaseContainer";
 
 const Discussion = () => {
@@ -156,7 +156,7 @@ const Discussion = () => {
 
   const getDeadTime = () => {
     let deadline = new Date();
-    deadline.setSeconds(deadline.getSeconds() + 120);
+    deadline.setSeconds(deadline.getSeconds() + 300);
 
     return deadline;
   };
@@ -174,26 +174,30 @@ const Discussion = () => {
   return (
     <div style={{ textAlign: "center", margin: "auto" }}>
       <BaseContainer>
-        <div className="waitingRoom container">
+        <div className="discussion container">
           <h1>Who was it?</h1>
           <h1>Discuss</h1>
           <h3></h3>
-          <div className="waitingRoom highlight">{timer}</div>
+          <div className="discussion highlight">{timer}</div>
           {(() => {
             if(!ready){
               return(
-                <div className="waitingRoom container">
-                  <Button
-                    onClick={()=> doSendReady()}>
-                    Skip            
-                  </Button>
-                </div>)
+                <BaseContainer>
+                  <div className="discussion button-container">
+                    <Button
+                      width="100%"
+                      height="50px"
+                      onClick={()=> doSendReady()}>
+                      Skip            
+                    </Button>
+                  </div>
+                </BaseContainer>
+              )
             }
             else {
               return(
-                <div className="waitingRoom container">
-                  <div className="waitingRoom heading">Waiting for all other players...</div>
-                </div>)
+                <div className="discussion heading">Waiting for all other players...</div>
+              )
             }
           })()}
         </div>

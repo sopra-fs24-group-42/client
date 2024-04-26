@@ -1,6 +1,6 @@
 @import "../theme";
 
-.nightReveal     {
+.votingReveal     {
 
     &.highlight {
     @include center;
@@ -62,12 +62,6 @@
       flex-direction: column;  // Stacks items vertically
       font-weight: bold;
       font-size: 20px;
-      position: fixed; // makes header not scroll
-      top: 60px;
-      left: 50%;              // Positions the left edge of the element at the center of the container
-      transform: translateX(-50%); // Shifts the element left by 50% of its own width, centering it
-      width: 50%;            // Optional: ensure it spans full width if needed for design
-      margin-top: 40px;
     }
 
     &.container {
