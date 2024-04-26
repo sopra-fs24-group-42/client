@@ -1,7 +1,7 @@
 @import "../theme";
 
-.votingReveal     {
-
+.voting     {
+   
     &.highlight {
     @include center;
     display: flex;
@@ -36,24 +36,7 @@
       width: 100%;            // Optional: ensure it spans full width if needed for design
       margin-top: 40px;
     }
-
-    &.header {
-        @include center;
-        display: flex;
-        justify-content: center; // Centers content horizontally in the flex container
-        align-items: center;     // Centers content vertically in the flex container
-        flex-direction: column;  // Stacks items vertically
-        font-weight: bold;
-        font-size: 25px;
-        position: fixed; // makes header not scroll
-        z-index: 9999; // makes header be topmost layer
-        top: 0;
-        left: 50%;              // Positions the left edge of the element at the center of the container
-        transform: translateX(-50%); // Shifts the element left by 50% of its own width, centering it
-        width: 100%;            // Optional: ensure it spans full width if needed for design
-        margin-top: 80px;
-      }
-
+    
     &.heading {
       @include center;
       display: flex;
@@ -62,7 +45,29 @@
       flex-direction: column;  // Stacks items vertically
       font-weight: bold;
       font-size: 20px;
+      position: fixed; // makes header not scroll
+      top: 60px;
+      left: 50%;              // Positions the left edge of the element at the center of the container
+      transform: translateX(-50%); // Shifts the element left by 50% of its own width, centering it
+      width: 50%;            // Optional: ensure it spans full width if needed for design
+      margin-top: 40px;
     }
+
+    &.heading2 {
+        @include center;
+        display: flex;
+        justify-content: center; // Centers content horizontally in the flex container
+        align-items: center;     // Centers content vertically in the flex container
+        flex-direction: column;  // Stacks items vertically
+        font-weight: bold;
+        font-size: 20px;
+        position: fixed; // makes header not scroll
+        top: 120px;
+        left: 50%;              // Positions the left edge of the element at the center of the container
+        transform: translateX(-50%); // Shifts the element left by 50% of its own width, centering it
+        width: 50%;            // Optional: ensure it spans full width if needed for design
+        margin-top: 40px;
+      }
 
     &.container {
       margin-top: 190px;
@@ -72,6 +77,7 @@
       display: flex;
       justify-content: center;
       flex-direction: column;
+      
   }
   &.form {
     margin-top: 10px;
@@ -87,9 +93,9 @@
     padding-right: 37px;
     border-radius: 0.75em;
     background-color: E72929;
-    transition: opacity 0.5s ease, transform 0.5s ease;
-    
+    transition: opacity 0.5s ease, transform 0.5s ease; 
   }
+
   &.field {
     display: flex;
     flex-direction: column;
@@ -121,11 +127,12 @@
     margin-top: 20px;
     position: fixed; // makes header not scroll
     z-index: 9999; // makes button be topmost layer
-    bottom: 50px;
+    bottom: -500px;
     left: 50%;              // Positions the left edge of the element at the center of the container
     transform: translateX(-50%); // Shifts the element left by 50% of its own width, centering it
     width: 25%;            // Optional: ensure it spans full width if needed for design
     margin-top: 40px;
+
   }
 }
 
@@ -148,6 +155,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+
     }
     & p,h2 {
       margin: 0.5em 0;
@@ -155,6 +163,7 @@
   }
   
   .player {
+
     &.container {
       margin: 0.5em 0;
       width: 20em;
@@ -163,6 +172,17 @@
       display: flex;
       align-items: center;
       background: lighten($background, 5);
+      &:disabled {
+        cursor: default;
+        opacity: 0.4;}
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+      &.selected {
+        border: 4px solid $accent; /* Example: solid orange border */
+      }
+
     }
     &.name {
       font-weight: 300;
@@ -178,4 +198,12 @@
       font-family: $fontMono;
       font-weight: 300;
     }
+
+    &.disabled {
+      pointer-events: none; /* Disable clicking */
+      opacity: 0.6;         /* Visual feedback */
+    }
+
+
+
   }

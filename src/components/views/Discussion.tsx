@@ -156,7 +156,7 @@ const Discussion = () => {
 
   const getDeadTime = () => {
     let deadline = new Date();
-    deadline.setSeconds(deadline.getSeconds() + 120);
+    deadline.setSeconds(deadline.getSeconds() + 300);
 
     return deadline;
   };
