@@ -18,35 +18,35 @@
     }
 
     &.werewolf {
-      height: 200px;
-      width: 200px;
-      background: url('../../../resources/wolf.png');
+      height: 250px;
+      width: 250px;
+      background: url('../../../resources/wolfBody.png');
       background-position: center;
       background-size: cover;
       border-radius: 100%;
+      background-color: rgba(255, 255, 255, 1);
     }
 
     &.villager {
-      height: 200px;
-      width: 200px;
-      background: url('../../../resources/farm.png');
+      height: 250px;
+      width: 250px;
+      background: url('../../../resources/villageHouse.png');
       background-position: center;
       background-size: cover;
       border-radius: 100%;
+      background-color: rgba(255, 255, 255, 1);
     }
 
     &.seer {
-      height: 200px;
-      width: 200px;
+      height: 250px;
+      width: 250px;
       background: url('../../../resources/eye.png');
       background-position: center;
       background-size: cover;
       border-radius: 100%;
+      background-color: rgba(255, 255, 255, 1);
     }
 
-    &.space {
-        margin-top: 50px;
-    }
     &.header1 {
       @include center;
       display: flex;
@@ -55,13 +55,12 @@
       flex-direction: column;  // Stacks items vertically
       font-weight: bold;
       font-size: 20px;
-      position: fixed; // makes header not scroll
-      z-index: 9999; // makes header be topmost layer
-      top: 0;
-      left: 50%;              // Positions the left edge of the element at the center of the container
-      transform: translateX(-50%); // Shifts the element left by 50% of its own width, centering it
-      width: 100%;            // Optional: ensure it spans full width if needed for design
-      margin-top: 60px;
+      background-color: rgba(225, 225, 225, 0.9);
+      //background-color: rgba(223, 215, 203, 0.8);
+      border-radius: 5px;
+      color: black; 
+      padding: 4px;
+
     }
     &.header2 {
       @include center;
@@ -71,25 +70,6 @@
       flex-direction: column;  // Stacks items vertically
       font-weight: bold;
       font-size: 25px;
-      position: fixed; // makes header not scroll
-      z-index: 9999; // makes header be topmost layer
-      top: 0;
-      left: 50%;              // Positions the left edge of the element at the center of the container
-      transform: translateX(-50%); // Shifts the element left by 50% of its own width, centering it
-      width: 100%;            // Optional: ensure it spans full width if needed for design
-      margin-top: 60px;
-    }
-
-    &.header3 {
-      @include center;
-      display: flex;
-      justify-content: center; // Centers content horizontally in the flex container
-      align-items: center;     // Centers content vertically in the flex container
-      flex-direction: column;  // Stacks items vertically
-      font-weight: bold;
-      font-size: 25px;
-      bottom: 500px;
-      width: 100%;            // Optional: ensure it spans full width if needed for design
     }
 
     &.instructions {
@@ -99,8 +79,10 @@
       align-items: center;     // Centers content vertically in the flex container
       flex-direction: column;  // Stacks items vertically
       font-size: 22px;
-      width: 100%;            // Optional: ensure it spans full width if needed for design
-      margin-top: 15px;
+      margin-top: 10px;
+      background-color: rgba(225, 225, 225, 0.9);
+      border-radius: 5px;
+      color: black; 
     }
     &.heading {
       @include center;
@@ -118,15 +100,37 @@
       margin-top: 40px;
     }
 
-    &.container {
-      margin-top: 5px;
-      min-height: 100px;
-      top: 200px;
-      /* we include the center mixin defined in _theme.scss and save three duplicate lines :) */
+    &.background-container {
+      //background: url('../../../resources/kingCard.jpg');
+      background-color: rgba(225, 225, 225, 1);
+      background-position: center;
+      background-size: cover;
+      max-height: 2340px;
+      max-width: 100vw;
+      width: 375px;
+      left: 0;
+      right: 0;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 20px;
+      padding-right: 20px; 
+      padding-bottom: 10px; 
+      padding-top: 5px; 
+      border-radius: 15px;
       @include center;
       display: flex;
       justify-content: center;
       flex-direction: column;
+      overflow: auto; // ADD THIS TO MAKE USERS SCROLLABLE!!
+      min-height: 100vh;
+    }
+
+    &.container {
+      @include center;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      border-radius: 15px;
   }
   &.form {
     margin-top: 10px;
@@ -182,17 +186,26 @@
     width: 25%;            // Optional: ensure it spans full width if needed for design
     margin-top: 40px;
     gap: 30px;
+    //background-color: 
   }
 
   &.button-container {
+    @include center;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 5px;
     position: fixed; 
-    z-index: 9999; // makes button be topmost layer
-    bottom: 50px;
-    margin-top: 20px;
+    bottom: 10px;
+    z-index: 10;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+    min-width: 200px;
+    width: 20%; 
   }
 }
 
