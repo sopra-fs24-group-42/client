@@ -27,6 +27,7 @@ const RoleReveal = () => {
   const [role, setRole] = useState(null); 
   const [ready, setReady] = useState(false);
   const [alreadySent, setAlreadySent] = useState(false);
+  const otherWerewolves = [];
   let gameState = "WAITINGROOM";
 
   localStorage.removeItem("role");
@@ -119,7 +120,6 @@ const RoleReveal = () => {
   }, [ready]);
 
   useEffect(() => { // This useEffect tracks changes in the lobby --> do I need this for roleReveal?
-    console.log("I am in Role reveal useEffect now!");
     if (messageReceived && messageReceived.players) {
       console.log("GAME STATE: " + messageReceived.gameState);
       if (messageReceived.gameState === "NIGHT") {
@@ -135,35 +135,58 @@ const RoleReveal = () => {
     setReady(true);
   }
 
-  let displayInstructions = <Spinner />;
   if (role === "Werewolf") {
-    displayText = werewolfText;
-    displayInstructions = werewolfInstructions;
-    displayImage = (
-      <div className="roleReveal werewolf"></div>)
-  }
-  else if (role === "Seer") {
-    displayText = seerText;
-    displayInstructions = seerInstructions;
-    displayImage = (
-      <div className="roleReveal seer"></div>)
-  }
-  else if (role === "Villager") {
-    displayText = villagerText;
-    displayInstructions = villagerInstructions;
-    displayImage = (
-      <div className="roleReveal villager"></div>)
+    for(let i = 0; i < messageReceived.players.length; i++) {
+      console.log("Iterating through players...");
+      if(messageReceived.players[i].username !== username) {
+        console.log("yeah, this is a user that does not have the same username");
+        if(messageReceived.players[i].roleName === "Werewolf") {
+          otherWerewolves.push(messageReceived.players[i].username);
+        }
+      }
+    }
+    console.log(otherWerewolves);
   }
 
   return (
     <BaseContainer>
-      <div className= "roleReveal header1">Shhhh! Keep this a secret. 
-        <div className= "roleReveal header2" >Your role is...</div>
-      </div>
-      <div className= "roleReveal container">
-        {displayImage}
-        <div className= "roleReveal highlight" >{displayText}</div>
-        <div className= "roleReveal instructions" >{displayInstructions}</div>
+      <div className= "roleReveal background-container">
+        <div className= "roleReveal header1">Shhhh! Keep this a secret.
+          <div className= "roleReveal header2" >Your role is...</div>
+        </div> 
+        {(() => { 
+          if(role === "Werewolf") {
+            return (
+              <div className="roleReveal container">
+                <div className="roleReveal werewolf"></div>
+                <div className="roleReveal highlight">Werewolf</div>
+                <div className="roleReveal instructions">{werewolfInstructions}</div>
+                { otherWerewolves.length > 0 ? 
+                  <div className="roleReveal instructions">These are the other werewolves: <b>{otherWerewolves}</b></div>:
+                  <div className="roleReveal instructions">You are the only werewolf in this game, good luck!</div>
+                }
+              </div>)
+          } else if (role === "Seer") {
+            return (
+              <div className="roleReveal container">
+                <div className="roleReveal seer"></div>
+                <div className="roleReveal highlight">Seer</div>
+                <div className="roleReveal instructions">{seerInstructions}</div>
+              </div>)
+          } else if (role === "Villager") {
+            return (
+              <div className="roleReveal container">
+                <div className="roleReveal villager"></div>
+                <div className="roleReveal highlight">Villager</div>
+                <div className="roleReveal instructions">As a villager, your goal is to survive and identify the werewolves!</div>
+              </div>)
+          } else {
+            return (
+              <div className="roleReveal container">
+                <Spinner />
+              </div>)
+          }
+        })()}
         <div className="roleReveal button-container">
           { ready ?
             <div className= "roleReveal header3">
