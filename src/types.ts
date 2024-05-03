@@ -6,7 +6,7 @@ export type User = {
   isKilled: string;
   ready: string;
   token: string;
-  role: string;
+  roleName: string;
   lobbyCode: string;
 };
 

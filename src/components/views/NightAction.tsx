@@ -12,8 +12,8 @@ import PropTypes from "prop-types";
 import { User } from "types";
 
 const LobbyMember = ({ user }: { user: User }) => (
-  <div className="player container">
-    <div className="player username">{user.username}</div>
+  <div className="nightAction player-container">
+    <div className="nightAction player-username">{user.username}</div>
   </div>
 );
 
@@ -92,7 +92,7 @@ const NightAction = () => {
 
   const getDeadTime = () => {
     let deadline = new Date();
-    deadline.setSeconds(deadline.getSeconds() + 120);
+    deadline.setSeconds(deadline.getSeconds() + 520);
 
     return deadline;
   };
@@ -221,14 +221,14 @@ const NightAction = () => {
 
   if (messageReceived !== null) {
     content = (
-      <div className ="game">
-        <ul className= "game user-list">
+      <div className ="nightAction game-container">
+        <ul className= "nightAction game-user-list">
           {playersInLobby.map((user: User) => {
             if(user.username !== username && user.isAlive) {
               return (
                 <li key={user.username}
                   onClick={() => setSelected(user.username)}
-                  className={`player container ${selected === user.username ? "selected" : ""}`}
+                  className={`nightAction player-container ${"isNotWerewolf"} ${selected === user.username ? "selected" : ""}`}
                 >
                   < LobbyMember user={user} />
                 </li>
@@ -239,40 +239,31 @@ const NightAction = () => {
       </div>
     );
     werewolfContent = (
-      <div className ="game">
-        <ul className= "game user-list">
+      <div className ="nightAction game-container">
+        <ul className= "nightAction game-user-list">
           {playersInLobby.map((user: User) => {
-            if(user.username !== username && user.isAlive && user.role !== "Werewolf") {
+            let isWerewolf = user.roleName === "Werewolf";
+            if(user.username !== username && user.isAlive) {
               return (
                 <li key={user.username}
                   onClick={() => setSelected(user.username)}
-                  className={`player container ${selected === user.username ? "selected" : ""}`}
+                  className={`nightAction player-container ${isWerewolf ? "isWerewolf" : "isNotWerewolf"} ${selected === user.username ? "selected" : ""}`}
                 >
                   < LobbyMember user={user} />
                 </li>
               );
-            } else if(user.username !== username && user.isAlive && user.role === "Werewolf"){
-              return (
-                <li key={user.username}
-                  onClick={() => setSelected(user.username)}
-                  className={`player werewolfContainer ${selected === user.username ? "selected" : ""}`}
-                >
-                  < LobbyMember user={user} />
-                </li>
-              );
-            }
-              
+            } 
           })}
         </ul>
       </div>
     );
-  
   }
 
   return (
     <BaseContainer>
-      <div className= "nightAction header">Night has fallen...
-        <div className="waitingRoom highlight">{timer}</div>
+      <div className="nightAction background-container">
+        <div className= "nightAction header1">Night has fallen...</div>
+        <div className="nightAction highlight">{timer}</div>
         {(() => {
           if(role === "Werewolf") {
             return (
@@ -280,7 +271,7 @@ const NightAction = () => {
                 {(() => {
                   if(ready && selected) {
                     return (
-                      <div className="waitingRoom container">
+                      <div className="nightAction container">
                         <div className= "nightAction heading">Waiting for all players to complete their night actions...</div>
                       </div>)}
                   else if (selected && !ready) {

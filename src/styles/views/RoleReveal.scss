@@ -61,8 +61,8 @@
       border-radius: 5px;
       color: black; 
       padding: 4px;
-
     }
+    
     &.header2 {
       @include center;
       display: flex;
@@ -134,7 +134,6 @@
       border-radius: 15px;
       font-size: 22px;
       color: black;
-
   }
   &.form {
     margin-top: 10px;
