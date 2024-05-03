@@ -80,7 +80,6 @@ const NightReveal = () => {
         console.log("this is the message: " + JSON.stringify(message));
         setMessageReceived(JSON.parse(message.body));
         setHostName(JSON.parse(message.body).hostName);
-        console.log(`HOSTNAME HAS BEEN SET INSIDE SUBSCRIBE: ${hostName}`);
         resolve(subscription);
       });
     }); 
@@ -102,7 +101,6 @@ const NightReveal = () => {
 
     if (messageReceived) {
       setHostName(messageReceived.hostName);
-      console.log(`HOSTNAME HAS BEEN SET INSIDE FIRST USEEFFECT: ${hostName}`);
       if (messageReceived.gameState === "DISCUSSION") { // happens after ready was sent by all
         navigate("/discussion");
       } else if (messageReceived.gameState === "ENDGAME"){
@@ -130,7 +128,6 @@ const NightReveal = () => {
     console.log("I am in Role reveal useEffect now!");
     if (messageReceived) {
       setHostName(messageReceived.hostName);
-      console.log(`HOSTNAME HAS BEEN SET INSIDE SECOND USEEFFECT: ${hostName}`);
       if (messageReceived.gameState === "DISCUSSION") {
         navigate("/discussion");
       } else if (messageReceived.gameState === "ENDGAME"){
@@ -164,70 +161,69 @@ const NightReveal = () => {
   //variables needed for TexttoSpeechAPI
   const [data, setData] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
+  const [playPressed, setPlayPressed] = useState(false);  // State to track if Playbutton has been pressed
 
   
   useEffect(() => {
     if(hostName) {
-    if (username === hostName) {  
-      // const PartOneText = textSamplesRevealNightpre[Math.floor(Math.random() * textSamples.length)];  
-      // const PartTwoText = TextSamplesRevealNightpost[Math.floor(Math.random() * textSamples.length)];  
-      //if(killedPlayer) {
+      if (username === hostName) {  
+        // const PartOneText = textSamplesRevealNightpre[Math.floor(Math.random() * textSamples.length)];  
+        // const PartTwoText = TextSamplesRevealNightpost[Math.floor(Math.random() * textSamples.length)];  
+        //if(killedPlayer) {
         //const individualText = concat(killedPlayer.username," has been killed during the Night");
-      //}
-      //else {
+        //}
+        //else {
         //const individual = "nobody has been killed during the night"}
 
-      const selectedText = "Test"; // PartOneText.concat(individualText, PartTwoText);
-      const fetchData = async () => {
-        const baseURL = "https://texttospeech.googleapis.com/v1beta1/text:synthesize?fields=audioContent&key="
-        const URLSecret = process.env.REACT_APP_API_KEY;
-        var fetcherURL = baseURL.concat(URLSecret)
-        const requestBody = {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify( {"audioConfig": {
-            "audioEncoding": "LINEAR16",
-            "pitch": 0,
-            "speakingRate": 1
-          },
-          "input": {
-            "text": selectedText
-          },
-          "voice": {
-            "languageCode": "en-US",
-            "name": "en-US-Standard-A"
-          }
-          })
-        };
+        const selectedText = "Test"; // PartOneText.concat(individualText, PartTwoText);
+        const fetchData = async () => {
+          const baseURL = "https://texttospeech.googleapis.com/v1beta1/text:synthesize?fields=audioContent&key="
+          const URLSecret = process.env.REACT_APP_API_KEY;
+          var fetcherURL = baseURL.concat(URLSecret)
+          const requestBody = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify( {"audioConfig": {
+              "audioEncoding": "LINEAR16",
+              "pitch": 0,
+              "speakingRate": 1
+            },
+            "input": {
+              "text": selectedText
+            },
+            "voice": {
+              "languageCode": "en-US",
+              "name": "en-US-Standard-A"
+            }
+            })
+          };
 
-        try {
-          const response = await fetch(fetcherURL, requestBody);
-          if (!response.ok) {
-            throw new Error("Network response was not ok " + response.statusText);
-          }
-          const jsonData = await response.json();
-          let modifiedString = JSON.stringify(jsonData);
-          console.log(modifiedString);
-          let newstring = modifiedString.substring(17);
-          console.log("firts 17 Elements deleted",newstring);
-          newstring = newstring.slice(0, -2);
-          console.log("last 2 Elements deleted",newstring);
-          newstring = "data:audio/mp3;base64,".concat(newstring)   
-          console.log("concatenated",newstring);
+          try {
+            const response = await fetch(fetcherURL, requestBody);
+            if (!response.ok) {
+              throw new Error("Network response was not ok " + response.statusText);
+            }
+            const jsonData = await response.json();
+            let modifiedString = JSON.stringify(jsonData);
+            console.log(modifiedString);
+            let newstring = modifiedString.substring(17);
+            console.log("firts 17 Elements deleted",newstring);
+            newstring = newstring.slice(0, -2);
+            console.log("last 2 Elements deleted",newstring);
+            newstring = "data:audio/mp3;base64,".concat(newstring)   
+            console.log("concatenated",newstring);
         
-          setData(newstring);  // Save the JSON response in state
-          console.log("Data saved in state:", newstring);
-        } catch (error) {
-          console.error("Error during fetching the audio file:", error);
+            setData(newstring);  // Save the JSON response in state
+            console.log("Data saved in state:", newstring);
+          } catch (error) {
+            console.error("Error during fetching the audio file:", error);
+          }
         }
-      }
-      fetchData();
+        fetchData();
+      } 
     } 
-  } 
   }, [hostName])
   
-
-
   const DecodeAndPlay = () => {
     // Assuming the base64 string is in the proper format with the data URL prefix
     const base64Content = data.split(",")[1]; // This will ignore the data URL prefix if present
@@ -241,7 +237,8 @@ const NightReveal = () => {
 
     // Create a URL for the Blob and set it for audio playback
     const newAudioUrl = URL.createObjectURL(blob);
-    setAudioUrl(newAudioUrl);
+    setAudioUrl(newAudioUrl); 
+    setPlayPressed(true);  // Marks that the play button has been pressed
     console.log("File has been decoded and AudioURL has been set")
     
   };
@@ -256,12 +253,23 @@ const NightReveal = () => {
               return (
                 <div className="nightReveal container">
                   {content}
+                  {username !== hostName &&
                   <Button
                     width="100%"
                     height="40px"
                     onClick={() => doSendReady()}
                   >Ok
                   </Button>
+                  }
+                  {username === hostName &&
+                  <Button
+                    width="100%"
+                    height="40px"
+                    onClick={() => doSendReady()}
+                    disabled={!playPressed}  // Disable OK button until audio is played
+                  >Ok
+                  </Button>
+                  }
                   { username === hostName &&
                   <Button
                     width="100%"
@@ -271,8 +279,8 @@ const NightReveal = () => {
                   </Button>
                   }
                   {audioUrl && (
-                      <audio controls src={audioUrl} autoPlay />
-                    )}
+                    <audio controls src={audioUrl} autoPlay />
+                  )}
                   
                 </div>
               );
