@@ -21,6 +21,8 @@ const RoleReveal = () => {
   var stompClient = null;
   var subscription = null;
   
+  let permRole = null;
+
   // variables needed for role reveal
   const [messageReceived, setMessageReceived] = useState(null);
   const username = localStorage.getItem("user");
@@ -56,7 +58,6 @@ const RoleReveal = () => {
         console.log("socket was successfully connected: " + frame);
         setConnection(true);
         setTimeout( function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
-          //const response = await callback();
           console.log("I waited: I received  MESSAGE frame back based on subscribing!!");
           resolve(stompClient);
         }, 500);
@@ -74,7 +75,9 @@ const RoleReveal = () => {
         // all of this only gets executed when message is received
         //localStorage.setItem("lobby", message.body);
         setMessageReceived(JSON.parse(message.body));
-        setRole(JSON.parse(message.body).playerMap[`${username}`].roleName);
+        console.log(`THIS IS ME????? ${JSON.stringify(JSON.parse(message.body).playerMap[`${username}`].roleName)}`)
+        permRole = JSON.parse(message.body).playerMap[`${username}`].roleName;
+        //setRole(JSON.parse(message.body).playerMap[`${username}`].roleName);
         resolve(subscription);
       });
     }); 
@@ -91,14 +94,14 @@ const RoleReveal = () => {
         console.error("There was an error connecting or subscribing: ", error);
       }
     };
-    setTimeout(function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
-      connectAndSubscribe();}, 600);
+    connectAndSubscribe();
     if (messageReceived) {
       console.log("GAME STATE: " + messageReceived.gameState);
       if (messageReceived.gameState === "NIGHT") {
         localStorage.setItem("role", role);
         navigate("/nightaction");
       }
+      permRole = messageReceived.playerMap[`${username}`].roleName;
       setRole(messageReceived.playerMap[`${username}`].roleName);
     }
 
@@ -108,7 +111,6 @@ const RoleReveal = () => {
           "Content-type": "application/json"
         };
         const body = JSON.stringify({username, gameState});
-        // Again, this does not work here. For some reason StompClient becomes null. 
         if(!alreadySent){
           stompClient.send("/app/ready", headers, body);
           setAlreadySent(true);}
@@ -119,34 +121,55 @@ const RoleReveal = () => {
 
   }, [ready]);
 
-  useEffect(() => { // This useEffect tracks changes in the lobby --> do I need this for roleReveal?
-    if (messageReceived && messageReceived.players) {
-      console.log("GAME STATE: " + messageReceived.gameState);
+  useEffect(() => { // This useEffect tracks changes in the lobby
+    if (messageReceived) {
       if (messageReceived.gameState === "NIGHT") {
         localStorage.setItem("role", role);
         navigate("/nightaction");
       }
+      permRole = messageReceived.playerMap[`${username}`].roleName
       setRole(messageReceived.playerMap[`${username}`].roleName);
       console.log(role);
     }
   }, [messageReceived]); 
 
+  //let content = <Spinner />;
+
+  useEffect(() => { // This useEffect tracks changes in role
+    if(permRole === "Werewolf") {
+      for(let i = 0; i < messageReceived.players.length; i++) {
+        console.log("Iterating through players...");
+        if(messageReceived.players[i].username !== username) {
+          console.log("yeah, this is a user that does not have the same username");
+          if(messageReceived.players[i].roleName === "Werewolf") {
+            otherWerewolves.push(messageReceived.players[i].username);
+          }
+        }
+      }
+      setRole("Werewolf");
+    } else if(permRole === "Villager") {
+      setRole("Villager"); 
+    } else if(permRole === "Seer") {
+      setRole("Seer");
+    }
+  }, [permRole]); 
+
   const doSendReady = () => {
     setReady(true);
   }
 
-  if (role === "Werewolf") {
-    for(let i = 0; i < messageReceived.players.length; i++) {
-      console.log("Iterating through players...");
-      if(messageReceived.players[i].username !== username) {
-        console.log("yeah, this is a user that does not have the same username");
-        if(messageReceived.players[i].roleName === "Werewolf") {
-          otherWerewolves.push(messageReceived.players[i].username);
-        }
-      }
-    }
-    console.log(otherWerewolves);
-  }
+  // if (permRole === "Werewolf") {
+  //   for(let i = 0; i < messageReceived.players.length; i++) {
+  //     console.log("Iterating through players...");
+  //     if(messageReceived.players[i].username !== username) {
+  //       console.log("yeah, this is a user that does not have the same username");
+  //       if(messageReceived.players[i].roleName === "Werewolf") {
+  //         otherWerewolves.push(messageReceived.players[i].username);
+  //       }
+  //     }
+  //   }
+  //   console.log(otherWerewolves);
+  // }
 
   return (
     <BaseContainer>
@@ -154,8 +177,8 @@ const RoleReveal = () => {
         <div className= "roleReveal header1">Shhhh! Keep this a secret.
           <div className= "roleReveal header2" >Your role is...</div>
         </div> 
-        {(() => { 
-          if(role === "Werewolf") {
+        {(() => {
+          if(role === "Werewolf"){// && role !== "Villager" && role !== "Seer") {
             return (
               <div className="roleReveal container">
                 <div className="roleReveal werewolf"></div>
@@ -166,14 +189,14 @@ const RoleReveal = () => {
                   <div className="roleReveal instructions">You are the only werewolf in this game, good luck!</div>
                 }
               </div>)
-          } else if (role === "Seer") {
+          } else if (role === "Seer") {//&& role !== "Werewolf" && role !== "Villager") {
             return (
               <div className="roleReveal container">
                 <div className="roleReveal seer"></div>
                 <div className="roleReveal highlight">Seer</div>
                 <div className="roleReveal instructions">{seerInstructions}</div>
               </div>)
-          } else if (role === "Villager") {
+          } else if (role === "Villager"){// && role !== "Seer" && role !== "Werewolf") {
             return (
               <div className="roleReveal container">
                 <div className="roleReveal villager"></div>
@@ -184,13 +207,15 @@ const RoleReveal = () => {
             return (
               <div className="roleReveal container">
                 <Spinner />
-              </div>)
+              </div>
+            );
           }
         })()}
         <div className="roleReveal button-container">
           { ready ?
-            <div className= "roleReveal header3">
-            Waiting until all players are ready...</div> :
+            <div className= "roleReveal container">
+            Waiting for other players
+              <div><Spinner /></div></div> :
             <Button
               width="100%"
               height="40px"
