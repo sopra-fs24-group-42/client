@@ -3,9 +3,6 @@ import {useNavigate} from "react-router-dom";
 import { getDomain } from "../../helpers/getDomain";
 import textSamples from "helpers/TextSamples";
 import { Button } from "components/ui/Button";
-import "../../styles/views/NarrationPhase.scss";
-
-
 
 function NarrationPhase() {
   const [data, setData] = useState(null);
@@ -85,16 +82,14 @@ function NarrationPhase() {
   };
   
   return (
-      <div className="NarrationPhase">
-        <div className="container">
-          <button className="btn" onClick={DecodeAndPlay}>
-            Press to Play
-          </button>
-          {audioUrl && (
-            <audio controls src={audioUrl} autoPlay />
-          )}
-        </div>
-      </div>
+    <div>
+      <button className="btn" onClick={DecodeAndPlay}>
+        Press to Play
+      </button>
+      {audioUrl && (
+        <audio controls src={audioUrl} autoPlay />
+      )}
+    </div>
     /*
     <BaseContainer>
       <div className="container">
