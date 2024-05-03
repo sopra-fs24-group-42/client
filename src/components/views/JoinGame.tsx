@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { api, handleError } from "helpers/api";
 import Player from "models/Player";
 import {useNavigate} from "react-router-dom";
@@ -32,6 +32,10 @@ const JoinGame = () => {
   const navigate = useNavigate();
   const [lobbyCode, setLobbyCode] = useState<string>(null);
   const [username, setUsername] = useState<string>(null);
+
+  useEffect(() => { // This useEffect tracks changes in the lobby
+    localStorage.clear();
+  }, []); 
 
   const doJoinGame = async () => {
     try {

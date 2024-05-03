@@ -13,8 +13,9 @@
     padding-left: 37px;
     padding-right: 37px;
     border-radius: 0.75em;
-    background-color: #FB6D48;
+    background-color: #c62121;
     margin-top: 10px;
+    color: white;
     }
 
     &.werewolf {
@@ -131,6 +132,9 @@
       justify-content: center;
       flex-direction: column;
       border-radius: 15px;
+      font-size: 22px;
+      color: black;
+
   }
   &.form {
     margin-top: 10px;

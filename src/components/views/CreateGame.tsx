@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { api, handleError } from "helpers/api";
 import Lobby from "models/Lobby";
 import {useNavigate} from "react-router-dom";
@@ -33,6 +33,10 @@ const CreateGame = () => {
   const [numberOfPlayers, setNumberOfPlayers] = useState<string>(null);
   const [hostName, setHostName] = useState<string>(null);
 
+  useEffect(() => { // This useEffect tracks changes in the lobby
+    localStorage.clear();
+  }, []); 
+  
   const doCreateGame = async () => {
     try {
       // creating a new Lobby object which also creates the host player object
