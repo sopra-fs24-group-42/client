@@ -21,7 +21,7 @@ const RoleReveal = () => {
   var stompClient = null;
   var subscription = null;
   
-  let permRole = null;
+  const [permRole, setPermRole] = useState(null);
 
   // variables needed for role reveal
   const [messageReceived, setMessageReceived] = useState(null);
@@ -29,6 +29,7 @@ const RoleReveal = () => {
   const [role, setRole] = useState(null); 
   const [ready, setReady] = useState(false);
   const [alreadySent, setAlreadySent] = useState(false);
+  const [listOfWerewolves, setListOfWerewolves] = useState(null);
   const otherWerewolves = [];
   let gameState = "WAITINGROOM";
 
@@ -76,7 +77,8 @@ const RoleReveal = () => {
         //localStorage.setItem("lobby", message.body);
         setMessageReceived(JSON.parse(message.body));
         console.log(`THIS IS ME????? ${JSON.stringify(JSON.parse(message.body).playerMap[`${username}`].roleName)}`)
-        permRole = JSON.parse(message.body).playerMap[`${username}`].roleName;
+        setPermRole(JSON.parse(message.body).playerMap[`${username}`].roleName);
+        console.log(`This is PERMROLE inside SUBSCRIBE: ${permRole}`);
         //setRole(JSON.parse(message.body).playerMap[`${username}`].roleName);
         resolve(subscription);
       });
@@ -101,8 +103,10 @@ const RoleReveal = () => {
         localStorage.setItem("role", role);
         navigate("/nightaction");
       }
-      permRole = messageReceived.playerMap[`${username}`].roleName;
-      setRole(messageReceived.playerMap[`${username}`].roleName);
+      setPermRole(messageReceived.playerMap[`${username}`].roleName);
+      console.log(`This is PERMROLE inside first useEffect: ${permRole}`);
+
+      //setRole(messageReceived.playerMap[`${username}`].roleName);
     }
 
     return () => {
@@ -127,16 +131,18 @@ const RoleReveal = () => {
         localStorage.setItem("role", role);
         navigate("/nightaction");
       }
-      permRole = messageReceived.playerMap[`${username}`].roleName
-      setRole(messageReceived.playerMap[`${username}`].roleName);
-      console.log(role);
+      setPermRole(messageReceived.playerMap[`${username}`].roleName);
+      console.log(`This is PERMROLE inside second useEffect: ${permRole}`);
+
+      //setRole(messageReceived.playerMap[`${username}`].roleName);
+      //console.log(role);
     }
   }, [messageReceived]); 
 
   //let content = <Spinner />;
 
-  useEffect(() => { // This useEffect tracks changes in role
-    if(permRole === "Werewolf") {
+  const findOtherWerewolves = async () => {
+    return new Promise((resolve, reject) => {   
       for(let i = 0; i < messageReceived.players.length; i++) {
         console.log("Iterating through players...");
         if(messageReceived.players[i].username !== username) {
@@ -146,6 +152,20 @@ const RoleReveal = () => {
           }
         }
       }
+      resolve(otherWerewolves);
+    }); 
+  }
+
+  useEffect(() => { // This useEffect tracks changes in role
+    console.log("INSIDE PERMROLE USEEFFECT LALALA");
+    if(permRole === "Werewolf") {
+      console.log("INSIDE WEREWOLF");
+      const doFindOtherWerewolves = async () => {
+        let x = await findOtherWerewolves();
+        setListOfWerewolves(x);
+      }
+      doFindOtherWerewolves();
+
       setRole("Werewolf");
     } else if(permRole === "Villager") {
       setRole("Villager"); 
@@ -158,19 +178,6 @@ const RoleReveal = () => {
     setReady(true);
   }
 
-  // if (permRole === "Werewolf") {
-  //   for(let i = 0; i < messageReceived.players.length; i++) {
-  //     console.log("Iterating through players...");
-  //     if(messageReceived.players[i].username !== username) {
-  //       console.log("yeah, this is a user that does not have the same username");
-  //       if(messageReceived.players[i].roleName === "Werewolf") {
-  //         otherWerewolves.push(messageReceived.players[i].username);
-  //       }
-  //     }
-  //   }
-  //   console.log(otherWerewolves);
-  // }
-
   return (
     <BaseContainer>
       <div className= "roleReveal background-container">
@@ -178,14 +185,14 @@ const RoleReveal = () => {
           <div className= "roleReveal header2" >Your role is...</div>
         </div> 
         {(() => {
-          if(role === "Werewolf"){// && role !== "Villager" && role !== "Seer") {
+          if(role === "Werewolf" && (listOfWerewolves)){// && role !== "Villager" && role !== "Seer") {
             return (
               <div className="roleReveal container">
                 <div className="roleReveal werewolf"></div>
                 <div className="roleReveal highlight">Werewolf</div>
                 <div className="roleReveal instructions">{werewolfInstructions}</div>
-                { otherWerewolves.length > 0 ? 
-                  <div className="roleReveal instructions">These are the other werewolves: <b>{otherWerewolves}</b></div>:
+                { listOfWerewolves.length > 0 ? 
+                  <div className="roleReveal instructions">These are the other werewolves: <b>{listOfWerewolves}</b></div>:
                   <div className="roleReveal instructions">You are the only werewolf in this game, good luck!</div>
                 }
               </div>)

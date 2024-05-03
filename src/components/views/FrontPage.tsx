@@ -16,6 +16,10 @@ specific components that belong to the main one in the same file.
 
 const FrontPage = () => {
   const navigate = useNavigate();
+
+  useEffect(() => { // This useEffect tracks changes in the lobby
+    localStorage.clear();
+  }, []); 
   
   return (
     <div>

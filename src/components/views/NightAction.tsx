@@ -217,6 +217,7 @@ const NightAction = () => {
   },[selected])
 
   let content = <Spinner />;
+  let werewolfContent = <Spinner />;
 
   if (messageReceived !== null) {
     content = (
@@ -232,13 +233,41 @@ const NightAction = () => {
                   < LobbyMember user={user} />
                 </li>
               );
-            }
-        
-            return null; // Do not render anything if the condition is true
+            }      
           })}
         </ul>
       </div>
-    );}
+    );
+    werewolfContent = (
+      <div className ="game">
+        <ul className= "game user-list">
+          {playersInLobby.map((user: User) => {
+            if(user.username !== username && user.isAlive && user.role !== "Werewolf") {
+              return (
+                <li key={user.username}
+                  onClick={() => setSelected(user.username)}
+                  className={`player container ${selected === user.username ? "selected" : ""}`}
+                >
+                  < LobbyMember user={user} />
+                </li>
+              );
+            } else if(user.username !== username && user.isAlive && user.role === "Werewolf"){
+              return (
+                <li key={user.username}
+                  onClick={() => setSelected(user.username)}
+                  className={`player werewolfContainer ${selected === user.username ? "selected" : ""}`}
+                >
+                  < LobbyMember user={user} />
+                </li>
+              );
+            }
+              
+          })}
+        </ul>
+      </div>
+    );
+  
+  }
 
   return (
     <BaseContainer>
@@ -257,7 +286,7 @@ const NightAction = () => {
                   else if (selected && !ready) {
                     return (
                       <div className= "nightAction heading">You have selected {selected} 
-                        <div className= "nightAction container">{content}
+                        <div className= "nightAction container">{werewolfContent}
                           <Button
                             width="100%"
                             height="40px"
@@ -269,7 +298,7 @@ const NightAction = () => {
                   } else { 
                     return (
                       <div className= "nightAction heading">{username}, select someone to kill.    
-                        <div className= "nightAction container">{content} </div>
+                        <div className= "nightAction container">{werewolfContent} </div>
                       </div>
                     )
                   }
