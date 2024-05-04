@@ -342,6 +342,18 @@ const NightAction = () => {
                                 <div className="nightAction villager"></div>
                               </div>
                             )
+                          } else if (revealRole === "Protector") {
+                            return (
+                              <div className="nightAction container">
+                                <div className="nightAction protector"></div>
+                              </div>
+                            )
+                          } else if (revealRole === "Sarifice") {
+                            return (
+                              <div className="nightAction container">
+                                <div className="nightAction sacrifice"></div>
+                              </div>
+                            )
                           }
                         })()}
                         <div className="nightAction header1">{selected} is a</div>
