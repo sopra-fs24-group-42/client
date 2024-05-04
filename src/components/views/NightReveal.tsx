@@ -10,6 +10,9 @@ import "styles/views/NightReveal.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { User } from "types";
+import NarrationPhaseNoDesign from "./NarrationPhaseNoDesign";
+import TextSamplesRevealNightpre from "helpers/TextSamplesRevealNightpre";
+import TextSamplesRevealNightpost from "helpers/TextSamplesRevealNightpost";
 
 const NightReveal = () => {
   // variables needed for establishing websocket connection
@@ -28,6 +31,7 @@ const NightReveal = () => {
   const username = localStorage.getItem("user"); //fetching username from localstorage
   const [ready, setReady] = useState(false);
   const [alreadySent, setAlreadySent] = useState(false);
+  const [hostName, setHostName] = useState(null);
   let gameState = "REVEALNIGHT";
 
   const lobbyId = localStorage.getItem("lobbyId");
@@ -75,6 +79,7 @@ const NightReveal = () => {
         // all of this only gets executed when message is received
         console.log("this is the message: " + JSON.stringify(message));
         setMessageReceived(JSON.parse(message.body));
+        setHostName(JSON.parse(message.body).hostName);
         resolve(subscription);
       });
     }); 
@@ -95,6 +100,7 @@ const NightReveal = () => {
     console.log("I connected?");
 
     if (messageReceived) {
+      setHostName(messageReceived.hostName);
       if (messageReceived.gameState === "DISCUSSION") { // happens after ready was sent by all
         navigate("/discussion");
       } else if (messageReceived.gameState === "ENDGAME"){
@@ -121,13 +127,14 @@ const NightReveal = () => {
   useEffect(() => { // This useEffect tracks changes in the lobby --> do I need this for roleReveal?
     console.log("I am in Role reveal useEffect now!");
     if (messageReceived) {
+      setHostName(messageReceived.hostName);
       if (messageReceived.gameState === "DISCUSSION") {
         navigate("/discussion");
       } else if (messageReceived.gameState === "ENDGAME"){
         navigate("/end");
       }
     }
-  }, [messageReceived]); 
+  }, [messageReceived]);
 
   const doSendReady = () => {
     setReady(true);
@@ -149,7 +156,92 @@ const NightReveal = () => {
         Everyone survived last night!
         </div>)
     }
+
   }
+  //variables needed for TexttoSpeechAPI
+  const [data, setData] = useState(null);
+  const [audioUrl, setAudioUrl] = useState(null);
+  const [playPressed, setPlayPressed] = useState(false);  // State to track if Playbutton has been pressed
+
+  
+  useEffect(() => {
+    if(hostName) {
+      if (username === hostName) {  
+        //const PartOneText = TextSamplesRevealNightpre[Math.floor(Math.random() * textSamples.length)];  
+        //const PartTwoText = TextSamplesRevealNightpost[Math.floor(Math.random() * textSamples.length)];  
+        //if(killedPlayer) {
+        //  const individualText = concat(killedPlayer.username," has been killed during the Night");
+        //}
+        //else {
+        //  const individual = "nobody has been killed during the night"}
+
+        const selectedText = "Test"; // PartOneText.concat(individualText, PartTwoText); NEEDS TO BE CHANGE FOR FINAL PRODUCT: ATM SHORT TO CONSERVE USED CHARACTERS
+        const fetchData = async () => {
+          const baseURL = "https://texttospeech.googleapis.com/v1beta1/text:synthesize?fields=audioContent&key="
+          const URLSecret = process.env.REACT_APP_API_KEY;
+          var fetcherURL = baseURL.concat(URLSecret)
+          const requestBody = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify( {"audioConfig": {
+              "audioEncoding": "LINEAR16",
+              "pitch": 0,
+              "speakingRate": 1
+            },
+            "input": {
+              "text": selectedText
+            },
+            "voice": {
+              "languageCode": "en-US",
+              "name": "en-US-Standard-A"
+            }
+            })
+          };
+
+          try {
+            const response = await fetch(fetcherURL, requestBody);
+            if (!response.ok) {
+              throw new Error("Network response was not ok " + response.statusText);
+            }
+            const jsonData = await response.json();
+            let modifiedString = JSON.stringify(jsonData);
+            console.log(modifiedString);
+            let newstring = modifiedString.substring(17);
+            console.log("firts 17 Elements deleted",newstring);
+            newstring = newstring.slice(0, -2);
+            console.log("last 2 Elements deleted",newstring);
+            newstring = "data:audio/mp3;base64,".concat(newstring)   
+            console.log("concatenated",newstring);
+        
+            setData(newstring);  // Save the JSON response in state
+            console.log("Data saved in state:", newstring);
+          } catch (error) {
+            console.error("Error during fetching the audio file:", error);
+          }
+        }
+        fetchData();
+      } 
+    } 
+  }, [hostName])
+  
+  const DecodeAndPlay = () => {
+    // Assuming the base64 string is in the proper format with the data URL prefix
+    const base64Content = data.split(",")[1]; // This will ignore the data URL prefix if present
+    const byteCharacters = atob(base64Content);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "audio/mp3" });
+
+    // Create a URL for the Blob and set it for audio playback
+    const newAudioUrl = URL.createObjectURL(blob);
+    setAudioUrl(newAudioUrl); 
+    setPlayPressed(true);  // Marks that the play button has been pressed
+    console.log("File has been decoded and AudioURL has been set")
+    
+  };
 
   return (
     <BaseContainer>
@@ -161,12 +253,35 @@ const NightReveal = () => {
               return (
                 <div className="nightReveal container">
                   {content}
+                  {username !== hostName &&
                   <Button
                     width="100%"
                     height="40px"
                     onClick={() => doSendReady()}
                   >Ok
                   </Button>
+                  }
+                  {username === hostName &&
+                  <Button
+                    width="100%"
+                    height="40px"
+                    onClick={() => doSendReady()}
+                    disabled={!playPressed}  // Disable OK button until audio is played
+                  >Ok
+                  </Button>
+                  }
+                  { username === hostName &&
+                  <Button
+                    width="100%"
+                    height="40px"
+                    onClick={DecodeAndPlay}
+                  >Press to Play
+                  </Button>
+                  }
+                  {audioUrl && (
+                    <audio controls src={audioUrl} autoPlay />
+                  )}
+                  
                 </div>
               );
             } else {
