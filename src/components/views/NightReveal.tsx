@@ -11,7 +11,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { User } from "types";
 import NarrationPhaseNoDesign from "./NarrationPhaseNoDesign";
-import textSamplesRevealNightpre from "helpers/textSamplesRevealNightpre";
+import TextSamplesRevealNightpre from "helpers/TextSamplesRevealNightpre";
 import TextSamplesRevealNightpost from "helpers/TextSamplesRevealNightpost";
 
 const NightReveal = () => {
@@ -167,13 +167,13 @@ const NightReveal = () => {
   useEffect(() => {
     if(hostName) {
       if (username === hostName) {  
-        // const PartOneText = textSamplesRevealNightpre[Math.floor(Math.random() * textSamples.length)];  
-        // const PartTwoText = TextSamplesRevealNightpost[Math.floor(Math.random() * textSamples.length)];  
-        //if(killedPlayer) {
-        //const individualText = concat(killedPlayer.username," has been killed during the Night");
-        //}
-        //else {
-        //const individual = "nobody has been killed during the night"}
+        const PartOneText = TextSamplesRevealNightpre[Math.floor(Math.random() * textSamples.length)];  
+        const PartTwoText = TextSamplesRevealNightpost[Math.floor(Math.random() * textSamples.length)];  
+        if(killedPlayer) {
+          const individualText = concat(killedPlayer.username," has been killed during the Night");
+        }
+        else {
+          const individual = "nobody has been killed during the night"}
 
         const selectedText = "Test"; // PartOneText.concat(individualText, PartTwoText);
         const fetchData = async () => {
