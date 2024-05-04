@@ -12,8 +12,8 @@ import PropTypes from "prop-types";
 import { User } from "types";
 
 const LobbyMember = ({ user }: { user: User }) => (
-  <div className="player container">
-    <div className="player username">{user.username}</div>
+  <div className="voting player-container">
+    <div className="voting player-username">{user.username}</div>
   </div>
 );
 
@@ -31,7 +31,7 @@ const Voting = () => {
   
   const navigate = useNavigate();
   const Ref = useRef(null);
-  const [timer, setTimer] = useState("00:00:00");
+  const [timer, setTimer] = useState("00:00");
   let gameState = "VOTING";
 
   const [messageReceived, setMessageReceived] = useState(null);
@@ -51,23 +51,20 @@ const Voting = () => {
     const total = Date.parse(e) - Date.parse(new Date());
     const seconds = Math.floor((total / 1000) % 60);
     const minutes = Math.floor((total / 1000 / 60) % 60);
-    const hours = Math.floor((total / 1000 / 60 / 60) % 24);
 
     return {
       total,
-      hours,
       minutes,
       seconds,
     };
   };
 
   const startTimer = (e) => {
-    let { total, hours, minutes, seconds } = getTimeRemaining(e);
+    let { total, minutes, seconds } = getTimeRemaining(e);
     if (total >= 0) {
       // Continue updating the timer
       setTimer(
-        `${hours > 9 ? hours : "0" + hours}:${
-          minutes > 9 ? minutes : "0" + minutes}:${
+        `${minutes > 9 ? minutes : "0" + minutes}:${
           seconds > 9 ? seconds : "0" + seconds}`
       );
     } else {
@@ -82,7 +79,7 @@ const Voting = () => {
   };
 
   const clearTimer = (e) => {
-    setTimer("00:00:10");
+    setTimer("02:00");
     if (Ref.current) clearInterval(Ref.current);
     const id = setInterval(() => {
       startTimer(e);
@@ -92,7 +89,7 @@ const Voting = () => {
 
   const getDeadTime = () => {
     let deadline = new Date();
-    deadline.setSeconds(deadline.getSeconds() + 10);
+    deadline.setSeconds(deadline.getSeconds() + 120); //120
 
     return deadline;
   };
@@ -201,14 +198,14 @@ const Voting = () => {
 
   if (messageReceived !== null) {
     content = (
-      <div className ="game">
-        <ul className= "game user-list">
+      <div className ="voting game-container">
+        <ul className= "voting game-user-list">
           {playersInLobby.map((user: User) => {
             if(user.isAlive && user.username !== username) { // only display other players that are still alive and also not yourself
               return (
                 <li key={user.username}
                   onClick={() => setSelected(user.username)}
-                  className={`player container ${selected === user.username ? "selected" : ""}`}
+                  className={`voting player-container ${selected === user.username ? "selected" : ""}`}
                 >
                   < LobbyMember user={user} />
                 </li>
@@ -223,36 +220,43 @@ const Voting = () => {
 
   return (
     <BaseContainer>
-      <div className= "voting header">Time to put it to a vote!
-        <div className="voting highlight">{timer}</div>
-        <BaseContainer>
-          {(() => {
-            if(ready && selected) {
-              return (
-                <div className= "voting heading2">Waiting for all players to submit their vote...</div>)}
-            else if (selected && !ready) {
-              return (
-                <div>
-                  <div className= "voting heading">You have selected {selected} </div>
-                  <div className= "voting container">{content}
-                    <Button
-                      width="100%"
-                      height="40px"
-                      onClick={() => doSendSelected()}
-                    >Vote for {selected}
-                    </Button>
+      <div className="voting background-container">
+        <div className= "voting header">Time to put it to a vote!
+          <div className="voting highlight">{timer}</div>
+          <BaseContainer>
+            {(() => {
+              if(ready && selected) {
+                return (
+                  <div className ="voting container">
+                    <div className= "voting wait">Waiting for all players to submit their vote...</div>
+                    <Spinner />
+                  </div>)
+              } else if (selected && !ready) {
+                return (
+                  <div className="voting container">
+                    <div className= "voting heading">You have selected {selected} </div>
+                    <div className= "voting container">{content}
+                      <div className="button-container">
+                        <Button
+                          width="100%"
+                          height="40px"
+                          onClick={() => doSendSelected()}
+                        >Vote for {selected}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>)
+              } else { 
+                return (
+                  <div className="voting container">
+                    <div className= "voting heading">{username}, select who you want to vote out.</div>    
+                    <div className= "voting container">{content} </div>
                   </div>
-                </div>)
-            } else { 
-              return (
-                <div>
-                  <div className= "voting heading">{username}, select who you want to vote out.</div>    
-                  <div className= "voting container">{content} </div>
-                </div>
-              )
-            }
-          })()}
-        </BaseContainer>
+                )
+              }
+            })()}
+          </BaseContainer>
+        </div>
       </div>
     </BaseContainer>
   );
