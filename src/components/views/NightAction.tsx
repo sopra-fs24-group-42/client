@@ -89,7 +89,7 @@ const NightAction = () => {
 
   const getDeadTime = () => {
     let deadline = new Date();
-    deadline.setSeconds(deadline.getSeconds() + 520);
+    deadline.setSeconds(deadline.getSeconds() + 10); //120
 
     return deadline;
   };
@@ -270,7 +270,7 @@ const NightAction = () => {
                   if(ready && selected) {
                     return (
                       <div className="nightAction container">
-                        <div className= "nightAction wait">Waiting for other players</div>
+                        <div className= "nightAction wait">Waiting for all players to finish their night actions...</div>
                         <Spinner />
                       </div>)}
                   else if (selected && !ready) {
@@ -359,7 +359,7 @@ const NightAction = () => {
                   } else if (selected && revealRole && ready) {
                     return (
                       <div className="nightAction container">
-                        <div className="nightAction wait">Waiting for other players
+                        <div className="nightAction wait">Waiting for all players to finish their night actions...
                         </div>
                         <Spinner />
                       </div>
@@ -384,7 +384,7 @@ const NightAction = () => {
                   if(ready && selected) {
                     return (
                       <div className= "nightAction container">
-                        <div className= "nightAction wait">Waiting for other players</div>
+                        <div className= "nightAction wait">Waiting for all players to finish their night actions...</div>
                         <Spinner />
                       </div>)}
                   else if (selected && !ready) {
