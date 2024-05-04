@@ -220,9 +220,10 @@ const RoleReveal = () => {
         })()}
         <div className="roleReveal button-container">
           { ready ?
-            <div className= "roleReveal container">
-            Waiting for other players
-              <div><Spinner /></div></div> :
+            <div className= "roleReveal wait">Waiting for other players
+              <Spinner />
+            </div>
+            :
             <Button
               width="100%"
               height="40px"

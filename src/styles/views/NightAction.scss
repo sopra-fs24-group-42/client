@@ -23,12 +23,29 @@
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
-    overflow: auto; // ADD THIS TO MAKE USERS SCROLLABLE!!
+    //overflow-y: auto; // ADD THIS TO MAKE USERS SCROLLABLE!!
     min-height: 100vh;
     //position: relative;
     align-items: center;
   }
    
+  &.role-highlight {
+    @include center;
+    //display: flex;
+    //justify-content: center;
+    top: 0px;
+    //flex-direction: column;
+    font-weight: bold;
+    font-size: 20px;
+    max-width: 30em;
+    padding-left: 37px;
+    padding-right: 37px;
+    border-radius: 0.75em;
+    background-color: #c62121;
+    margin-top: 0px;
+    color: white;
+    }
+
   &.highlight {
     @include center;
     //display: flex;
@@ -36,7 +53,7 @@
     top: 0px;
     //flex-direction: column;
     font-weight: bold;
-    font-size: 25px;
+    font-size: 30px;
     max-width: 30em;
     padding-left: 37px;
     padding-right: 37px;
@@ -49,6 +66,8 @@
     &.header1 {
       margin: 5px;
       @include center;
+      left: 0;
+      right: 0;
       display: flex;
       justify-content: center; // Centers content horizontally in the flex container
       align-items: center;     // Centers content vertically in the flex container
@@ -61,45 +80,59 @@
     
     &.heading {
       @include center;
+      padding: 2px;
+      left: 0;
+      right: 0;
       display: flex;
       justify-content: center; // Centers content horizontally in the flex container
       align-items: center;     // Centers content vertically in the flex container
       flex-direction: column;  // Stacks items vertically
       font-weight: bold;
       font-size: 20px;
-      position: fixed; // makes header not scroll
-      top: 60px;
-      left: 50%;              // Positions the left edge of the element at the center of the container
-      transform: translateX(-50%); // Shifts the element left by 50% of its own width, centering it
-      width: 50%;            // Optional: ensure it spans full width if needed for design
-      margin-top: 40px;
+      text-align: center;
+      color: black;
     }
 
-    &.heading2 {
-        @include center;
-        display: flex;
-        justify-content: center; // Centers content horizontally in the flex container
-        align-items: center;     // Centers content vertically in the flex container
-        flex-direction: column;  // Stacks items vertically
-        font-weight: bold;
-        font-size: 20px;
-        position: fixed; // makes header not scroll
-        top: 120px;
-        left: 50%;              // Positions the left edge of the element at the center of the container
-        transform: translateX(-50%); // Shifts the element left by 50% of its own width, centering it
-        width: 50%;            // Optional: ensure it spans full width if needed for design
-        margin-top: 40px;
-      }
+    &.wait {
+      @include center;
+      padding: 2px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center; // Centers content horizontally in the flex container
+      align-items: center;     // Centers content vertically in the flex container
+      flex-direction: column;  // Stacks items vertically
+      font-weight: normal;
+      font-size: 16px;
+      text-align: center;
+      color: black;
+    }
 
       &.container {
         @include center;
+        left: 0;
+        right: 0;
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         flex-direction: column;
         border-radius: 15px;
         font-size: 22px;
-        overflow: auto;
+        align-items: center;
+        padding: 2px;
     }
+
+    &.role-container {
+      @include center;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      border-radius: 15px;
+      font-size: 22px;
+      align-items: center;
+      padding: 2px;
+  }
 
     &.button-container {
       @include center;
@@ -117,56 +150,30 @@
       padding-left: 10px;
       padding-right: 10px;
       min-width: 200px;
-      width: 20%; 
+      width: 20%;
     }
 
     &.game-container { // this one is the outer container
-      padding: 2px;
+      padding: 1px;
       border-radius: $borderRadius;
       display: flex;
       flex-direction: column;
       align-items: center;
-      overflow: auto;
       max-width: 100vw;
       width: 375px;
       left: 0;
       right: 0;
       margin-left: 2px;
       margin-right: 2px;
-      overflow: auto;
+      overflow: scroll;
     }
 
-    &.player-werewolf-container {
-      margin: 2px;
-      max-width: 100vw;
-      width: 300px;
-      left: 0;
-      right: 0;
-      padding: 2px;
-      border-radius: $borderRadius;
-      display: flex;
-      align-items: center;
-      overflow: auto; //handles scrolling inside container
-      margin: 2px;
-      background-color: blue;
-      &:disabled {
-        cursor: default;
-        opacity: 0.4;}
-      &:hover {
-        transform: translateY(-2px);
-      }
-      &.selected {
-        border: 4px solid $accent; /* Example: solid orange border */
-      }
-  }
-
     &.player-container { // this one is the inner container
-      margin: 2px;
       max-width: 100vw;
       width: 300px;
       left: 0;
       right: 0;
-      padding: 2px;
+      padding: 1px;
       border-radius: $borderRadius;
       display: flex;
       align-items: center;
@@ -174,14 +181,14 @@
       left: 0;
       right: 0;
       font-weight: normal;
-      font-size: 20px;
+      font-size: 18px;
       color:white;
-      margin: 2px;
+      margin-bottom: 5px;
         &:disabled {
           cursor: default;
           opacity: 0.4;}
         &:hover {
-          transform: translateY(-2px);
+          transform: translateY(-1px);
         }
         &.selected {
           border: 4px solid $accent; /* Example: solid orange border */
@@ -196,7 +203,6 @@
           background-position: right center; 
           background-position-x: 96%;
           background-size: 35px;
-          //font-weight: light;
       }
     }
 
@@ -205,6 +211,7 @@
       right:0;
       display: flex;
       align-items: center;
+      padding: 1px;
     }
 
     &.game-user-list {
@@ -212,12 +219,37 @@
       padding-left: 0;
     }
 
-    &.game-user-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background-color: purple;
+    &.werewolf {
+      height: 200px;
+      width: 200px;
+      background: url('../../../resources/wolfBody.png');
+      background-position: center;
+      background-size: cover;
+      border-radius: 100%;
+      background-color: rgba(255, 255, 255, 1);
+    }
+
+    &.villager {
+      height: 150px;
+      width: 150px;
+      background: url('../../../resources/villageHouse.png');
+      background-position: center;
+      background-size: cover;
+      border-radius: 100%;
+      background-color: rgba(255, 255, 255, 1);
+    }
+
+    &.seer {
+      height: 200px;
+      width: 200px;
+      background: url('../../../resources/eye.png');
+      background-position: center;
+      background-size: cover;
+      border-radius: 100%;
+      background-color: rgba(255, 255, 255, 1);
+      padding: 2px;
+      margin-top: 5px;
+      margin-bottom: 10px;
     }
 
 }
