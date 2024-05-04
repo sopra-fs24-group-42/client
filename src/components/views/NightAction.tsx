@@ -216,6 +216,7 @@ const NightAction = () => {
 
   let content = <Spinner />;
   let werewolfContent = <Spinner />;
+  let protectorContent = <Spinner />;
 
   if (messageReceived !== null) {
     content = (
@@ -223,6 +224,24 @@ const NightAction = () => {
         <ul className= "nightAction game-user-list">
           {playersInLobby.map((user: User) => {
             if(user.username !== username && user.isAlive) {
+              return (
+                <li key={user.username}
+                  onClick={() => setSelected(user.username)}
+                  className={`nightAction player-container ${"isNotWerewolf"} ${selected === user.username ? "selected" : ""}`}
+                >
+                  < LobbyMember user={user} />
+                </li>
+              );
+            }      
+          })}
+        </ul>
+      </div>
+    );
+    protectorContent = (
+      <div className ="nightAction game-container">
+        <ul className= "nightAction game-user-list">
+          {playersInLobby.map((user: User) => {
+            if(user.isAlive) {
               return (
                 <li key={user.username}
                   onClick={() => setSelected(user.username)}
@@ -399,6 +418,22 @@ const NightAction = () => {
                         <div className= "nightAction wait">Waiting for all players to finish their night actions...</div>
                         <Spinner />
                       </div>)}
+                  else if (selected && !ready && role === "Protector") {
+                    return(
+                      <div className = "nightAction container">
+                        <div className= "nightAction heading">You have selected {selected}
+                          <div className= "nightAction container">{protectorContent}
+                            <div className="nightAction button-container">
+                              <Button
+                                width="100%"
+                                height="40px"
+                                onClick={() => doSendSelected()}
+                              >protect!
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>)}
                   else if (selected && !ready) {
                     return (
                       <div className = "nightAction container">
@@ -420,7 +455,7 @@ const NightAction = () => {
                       return (
                         <div className = "nightAction container">
                           <div className= "nightAction heading">{username}, select someone to protect.
-                            <div className= "nightAction container">{content} </div>
+                            <div className= "nightAction container">{protectorContent} </div>
                           </div>
                         </div>
                       )
