@@ -403,14 +403,32 @@ const NightAction = () => {
                           </div>
                         </div>
                       </div>)
-                  } else { 
-                    return (
-                      <div className = "nightAction container">
-                        <div className= "nightAction heading">{username}, select someone to avoid suspicion.    
-                          <div className= "nightAction container">{content} </div>
+                  } else {
+                    if (role === "Protector") {
+                      return (
+                        <div className = "nightAction container">
+                          <div className= "nightAction heading">{username}, select someone to protect.
+                            <div className= "nightAction container">{content} </div>
+                          </div>
                         </div>
-                      </div>
-                    )
+                      )
+                    } else if (role === "Sacrifice") {
+                      return (
+                        <div className = "nightAction container">
+                          <div className= "nightAction heading">{username}, select someone to die with you.
+                            <div className= "nightAction container">{content} </div>
+                          </div>
+                        </div>
+                      )
+                    } else {
+                      return (
+                        <div className = "nightAction container">
+                          <div className= "nightAction heading">{username}, select someone to avoid suspicion.
+                            <div className= "nightAction container">{content} </div>
+                          </div>
+                        </div>
+                      )
+                    }
                   }
                 })()}
               </div>

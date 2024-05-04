@@ -46,6 +46,12 @@ const RoleReveal = () => {
   const seerText = "Seer";
   const seerImage = "roleReveal seer";
   const seerInstructions = "As a seer, you can choose to see a player's role during the night.";
+  const protectorText = "Protector";
+  const protectorImage = "roleReveal protector";
+  const protectorInstructions = "As a protector, you can protect another player during the night.";
+  const sacrificeText = "Sacrifice";
+  const sacrificeImage = "roleReveal sacrifice";
+  const sacrificeInstructions = "As a sacrifice, you can sacrifice yourself and \ntake another player with you to death during night.";
   let displayImage = "";
   let displayText = "";
 
@@ -171,6 +177,10 @@ const RoleReveal = () => {
       setRole("Villager"); 
     } else if(permRole === "Seer") {
       setRole("Seer");
+    } else if(permRole === "Protector") {
+      setRole("Protector");
+    } else if(permRole === "Sacrifice") {
+      setRole("Sacrifice");
     }
   }, [permRole]); 
 
@@ -208,7 +218,21 @@ const RoleReveal = () => {
               <div className="roleReveal container">
                 <div className="roleReveal villager"></div>
                 <div className="roleReveal highlight">Villager</div>
-                <div className="roleReveal instructions">As a villager, your goal is to survive and identify the werewolves!</div>
+                <div className="roleReveal instructions">{villagerInstructions}</div>
+              </div>)
+          } else if (role === "Protector"){
+            return(
+              <div className="roleReveal container">
+                <div className="roleReveal protector"></div>
+                <div className="roleReveal highlight">Protector</div>
+                <div className="roleReveal instructions">{protectorInstructions}</div>
+              </div>)
+          } else if (role === "Sacrifice"){
+            return(
+              <div className="roleReveal container">
+                <div className="roleReveal sacrifice"></div>
+                <div className="roleReveal highlight">Sacrifice</div>
+                <div className="roleReveal instructions">{sacrificeInstructions}</div>
               </div>)
           } else {
             return (

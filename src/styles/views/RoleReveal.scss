@@ -48,6 +48,26 @@
       background-color: rgba(255, 255, 255, 1);
     }
 
+    &.protector {
+      height: 250px;
+      width: 250px;
+      background: url('../../../resources/villageHouse.png');//TODO: picture for protector
+      background-position: center;
+      background-size: cover;
+      border-radius: 100%;
+      background-color: rgba(255, 255, 255, 1);
+    }
+
+    &.sacrifice {
+      height: 250px;
+      width: 250px;
+      background: url('../../../resources/villageHouse.png');//TODO: picture for sacrifice
+      background-position: center;
+      background-size: cover;
+      border-radius: 100%;
+      background-color: rgba(255, 255, 255, 1);
+    }
+
     &.header1 {
       @include center;
       display: flex;
