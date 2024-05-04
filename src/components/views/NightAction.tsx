@@ -31,7 +31,7 @@ const NightAction = () => {
   
   const navigate = useNavigate();
   const Ref = useRef(null);
-  const [timer, setTimer] = useState("00:00:00");
+  const [timer, setTimer] = useState("00:00");
 
   let gameState = "NIGHT";
 
@@ -79,7 +79,7 @@ const NightAction = () => {
   };
 
   const clearTimer = (e) => {
-    setTimer("00:00:10");
+    setTimer("02:00");
     if (Ref.current) clearInterval(Ref.current);
     const id = setInterval(() => {
       startTimer(e);
@@ -89,7 +89,7 @@ const NightAction = () => {
 
   const getDeadTime = () => {
     let deadline = new Date();
-    deadline.setSeconds(deadline.getSeconds() + 10); //120
+    deadline.setSeconds(deadline.getSeconds() + 120); //120
 
     return deadline;
   };

@@ -31,7 +31,7 @@ const Voting = () => {
   
   const navigate = useNavigate();
   const Ref = useRef(null);
-  const [timer, setTimer] = useState("00:00:00");
+  const [timer, setTimer] = useState("00:00");
   let gameState = "VOTING";
 
   const [messageReceived, setMessageReceived] = useState(null);
@@ -79,7 +79,7 @@ const Voting = () => {
   };
 
   const clearTimer = (e) => {
-    setTimer("00:00:10");
+    setTimer("02:00");
     if (Ref.current) clearInterval(Ref.current);
     const id = setInterval(() => {
       startTimer(e);

@@ -6,11 +6,13 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/Discussion.scss";
 import BaseContainer from "components/ui/BaseContainer";
+import { Spinner } from "components/ui/Spinner";
+
 
 const Discussion = () => {
   const navigate = useNavigate();
   const Ref = useRef(null);
-  const [timer, setTimer] = useState("00:00:00");
+  const [timer, setTimer] = useState("00:00");
 
   var connection = false;
   let gameState = "DISCUSSION";
@@ -99,7 +101,6 @@ const Discussion = () => {
   }, [ready]);
 
   useEffect(() => { // This useEffect tracks changes in the lobby
-    console.log("something is hapaapapapeenning");
     if (messageReceived) {
       if (messageReceived.gameState === "VOTING") {
         navigate("/voting");
@@ -112,23 +113,20 @@ const Discussion = () => {
     const total = Date.parse(e) - Date.parse(new Date());
     const seconds = Math.floor((total / 1000) % 60);
     const minutes = Math.floor((total / 1000 / 60) % 60);
-    const hours = Math.floor((total / 1000 / 60 / 60) % 24);
 
     return {
       total,
-      hours,
       minutes,
       seconds,
     };
   };
 
   const startTimer = (e) => {
-    let { total, hours, minutes, seconds } = getTimeRemaining(e);
+    let { total, minutes, seconds } = getTimeRemaining(e);
     if (total >= 0) {
       // Continue updating the timer
       setTimer(
-        `${hours > 9 ? hours : "0" + hours}:${
-          minutes > 9 ? minutes : "0" + minutes}:${
+        `${minutes > 9 ? minutes : "0" + minutes}:${
           seconds > 9 ? seconds : "0" + seconds}`
       );
     } else {
@@ -140,7 +138,7 @@ const Discussion = () => {
   };
 
   const clearTimer = (e) => {
-    setTimer("00:00:10");
+    setTimer("05:00");
     if (Ref.current) clearInterval(Ref.current);
     const id = setInterval(() => {
       startTimer(e);
@@ -170,37 +168,40 @@ const Discussion = () => {
   }, []);
 
   return (
-    <div style={{ textAlign: "center", margin: "auto" }}>
-      <BaseContainer>
+    //<div style={{ textAlign: "center", margin: "auto" }}>
+    <BaseContainer>
+      <div className="discussion background-container">
         <div className="discussion container">
-          <h1>Who was it?</h1>
-          <h1>Discuss</h1>
-          <h3></h3>
+          <div className="discussion timer"></div>
+          <div className="discussion header">Who was it?</div>
+          <div className="discussion header">Discuss!</div>
           <div className="discussion highlight">{timer}</div>
           {(() => {
             if(!ready){
               return(
-                <BaseContainer>
-                  <div className="discussion button-container">
-                    <Button
-                      width="100%"
-                      height="50px"
-                      onClick={()=> doSendReady()}>
-                      Skip            
-                    </Button>
-                  </div>
-                </BaseContainer>
+                <div className="discussion button-container">
+                  <Button
+                    width="100%"
+                    height="50px"
+                    onClick={()=> doSendReady()}>
+                    Skip            
+                  </Button>
+                </div>
               )
             }
             else {
               return(
-                <div className="discussion heading">Waiting for all other players...</div>
+                <div className="discussion container">
+                  <div className="discussion wait">Waiting for other players...</div>
+                  <Spinner />
+                </div>
               )
             }
           })()}
         </div>
-      </BaseContainer>
-    </div>
+      </div>
+    </BaseContainer>
+    //</div>
   );
 };
 
