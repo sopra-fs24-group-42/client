@@ -82,9 +82,7 @@ const RoleReveal = () => {
         // all of this only gets executed when message is received
         //localStorage.setItem("lobby", message.body);
         setMessageReceived(JSON.parse(message.body));
-        console.log(`THIS IS ME????? ${JSON.stringify(JSON.parse(message.body).playerMap[`${username}`].roleName)}`)
         setPermRole(JSON.parse(message.body).playerMap[`${username}`].roleName);
-        console.log(`This is PERMROLE inside SUBSCRIBE: ${permRole}`);
         //setRole(JSON.parse(message.body).playerMap[`${username}`].roleName);
         resolve(subscription);
       });
