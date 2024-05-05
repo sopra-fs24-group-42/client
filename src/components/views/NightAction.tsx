@@ -216,6 +216,8 @@ const NightAction = () => {
 
   let content = <Spinner />;
   let werewolfContent = <Spinner />;
+  let protectorContent = <Spinner />;
+  let sacrificeContent = <Spinner />;
 
   if (messageReceived !== null) {
     content = (
@@ -234,6 +236,58 @@ const NightAction = () => {
             }      
           })}
         </ul>
+      </div>
+    );
+    protectorContent = (
+      <div className ="nightAction game-container">
+        <ul className= "nightAction game-user-list">
+          {playersInLobby.map((user: User) => {
+            if(user.isAlive) {
+              return (
+                <li key={user.username}
+                  onClick={() => setSelected(user.username)}
+                  className={`nightAction player-container ${"isNotWerewolf"} ${selected === user.username ? "selected" : ""}`}
+                >
+                  < LobbyMember user={user} />
+                </li>
+              );
+            }      
+          })}
+        </ul>
+      </div>
+    );
+    sacrificeContent = (
+      <div className ="nightAction game-container">
+        <ul className= "nightAction game-user-list">
+          {playersInLobby.map((user: User) => {
+            if(user.username !== username && user.isAlive) {
+              return (
+                <li key={user.username}
+                  onClick={() => setSelected(user.username)}
+                  className={`nightAction player-container ${"isNotWerewolf"} ${selected === user.username ? "selected" : ""}`}
+                >
+                  < LobbyMember user={user} />
+                </li>
+              );
+            }      
+          })}
+          <li
+            key="noSelection"
+            onClick={() => setSelected(null)}
+            className={`nightAction player-container ${"isNotWerewolf"} ${selected === null ? "selected" : ""}`}
+            style={{ backgroundColor: "red" }}
+          >
+            remove selection
+          </li>
+        </ul>
+        <div className="nightAction button-container">
+          <Button
+            width="100%"
+            height="40px"
+            onClick={() => {doSendSelected(); setSelected("Easter Egg!");}}
+          >don&apos;t sacrifice
+          </Button>
+        </div>
       </div>
     );
     werewolfContent = (
@@ -342,6 +396,18 @@ const NightAction = () => {
                                 <div className="nightAction villager"></div>
                               </div>
                             )
+                          } else if (revealRole === "Protector") {
+                            return (
+                              <div className="nightAction container">
+                                <div className="nightAction protector"></div>
+                              </div>
+                            )
+                          } else if (revealRole === "Sarifice") {
+                            return (
+                              <div className="nightAction container">
+                                <div className="nightAction sacrifice"></div>
+                              </div>
+                            )
                           }
                         })()}
                         <div className="nightAction header1">{selected} is a</div>
@@ -387,6 +453,38 @@ const NightAction = () => {
                         <div className= "nightAction wait">Waiting for all players to finish their night actions...</div>
                         <Spinner />
                       </div>)}
+                  else if (selected && !ready && role === "Protector") {
+                    return(
+                      <div className = "nightAction container">
+                        <div className= "nightAction heading">You have selected {selected}
+                          <div className= "nightAction container">{protectorContent}
+                            <div className="nightAction button-container">
+                              <Button
+                                width="100%"
+                                height="40px"
+                                onClick={() => doSendSelected()}
+                              >protect {selected}!
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>)}
+                  else if (selected && !ready && role === "Sacrifice") {
+                    return(
+                      <div className = "nightAction container">
+                        <div className= "nightAction heading">You have selected {selected}
+                          <div className= "nightAction container">{sacrificeContent}
+                            <div className="nightAction button-container">
+                              <Button
+                                width="100%"
+                                height="40px"
+                                onClick={() => doSendSelected()}
+                              >sacrifice!
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>)}
                   else if (selected && !ready) {
                     return (
                       <div className = "nightAction container">
@@ -403,14 +501,32 @@ const NightAction = () => {
                           </div>
                         </div>
                       </div>)
-                  } else { 
-                    return (
-                      <div className = "nightAction container">
-                        <div className= "nightAction heading">{username}, select someone to avoid suspicion.    
-                          <div className= "nightAction container">{content} </div>
+                  } else {
+                    if (role === "Protector") {
+                      return (
+                        <div className = "nightAction container">
+                          <div className= "nightAction heading">{username}, select someone to protect.
+                            <div className= "nightAction container">{protectorContent} </div>
+                          </div>
                         </div>
-                      </div>
-                    )
+                      )
+                    } else if (role === "Sacrifice") {
+                      return (
+                        <div className = "nightAction container">
+                          <div className= "nightAction heading">{username}, select someone to die with you.
+                            <div className= "nightAction container">{sacrificeContent} </div>
+                          </div>
+                        </div>
+                      )
+                    } else {
+                      return (
+                        <div className = "nightAction container">
+                          <div className= "nightAction heading">{username}, select someone to avoid suspicion.
+                            <div className= "nightAction container">{content} </div>
+                          </div>
+                        </div>
+                      )
+                    }
                   }
                 })()}
               </div>

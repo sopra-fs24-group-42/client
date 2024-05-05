@@ -167,15 +167,15 @@ const NightReveal = () => {
   useEffect(() => {
     if(hostName) {
       if (username === hostName) {  
-        const PartOneText = TextSamplesRevealNightpre[Math.floor(Math.random() * textSamples.length)];  
-        const PartTwoText = TextSamplesRevealNightpost[Math.floor(Math.random() * textSamples.length)];  
-        if(killedPlayer) {
-          const individualText = concat(killedPlayer.username," has been killed during the Night");
-        }
-        else {
-          const individual = "nobody has been killed during the night"}
+        //const PartOneText = TextSamplesRevealNightpre[Math.floor(Math.random() * textSamples.length)];  
+        //const PartTwoText = TextSamplesRevealNightpost[Math.floor(Math.random() * textSamples.length)];  
+        //if(killedPlayer) {
+        //  const individualText = concat(killedPlayer.username," has been killed during the Night");
+        //}
+        //else {
+        //  const individual = "nobody has been killed during the night"}
 
-        const selectedText = "Test"; // PartOneText.concat(individualText, PartTwoText);
+        const selectedText = "Test"; // PartOneText.concat(individualText, PartTwoText); NEEDS TO BE CHANGE FOR FINAL PRODUCT: ATM SHORT TO CONSERVE USED CHARACTERS
         const fetchData = async () => {
           const baseURL = "https://texttospeech.googleapis.com/v1beta1/text:synthesize?fields=audioContent&key="
           const URLSecret = process.env.REACT_APP_API_KEY;
