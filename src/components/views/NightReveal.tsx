@@ -10,9 +10,8 @@ import "styles/views/NightReveal.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { User } from "types";
-import NarrationPhaseNoDesign from "./NarrationPhaseNoDesign";
-import TextSamplesRevealNightpre from "helpers/TextSamplesRevealNightpre";
-import TextSamplesRevealNightpost from "helpers/TextSamplesRevealNightpost";
+import TextSamplesRevealNightpre from "helpers/TextSamples/TextSamplesRevealNightpre";
+import TextSamplesRevealNightpost from "helpers/TextSamples/TextSamplesRevealNightpost";
 
 const NightReveal = () => {
   // variables needed for establishing websocket connection

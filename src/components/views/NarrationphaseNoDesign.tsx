@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {useNavigate} from "react-router-dom";
 import { getDomain } from "../../helpers/getDomain";
-import textSamples from "helpers/TextSamples";
+import textSamples from "helpers/TextSamples/TextSamples";
 import { Button } from "components/ui/Button";
 
 function NarrationPhase() {

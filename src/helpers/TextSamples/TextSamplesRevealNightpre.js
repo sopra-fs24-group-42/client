@@ -2,5 +2,5 @@
 const TextSamplesRevealNightpre = [
   "Night pre 1",
   "Night pre 2" ];
-    
+ 
 export default TextSamplesRevealNightpre;
