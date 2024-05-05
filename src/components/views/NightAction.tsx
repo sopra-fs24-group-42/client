@@ -40,7 +40,7 @@ const NightAction = () => {
   const [playersInLobby, setPlayersInLobby] = useState(null);
   const [alreadySent, setAlreadySent] = useState(false);
 
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState("");
   var sentReady = false; // for seer role
 
   const [ready, setReady] = useState(false);
@@ -69,11 +69,13 @@ const NightAction = () => {
       );
     } else {
       // Timer expires, navigate to another page
-      try {
-        let selection = localStorage.getItem("selected");}
-      catch (e) {
-        localStorage.setItem("selected", null);}
+      //try { 
+      //  let selection = localStorage.getItem("selected");} // checking if selected has been made
+      //catch (e) {
+      //  localStorage.setItem("selected","");} // if not, put it in localStorage
+      //console.log(`Time ran out. Selection is ${selection}, selected is {selected}`);
       setReady(true);
+      setAlreadySent(true);
       clearInterval(Ref.current);
     }
   };
@@ -89,7 +91,7 @@ const NightAction = () => {
 
   const getDeadTime = () => {
     let deadline = new Date();
-    deadline.setSeconds(deadline.getSeconds() + 120); //120
+    deadline.setSeconds(deadline.getSeconds() + 10); //120
 
     return deadline;
   };
@@ -136,8 +138,6 @@ const NightAction = () => {
       subscription = stompClient.subscribe(destination, async function(message) { 
         console.log("Subscription: " + JSON.stringify(subscription));
         // all of this only gets executed when message is received
-        console.log("MESSAGE IN SUBSCRIBE: " + JSON.stringify(message));
-        //localStorage.setItem("lobby", message.body);
         setMessageReceived(JSON.parse(message.body));
         setPlayersInLobby(JSON.parse(message.body).players);
         resolve(subscription);
@@ -174,16 +174,18 @@ const NightAction = () => {
       console.log("THIS IS SELECTION" + selection);
       const body = JSON.stringify({username, selection});
       try {
+        console.log(`ALREADY SENT? ${alreadySent}`)
         if(!alreadySent) { // to avoid SEND frames being sent doubled 
+          //alreadySent = true;
+          //setAlreadySent(true);
           stompClient.send(`/app/${role}/nightaction`, headers, body);
-          setTimeout(function() {
-            stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
-            sentReady = true;
-            setAlreadySent(true);
-          },500);}
+          stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
+          sentReady = true; // for seer
+        }
       } catch (e) {
         console.log("Something went wrong sending selection information: " + e);
       }
+      setAlreadySent(true);
     }
   }, [ready]);
 
@@ -207,6 +209,7 @@ const NightAction = () => {
 
   const doSendSelected = () => {
     setReady(true);
+    setAlreadySent(true);
   }
 
   useEffect(() => {
@@ -273,7 +276,7 @@ const NightAction = () => {
           })}
           <li
             key="noSelection"
-            onClick={() => setSelected(null)}
+            onClick={() => setSelected("")}
             className={`nightAction player-container ${"isNotWerewolf"} ${selected === null ? "selected" : ""}`}
             style={{ backgroundColor: "red" }}
           >
@@ -321,13 +324,13 @@ const NightAction = () => {
             return (
               <div className = "nightAction container">
                 {(() => {
-                  if(ready && selected) {
+                  if(ready && selected !== "") {
                     return (
                       <div className="nightAction container">
                         <div className= "nightAction wait">Waiting for all players to finish their night actions...</div>
                         <Spinner />
                       </div>)}
-                  else if (selected && !ready) {
+                  else if (selected !== "" && !ready) {
                     return (
                       <div className = "nightAction container">
                         <div className= "nightAction heading">You have selected {selected} 
@@ -359,7 +362,7 @@ const NightAction = () => {
             return (
               <div className = "nightAction container">
                 {(() => {
-                  if (selected && !revealRole) {
+                  if (selected !== "" && !revealRole) {
                     return (
                       <div className="nightAction heading">You have selected {selected}
                         <div className="nightAction container">{content}
@@ -374,7 +377,7 @@ const NightAction = () => {
                         </div>
                       </div>
                     );
-                  } else if (selected && revealRole && !ready) {
+                  } else if (selected !== "" && revealRole && !ready) {
                     return (
                       <div className="nightAction container">
                         {(() => {
@@ -422,7 +425,7 @@ const NightAction = () => {
                         </div>
                       </div>
                     );
-                  } else if (selected && revealRole && ready) {
+                  } else if (selected !== "" && revealRole && ready) {
                     return (
                       <div className="nightAction container">
                         <div className="nightAction wait">Waiting for all players to finish their night actions...
@@ -447,13 +450,13 @@ const NightAction = () => {
             return (
               <div className = "nightAction container">
                 {(() => {
-                  if(ready && selected) {
+                  if(ready && selected !== "") {
                     return (
                       <div className= "nightAction container">
                         <div className= "nightAction wait">Waiting for all players to finish their night actions...</div>
                         <Spinner />
                       </div>)}
-                  else if (selected && !ready && role === "Protector") {
+                  else if (selected !== "" && !ready && role === "Protector") {
                     return(
                       <div className = "nightAction container">
                         <div className= "nightAction heading">You have selected {selected}
@@ -469,7 +472,7 @@ const NightAction = () => {
                           </div>
                         </div>
                       </div>)}
-                  else if (selected && !ready && role === "Sacrifice") {
+                  else if (selected !== "" && !ready && role === "Sacrifice") {
                     return(
                       <div className = "nightAction container">
                         <div className= "nightAction heading">You have selected {selected}
@@ -485,7 +488,7 @@ const NightAction = () => {
                           </div>
                         </div>
                       </div>)}
-                  else if (selected && !ready) {
+                  else if (selected !== "" && !ready) {
                     return (
                       <div className = "nightAction container">
                         <div className= "nightAction heading">You have selected {selected}
