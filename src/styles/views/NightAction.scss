@@ -230,8 +230,8 @@
     }
 
     &.villager {
-      height: 150px;
-      width: 150px;
+      height: 200px;
+      width: 200px;
       background: url('../../../resources/villageHouse.png');
       background-position: center;
       background-size: cover;
@@ -250,6 +250,26 @@
       padding: 2px;
       margin-top: 5px;
       margin-bottom: 10px;
+    }
+
+    &.protector {
+      height: 200px;
+      width: 200px;
+      background: url('../../../resources/flowersProtect.svg');//TODO: picture for protector
+      background-position: center;
+      background-size: cover;
+      border-radius: 100%;
+      background-color: rgba(255, 255, 255, 1);
+    }
+
+    &.sacrifice {
+      height: 200px;
+      width: 200px;
+      background: url('../../../resources/candle.png');//TODO: picture for sacrifice
+      background-position: center;
+      background-size: cover;
+      border-radius: 100%;
+      background-color: rgba(255, 255, 255, 1);
     }
 
 }

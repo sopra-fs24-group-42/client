@@ -37,7 +37,7 @@ const Voting = () => {
   const [messageReceived, setMessageReceived] = useState(null);
   const [playersInLobby, setPlayersInLobby] = useState(null);
 
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState("");
   var votedPlayer = null;
 
   const [ready, setReady] = useState(false);
@@ -69,11 +69,12 @@ const Voting = () => {
       );
     } else {
       // Timer expires, navigate to another page
-      try {
-        let selection = localStorage.getItem("selected");}
-      catch (e) {
-        localStorage.setItem("selected", null);}
+      //try {
+      //  let selection = localStorage.getItem("selected");}
+      //catch (e) {
+      //  localStorage.setItem("selected", null);}
       setReady(true);
+      setAlreadySent(true);
       clearInterval(Ref.current);
     }
   };
@@ -89,7 +90,7 @@ const Voting = () => {
 
   const getDeadTime = () => {
     let deadline = new Date();
-    deadline.setSeconds(deadline.getSeconds() + 120); //120
+    deadline.setSeconds(deadline.getSeconds() + 15); //120
 
     return deadline;
   };
@@ -170,12 +171,13 @@ const Voting = () => {
         if(!alreadySent) { // to avoid SEND frames being sent doubled
           stompClient.send("/app/voting", headers, body);
           stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
-          setAlreadySent(true);}
+        }
       } catch (e) {
         console.log("Something went wrong sending selection information: " + e);
       }
+      setAlreadySent(true);
     }
-  }, [ready, connection]);
+  }, [ready]);
 
   useEffect(() => { // This useEffect tracks changes in the lobby
     if (messageReceived) {
@@ -187,6 +189,7 @@ const Voting = () => {
   }, [messageReceived]); 
 
   const doSendSelected = () => {
+    setAlreadySent(true);
     setReady(true);
   }
   
@@ -225,13 +228,13 @@ const Voting = () => {
           <div className="voting highlight">{timer}</div>
           <BaseContainer>
             {(() => {
-              if(ready && selected) {
+              if(ready && selected !== "") {
                 return (
                   <div className ="voting container">
                     <div className= "voting wait">Waiting for all players to submit their vote...</div>
                     <Spinner />
                   </div>)
-              } else if (selected && !ready) {
+              } else if (selected !== "" && !ready) {
                 return (
                   <div className="voting container">
                     <div className= "voting heading">You have selected {selected} </div>

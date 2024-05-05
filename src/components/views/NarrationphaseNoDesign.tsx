@@ -3,13 +3,15 @@ import {useNavigate} from "react-router-dom";
 import { getDomain } from "../../helpers/getDomain";
 import textSamples from "helpers/TextSamples/TextSamples";
 import { Button } from "components/ui/Button";
-import "../../styles/views/NarrationPhase.scss";
-import Header from "./Header";
-
 
 function NarrationPhase() {
   const [data, setData] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
+  const [isDisabled, setIsDisabled] = useState(false);
+
+  function handleInfoClick() {
+    console.log("The info button was clicked!"); // Handles clicking on the Infobutton
+  }
   
   useEffect(() => {
     const selectedText = textSamples[Math.floor(Math.random() * textSamples.length)];
@@ -80,17 +82,13 @@ function NarrationPhase() {
   };
   
   return (
-    <div className="NarrationPhase">
-      <div className="container">
-        <div className="title">Survive the Night</div>
-        <div className="subtitle">Shhhhhhhhh. This is the Narration Phase, listen...</div>
-        <button className="btn" onClick={DecodeAndPlay}>
-          Press to Play
-        </button>
-        {audioUrl && (
-          <audio controls src={audioUrl} autoPlay />
-        )}
-      </div>
+    <div>
+      <button className="btn" onClick={DecodeAndPlay}>
+        Press to Play
+      </button>
+      {audioUrl && (
+        <audio controls src={audioUrl} autoPlay />
+      )}
     </div>
     /*
     <BaseContainer>
@@ -100,7 +98,6 @@ function NarrationPhase() {
       </div>
     </BaseContainer>
     */
-
     
   );
 }
