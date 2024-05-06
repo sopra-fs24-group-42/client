@@ -29,6 +29,8 @@ const VotingReveal = () => {
   const username = localStorage.getItem("user"); //fetching username from localstorage
   const [ready, setReady] = useState(false);
   let gameState = "REVEALVOTING";
+  const [alreadySent, setAlreadySent] = useState(false);
+
 
   const lobbyId = localStorage.getItem("lobbyId");
 
@@ -114,7 +116,8 @@ const VotingReveal = () => {
       };
       const body = JSON.stringify({username, gameState});
       try{
-        stompClient.send("/app/ready", headers, body);
+        if(!alreadySent) {
+          stompClient.send("/app/ready", headers, body);}
       } catch (e) {
         console.log("Something went wrong starting the game :/");
       }
@@ -135,6 +138,7 @@ const VotingReveal = () => {
 
   const doSendReady = () => {
     setReady(true);
+    setAlreadySent(true);
   }
 
   let content = <Spinner />; // fetching data

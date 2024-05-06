@@ -24,9 +24,7 @@ LobbyMember.propTypes = {
 const WaitingRoom = () => {
   // variables needed for establishing websocket connection
   const [connection, setConnection] = useState(null);
-  //const [stompClient, setStompClient] = useState(null);
-  //const [subscription, setSubscription] = useState(null);
-  //let connection = false;
+  const [alreadySent, setAlreadySent] = useState(false);
   const baseURL = getDomain();
   var stompClient = null;
   var subscription = null;
@@ -58,10 +56,7 @@ const WaitingRoom = () => {
       stompClient.connect({}, function (frame) { // connecting to server websocket: instructions inside "function" will only be executed once we get something (i.e. a connect frame back from the server). Parameter "frame" is what we get from the server. 
         console.log("socket was successfully connected: " + frame);
         setConnection(true);
-        //stompClient.heartbeat.outgoing = 20000;
-        //stompClient.heartbeat.incoming = 10000;
-        //stompClient.reconnect_delay = 5000;
-        //connection = true;
+
         setTimeout(function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
           //const response = await callback();
           console.log("I waited: I received  MESSAGE frame back based on subscribing!!");
@@ -123,7 +118,9 @@ const WaitingRoom = () => {
       };
       const body = JSON.stringify({lobbyId});
       try{
-        stompClient.send("/app/startgame", headers, body);
+        if(!alreadySent) {
+          stompClient.send("/app/startgame", headers, body);
+        }
       } catch (e) {
         console.log("Something went wrong starting the game :/");
       }
@@ -154,15 +151,7 @@ const WaitingRoom = () => {
   }
 
   const doStartGame = () => {
-    // Calling send here does not work, because the stompClient variable is null for some reason.
-    // This is very strange, because the connection (and subscription) is still active and stompClient is a global variable..
-    // I cannot explain why it's null.
-    // --> workaround: calling it in the useEffect unmount (return) works. 
-    /*const headers = {
-      "Content-type": "application/json"
-    };
-    const body = JSON.stringify({lobbyId});
-    stompClient.send("/app/startgame", headers, body);*/
+    setAlreadySent(true);
     navigate("/rolereveal"); //--> This triggers dismount of this component, which triggers return value of first useEffect, which triggers a send message to /app/startgame which triggers a broadcast to all players which gets caught in subscribe callback and set as MessageReceived, where I check if role is null, which if it isn't, everyone gets rerouted to /rolereveal
   }
 

@@ -115,7 +115,7 @@ const NightReveal = () => {
       try{
         if(!alreadySent) { // to avoid SEND frames being sent doubled
           stompClient.send("/app/ready", headers, body);
-          setAlreadySent(true);}
+        }
       } catch (e) {
         console.log("Something went wrong starting the game :/");
       }
@@ -137,6 +137,7 @@ const NightReveal = () => {
 
   const doSendReady = () => {
     setReady(true);
+    setAlreadySent(true);
   }
 
   let content = <Spinner />;

@@ -95,7 +95,7 @@ const End = () => {
       try {
         if(!alreadySent) { // to avoid SEND frames being sent doubled
           stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
-          setAlreadySent(true);}
+        }
       } catch (e) {
         console.log("Something went wrong sending information: " + e);
       }
@@ -112,6 +112,7 @@ const End = () => {
 
   const doSendReady = () => {
     setReady(true);
+    setAlreadySent(true);
   }
 
   let content = <Spinner />;

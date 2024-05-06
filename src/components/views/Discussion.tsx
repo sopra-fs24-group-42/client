@@ -93,7 +93,7 @@ const Discussion = () => {
       try {
         if(!alreadySent) { // to stop sending SEND frames doubled
           stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
-          setAlreadySent(true);} 
+        } 
       } catch (e) {
         console.log("Something went wrong sending selection information: " + e);
       }
@@ -132,6 +132,7 @@ const Discussion = () => {
     } else {
       // Timer expires, navigate to another page
       setReady(true);
+      setAlreadySent(true);
       //navigate("/voting");
       clearInterval(Ref.current);
     }
@@ -148,6 +149,7 @@ const Discussion = () => {
 
   const doSendReady = () => {
     setReady(true);
+    setAlreadySent(true);
   }
 
   const getDeadTime = () => {
@@ -168,7 +170,6 @@ const Discussion = () => {
   }, []);
 
   return (
-    //<div style={{ textAlign: "center", margin: "auto" }}>
     <BaseContainer>
       <div className="discussion background-container">
         <div className="discussion container">
