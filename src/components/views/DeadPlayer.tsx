@@ -2,14 +2,11 @@ import React, { useState, useEffect } from "react";
 import SockJS from "sockjs-client";
 import { over } from "stompjs";
 import { getDomain } from "../../helpers/getDomain";
-import { api, handleError } from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
 import {useNavigate, useLocation} from "react-router-dom";
 import { Button } from "components/ui/Button";
-import "styles/views/NightReveal.scss";
+import "styles/views/DeadPlayer.scss";
 import BaseContainer from "components/ui/BaseContainer";
-import PropTypes from "prop-types";
-import { User } from "types";
 
 const DeadScreen = () => {
 
@@ -111,44 +108,29 @@ const DeadScreen = () => {
     }
   }, [messageReceived]); 
 
-  let content = <Spinner />;
-  if(messageReceived !== null) {
-    if(deadPlayer.numberOfVotes !== 0) { // you were voted out
-      content = (
-        <div className = "nightAction highlight">
-          {deadPlayer.username}, you were voted out!
-        </div>
-      );
-    }
-    else { // you were killed
-      content = (
-        <div className = "nightAction highlight">
-          {deadPlayer.username}, you were killed!
-        </div>)
-    }
-  }
-
   return (
     <BaseContainer>
-      <div className="nightReveal container">
-        <div>
-          <div className="nightReveal header">It is over for you</div>
-          {(() => {
-            if (deadPlayer.numberOfVotes !== 0) { // you were voted out
-              return (
-                <div className = "nightAction highlight">
-                  {deadPlayer.username}, you were voted out!
-                </div>
-              );
-            } else { // you were killed
-              return (
-                <div className = "nightAction highlight">
-                  {deadPlayer.username}, you were killed!
-                </div>
-              );
-            }
-          })()}
-        </div>
+      <div className="deadPlayer background-container">
+        <div className="deadPlayer header">{deadPlayer.username}, <br></br> the game ends here for you...</div>
+        {(() => {
+          if (deadPlayer.numberOfVotes !== 0) { // you were voted out
+            return (
+              <div className="deadPlayer container">
+                <div className = "deadPlayer votedOut"></div>
+                <div className="deadPlayer header">You were</div>
+                <div className = "deadPlayer highlight">voted out!</div>
+              </div>
+            );
+          } else { // you were killed
+            return (
+              <div className="deadPlayer container">
+                <div className="deadPlayer rip"></div>
+                <div className="deadPlayer header">You were</div>
+                <div className = "deadPlayer highlight">killed!</div>
+              </div>
+            );
+          }
+        })()}
       </div>
     </BaseContainer>
   );

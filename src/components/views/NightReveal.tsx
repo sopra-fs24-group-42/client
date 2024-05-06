@@ -245,14 +245,14 @@ const NightReveal = () => {
 
   return (
     <BaseContainer>
-      <div className="nightReveal container">
-        <div>
-          <div className="nightReveal header">Something happened during the night...</div>
+      <div className ="nightReveal background-container">
+        <div className="nightReveal container">
+          <div className="nightReveal header">Dawn has broken...</div>
+          {content}
           {(() => {
             if (!ready) {
               return (
-                <div className="nightReveal container">
-                  {content}
+                <div className="nightReveal button-container">
                   {username !== hostName &&
                   <Button
                     width="100%"
@@ -281,15 +281,13 @@ const NightReveal = () => {
                   {audioUrl && (
                     <audio controls src={audioUrl} autoPlay />
                   )}
-                  
                 </div>
               );
             } else {
               return (
                 <div className="nightReveal container">
-                  <div className="nightReveal header2">
-                  Waiting for all players to press ok
-                  </div>
+                  <div className="nightReveal wait">Waiting for other players...</div>
+                  <Spinner />
                 </div>
               );
             }
