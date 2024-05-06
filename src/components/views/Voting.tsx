@@ -170,7 +170,9 @@ const Voting = () => {
       try {
         if(!alreadySent) { // to avoid SEND frames being sent doubled
           stompClient.send("/app/voting", headers, body);
-          stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
+          setTimeout(() => {
+            stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
+          }, 100);
         }
       } catch (e) {
         console.log("Something went wrong sending selection information: " + e);
