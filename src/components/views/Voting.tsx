@@ -172,7 +172,7 @@ const Voting = () => {
           stompClient.send("/app/voting", headers, body);
           setTimeout(() => {
             stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
-          }, 100);
+          }, 1000);
         }
       } catch (e) {
         console.log("Something went wrong sending selection information: " + e);
