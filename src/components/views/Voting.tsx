@@ -171,7 +171,7 @@ const Voting = () => {
         if(!alreadySent) { // to avoid SEND frames being sent doubled
           stompClient.send("/app/voting", headers, body);
           setTimeout(() => {
-          stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
+            stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
           }, 100);
         }
       } catch (e) {
