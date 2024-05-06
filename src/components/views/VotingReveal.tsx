@@ -279,7 +279,7 @@ const VotingReveal = () => {
         {(() => {
           if (!ready) {
             return (
-              <div className="votingReveal container">
+              <div className="votingReveal button-container">
                 {username !== hostName &&
                 <Button
                   width="100%"

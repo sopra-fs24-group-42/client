@@ -7,7 +7,7 @@ import { Spinner } from "components/ui/Spinner";
 import {useNavigate, useLocation} from "react-router-dom";
 import { Button } from "components/ui/Button";
 import BaseContainer from "components/ui/BaseContainer";
-import "styles/views/NightAction.scss";
+import "styles/views/End.scss";
 import PropTypes from "prop-types";
 import { User } from "types";
 
@@ -119,30 +119,34 @@ const End = () => {
 
   if (messageReceived !== null) {
     content = (
-      <div className="nightAction highlight">The {winningTeam} won!</div>
+      <div className="end highlight">The {winningTeam} won!</div>
     );}
 
   return (
     <BaseContainer>
-      <div className= "nightAction header">The game has ended!</div>
-      {(() => {
-        if(!ready) {
-          return (
-            <div className = "nightAction container">
-              {content}
-              <Button
-                width="100%"
-                height="40px"
-                onClick={() => doSendReady()}
-              >Ok
-              </Button>
-            </div>
-          )
-        }    
-        else { 
-          return (
-            {content})}
-      })()}
+      <div className="end background-container">
+        <div className= "end header">The game has ended!</div>
+        <div className="end crown"></div>
+        {content}
+        {(() => {
+          if(!ready) {
+            return (
+              <div className = "end button-container">
+                <Button
+                  width="100%"
+                  height="40px"
+                  onClick={() => doSendReady()}
+                >Ok
+                </Button>
+              </div>)
+          } else { 
+            return (
+              <div className="end container">
+                <div className="end wait">Waiting for other players...</div>
+                <Spinner />
+              </div>)}
+        })()}
+      </div>
     </BaseContainer>
   );
 };
