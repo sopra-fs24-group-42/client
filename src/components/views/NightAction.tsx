@@ -91,7 +91,7 @@ const NightAction = () => {
 
   const getDeadTime = () => {
     let deadline = new Date();
-    deadline.setSeconds(deadline.getSeconds() + 10); //120
+    deadline.setSeconds(deadline.getSeconds() + 120); //120
 
     return deadline;
   };
@@ -185,7 +185,6 @@ const NightAction = () => {
       } catch (e) {
         console.log("Something went wrong sending selection information: " + e);
       }
-      setAlreadySent(true);
     }
   }, [ready]);
 

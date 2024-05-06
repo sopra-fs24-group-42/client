@@ -90,7 +90,7 @@ const Voting = () => {
 
   const getDeadTime = () => {
     let deadline = new Date();
-    deadline.setSeconds(deadline.getSeconds() + 15); //120
+    deadline.setSeconds(deadline.getSeconds() + 120); //120
 
     return deadline;
   };
