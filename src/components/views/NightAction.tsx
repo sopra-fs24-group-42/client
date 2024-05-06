@@ -180,9 +180,8 @@ const NightAction = () => {
           //setAlreadySent(true);
           stompClient.send(`/app/${role}/nightaction`, headers, body);
           setTimeout(() => {
-          stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
+            stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
           }, 100);
-         //  stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
           sentReady = true; // for seer
         }
       } catch (e) {
