@@ -119,7 +119,7 @@ const WaitingRoom = () => {
       const body = JSON.stringify({lobbyId});
       try{
         if(!alreadySent) {
-        stompClient.send("/app/startgame", headers, body);
+          stompClient.send("/app/startgame", headers, body);
         }
       } catch (e) {
         console.log("Something went wrong starting the game :/");

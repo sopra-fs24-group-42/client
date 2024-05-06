@@ -117,7 +117,7 @@ const VotingReveal = () => {
       const body = JSON.stringify({username, gameState});
       try{
         if(!alreadySent) {
-        stompClient.send("/app/ready", headers, body);}
+          stompClient.send("/app/ready", headers, body);}
       } catch (e) {
         console.log("Something went wrong starting the game :/");
       }
