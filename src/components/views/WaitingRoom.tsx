@@ -12,8 +12,8 @@ import PropTypes from "prop-types";
 import { User } from "types";
 
 const LobbyMember = ({ user }: { user: User }) => (
-  <div className="player container">
-    <div className="player username">{user.username}</div>
+  <div className="waitingRoom player-container">
+    <div className="waitingRoom player-username">{user.username}</div>
   </div>
 );
 
@@ -128,7 +128,6 @@ const WaitingRoom = () => {
   }, []);
 
   useEffect(() => { // This useEffect tracks changes in the lobby
-    console.log("something is hapaapapapeenning");
     if (messageReceived && messageReceived.players) {
       if ((messageReceived.playerMap[`${user}`].roleName) !== null) { //checking if role has been assigned
         setRole(messageReceived.playerMap[`${user}`].roleName);
@@ -160,8 +159,8 @@ const WaitingRoom = () => {
 
   if (messageReceived !== null) {
     content = (
-      <div className ="game">
-        <ul className= "game user-list">
+      <div className ="waitingRoom game-container">
+        <ul className= "waitingRoom game-user-list">
           {playersInLobby.map((user: User) => (
             <li key={user.username}>
               < LobbyMember user={user} />
@@ -177,25 +176,22 @@ const WaitingRoom = () => {
 
   return (
     <BaseContainer>
-      <div className= "waitingRoom header">Welcome to game 
-        <div className= "waitingRoom highlight">{lobbyCode}
-          <div className= "waitingRoom heading"> {headerMessage}</div>
-        </div>
-      </div>
-      <div>
-      </div>
-      <div className= "waitingRoom container">
-        {content}
-        <div className="waitingRoom button-container">
-          { user === hostName &&
-          <Button
-            width="100%"
-            height="40px"
-            disabled={checkIfAllPlayersHere() === false}
-            onClick={() => doStartGame()}
-          >
-            Start Game
-          </Button>}
+      <div className="waitingRoom background-container">
+        <div className= "waitingRoom header">Welcome to game</div>
+        <div className= "waitingRoom highlight">{lobbyCode}</div>
+        <div className= "waitingRoom heading"> {headerMessage}</div>   
+        <div className= "waitingRoom container">
+          {content}
+          <div className="waitingRoom button-container">
+            { user === hostName &&
+            <Button
+              width="100%"
+              height="40px"
+              disabled={checkIfAllPlayersHere() === false}
+              onClick={() => doStartGame()}
+            >Start Game
+            </Button>}
+          </div>
         </div>
       </div>
     </BaseContainer>

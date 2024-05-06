@@ -22,21 +22,21 @@ const FrontPage = () => {
   }, []); 
   
   return (
-    <div>
-      <Header height="100" /> 
-      <BaseContainer>
-        <Button 
-          onClick = {()=> navigate("/joingame")}> 
-          Join an existing game
-        </Button>
-        <Button 
-          style={{"margin-top": "70px"}}
-          onClick = {()=> navigate("/creategame")}
-        > 
-        Create a new game
-        </Button>
-      </BaseContainer>
-    </div>
+    <BaseContainer>
+      <div className="frontpage background-container">
+        <div className="frontpage button-container">
+          <Header height="100" /> 
+          <Button 
+            onClick = {()=> navigate("/joingame")}> 
+            Join an existing game
+          </Button>
+          <Button 
+            onClick = {()=> navigate("/creategame")}
+          >Create a new game
+          </Button>
+        </div>
+      </div>
+    </BaseContainer>
   );
 };
 

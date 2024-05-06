@@ -56,40 +56,35 @@ const CreateGame = () => {
 
   return (
     <BaseContainer>
-      <div className="createGame header">
-        Create a new game
-      </div>
-      <div className="createGame container">
-        <div className="createGame form">
-          <FormField
-            label="How many people are playing?"
-            value={numberOfPlayers}
-            onChange={(e: string) => setNumberOfPlayers(e)}
-          />
-          <FormField
-            label="Choose your username:"
-            value={hostName}
-            onChange={(e: string) => setHostName(e)}
-          />
-          <div className="createGame space"></div>
-          <div className="createGame button-container">
-            <Button
-              width="100%"
-              height="80px"
-              disabled={!hostName || !numberOfPlayers}
-              onClick={() => doCreateGame()}
-            >
-            Create Game
-            </Button>
-          </div>
-          <div className="createGame button-container">
-            <Button
-              width="100%"
-              height="30px"
-              onClick={() => navigate("/frontpage")}
-            >
-              Back
-            </Button>
+      <div className="createGame background-container">
+        <div className="createGame header">Create a new game</div>
+        <div className="createGame container">
+          <div className="createGame form">
+            <FormField
+              label="How many people are playing?"
+              value={numberOfPlayers}
+              onChange={(e: string) => setNumberOfPlayers(e)}
+            />
+            <FormField
+              label="Choose your username:"
+              value={hostName}
+              onChange={(e: string) => setHostName(e)}
+            />
+            <div className="createGame button-container">
+              <Button
+                width="100%"
+                height="80px"
+                disabled={!hostName || !numberOfPlayers}
+                onClick={() => doCreateGame()}
+              >Create Game
+              </Button>
+              <Button
+                width="100%"
+                height="30px"
+                onClick={() => navigate("/frontpage")}
+              >Back
+              </Button>
+            </div>
           </div>
         </div>
       </div>

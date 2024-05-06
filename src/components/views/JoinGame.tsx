@@ -55,38 +55,35 @@ const JoinGame = () => {
 
   return (
     <BaseContainer>
-      <div className= "joinGame header">Join an existing game</div>
-      <div className="joinGame container">
-        <div className="joinGame form">
-          <FormField
-            label="Choose your username:"
-            value={username}
-            onChange={(e: string) => setUsername(e)}
-          />
-          <FormField
-            label="Enter a game code:"
-            value={lobbyCode}
-            onChange={(e: string) => setLobbyCode(e)}
-          />
-          <div className="joinGame space"></div>
-          <div className="joinGame button-container">
-            <Button
-              width="100%"
-              height="80px"
-              disabled={!username || !lobbyCode}
-              onClick={() => doJoinGame()}
-            >
-              Join Game
-            </Button>
-          </div>
-          <div className="joinGame button-container">
-            <Button
-              width="100%"
-              height="40px"
-              onClick={() => navigate("/frontpage")}
-            >
-              Back
-            </Button>
+      <div className="joinGame background-container">
+        <div className= "joinGame header">Join an existing game</div>
+        <div className="joinGame container">
+          <div className="joinGame form">
+            <FormField
+              label="Choose your username:"
+              value={username}
+              onChange={(e: string) => setUsername(e)}
+            />
+            <FormField
+              label="Enter a game code:"
+              value={lobbyCode}
+              onChange={(e: string) => setLobbyCode(e)}
+            />
+            <div className="joinGame button-container">
+              <Button
+                width="100%"
+                height="80px"
+                disabled={!username || !lobbyCode}
+                onClick={() => doJoinGame()}
+              >Join Game
+              </Button>
+              <Button
+                width="100%"
+                height="40px"
+                onClick={() => navigate("/frontpage")}
+              >Back
+              </Button>
+            </div>
           </div>
         </div>
       </div>
