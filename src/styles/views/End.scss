@@ -1,6 +1,6 @@
 @import "../theme";
 
-.votingReveal     {
+.end     {
 
   &.background-container {
     //background: url('../../../resources/kingCard.jpg');
@@ -117,53 +117,14 @@
     color: black;
   }
 
-  &.werewolf {
-    height: 200px;
-    width: 200px;
-    background: url('../../../resources/wolfBody.png');
+  &.crown {
+    height: 250px;
+    width: 250px;
+    background: url('../../../resources/crown.png');
     background-position: center;
     background-size: cover;
     border-radius: 100%;
     background-color: rgba(255, 255, 255, 1);
   }
 
-  &.villager {
-    height: 200px;
-    width: 200px;
-    background: url('../../../resources/villageHouse.png');
-    background-position: center;
-    background-size: cover;
-    border-radius: 100%;
-    background-color: rgba(255, 255, 255, 1);
-  }
-
-  &.seer {
-    height: 200px;
-    width: 200px;
-    background: url('../../../resources/eye.png');
-    background-position: center;
-    background-size: cover;
-    border-radius: 100%;
-    background-color: rgba(255, 255, 255, 1);
-  }
-
-  &.protector {
-    height: 200px;
-    width: 200px;
-    background: url('../../../resources/flowersProtect.svg');//TODO: picture for protector
-    background-position: center;
-    background-size: cover;
-    border-radius: 100%;
-    background-color: rgba(255, 255, 255, 1);
-  }
-
-  &.sacrifice {
-    height: 200px;
-    width: 200px;
-    background: url('../../../resources/candle.png');//TODO: picture for sacrifice
-    background-position: center;
-    background-size: cover;
-    border-radius: 100%;
-    background-color: rgba(255, 255, 255, 1);
-  }
 }

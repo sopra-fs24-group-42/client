@@ -406,7 +406,7 @@ const NightAction = () => {
                                 <div className="nightAction protector"></div>
                               </div>
                             )
-                          } else if (revealRole === "Sarifice") {
+                          } else if (revealRole === "Sacrifice") {
                             return (
                               <div className="nightAction container">
                                 <div className="nightAction sacrifice"></div>
