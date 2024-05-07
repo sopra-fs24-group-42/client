@@ -118,8 +118,9 @@ const WaitingRoom = () => {
       };
       const body = JSON.stringify({lobbyId});
       try{
-        if(!alreadySent) {
+        if(!alreadySent && user === localStorage.getItem("toaster")) {
           stompClient.send("/app/startgame", headers, body);
+          localStorage.removeItem("toaster");
         }
       } catch (e) {
         console.log("Something went wrong starting the game :/");
@@ -151,6 +152,7 @@ const WaitingRoom = () => {
 
   const doStartGame = () => {
     setAlreadySent(true);
+    localStorage.setItem("toaster", hostName);
     navigate("/rolereveal"); //--> This triggers dismount of this component, which triggers return value of first useEffect, which triggers a send message to /app/startgame which triggers a broadcast to all players which gets caught in subscribe callback and set as MessageReceived, where I check if role is null, which if it isn't, everyone gets rerouted to /rolereveal
   }
 
