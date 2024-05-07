@@ -82,9 +82,7 @@ const RoleReveal = () => {
         // all of this only gets executed when message is received
         //localStorage.setItem("lobby", message.body);
         setMessageReceived(JSON.parse(message.body));
-        console.log(`THIS IS ME????? ${JSON.stringify(JSON.parse(message.body).playerMap[`${username}`].roleName)}`)
         setPermRole(JSON.parse(message.body).playerMap[`${username}`].roleName);
-        console.log(`This is PERMROLE inside SUBSCRIBE: ${permRole}`);
         //setRole(JSON.parse(message.body).playerMap[`${username}`].roleName);
         resolve(subscription);
       });
@@ -111,8 +109,6 @@ const RoleReveal = () => {
       }
       setPermRole(messageReceived.playerMap[`${username}`].roleName);
       console.log(`This is PERMROLE inside first useEffect: ${permRole}`);
-
-      //setRole(messageReceived.playerMap[`${username}`].roleName);
     }
 
     return () => {
@@ -123,7 +119,7 @@ const RoleReveal = () => {
         const body = JSON.stringify({username, gameState});
         if(!alreadySent){
           stompClient.send("/app/ready", headers, body);
-          setAlreadySent(true);}
+        }
       } catch (e) {
         console.log("Something went wrong while sending a message to the server :/ " + e);
       }
@@ -185,6 +181,7 @@ const RoleReveal = () => {
   }, [permRole]); 
 
   const doSendReady = () => {
+    setAlreadySent(true);
     setReady(true);
   }
 

@@ -10,7 +10,6 @@ import "styles/views/VotingReveal.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { User } from "types";
-import NightAction from "./NightAction";
 
 const VotingReveal = () => {
   localStorage.removeItem("selected");
@@ -29,6 +28,8 @@ const VotingReveal = () => {
   const username = localStorage.getItem("user"); //fetching username from localstorage
   const [ready, setReady] = useState(false);
   let gameState = "REVEALVOTING";
+  const [alreadySent, setAlreadySent] = useState(false);
+
 
   const lobbyId = localStorage.getItem("lobbyId");
 
@@ -114,7 +115,8 @@ const VotingReveal = () => {
       };
       const body = JSON.stringify({username, gameState});
       try{
-        stompClient.send("/app/ready", headers, body);
+        if(!alreadySent) {
+          stompClient.send("/app/ready", headers, body);}
       } catch (e) {
         console.log("Something went wrong starting the game :/");
       }
@@ -135,6 +137,7 @@ const VotingReveal = () => {
 
   const doSendReady = () => {
     setReady(true);
+    setAlreadySent(true);
   }
 
   let content = <Spinner />; // fetching data
@@ -145,11 +148,48 @@ const VotingReveal = () => {
         <div className="nightAction highlight"> There was a tie... No one was voted out!</div>
       )
     } else { // there was no tie: a player was voted out
-      content = (
-        <div className = "nightAction highlight">
-          {votedPlayer.username}, a {votedPlayer.roleName} was voted out!
-        </div>
-      );}
+      if(votedPlayer.roleName === "Seer") {
+        content = (
+          <div className = "votingReveal container">
+            <div className = "votingReveal seer"></div>
+            <div className = "votingReveal header">{votedPlayer.username}, <br></br> a</div>
+            <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
+            <div className = "votingReveal header">was voted out!</div>
+          </div>)
+      } else if (votedPlayer.roleName === "Villager") {
+        content = (
+          <div className = "votingReveal container">
+            <div className = "votingReveal villager"></div>
+            <div className = "votingReveal header">{votedPlayer.username}, <br></br> a</div>
+            <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
+            <div className = "votingReveal header">was voted out!</div>
+          </div>)
+      } else if (votedPlayer.roleName === "Werewolf") {
+        content = (
+          <div className = "votingReveal container">
+            <div className = "votingReveal werewolf"></div>
+            <div className = "votingReveal header">{votedPlayer.username}, <br></br> a</div>
+            <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
+            <div className = "votingReveal header">was voted out!</div>
+          </div>)
+      } else if (votedPlayer.roleName === "Protector") {
+        content = (
+          <div className = "votingReveal container">
+            <div className = "votingReveal protector"></div>
+            <div className = "votingReveal header">{votedPlayer.username}, <br></br> a</div>
+            <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
+            <div className = "votingReveal header">was voted out!</div>
+          </div>)
+      } else if (votedPlayer.roleName === "Sacrifice") {
+        content = (
+          <div className = "votingReveal container">
+            <div className = "votingReveal sacrifice"></div>
+            <div className = "votingReveal header">{votedPlayer.username}, <br></br> a</div>
+            <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
+            <div className = "votingReveal header">was voted out!</div>
+          </div>)
+      }
+    }
   }
 
   useEffect(() => {
@@ -233,13 +273,13 @@ const VotingReveal = () => {
 
   return (
     <BaseContainer>
-      <div className="votingReveal container">
-        <div className="votingReveal header">The voting results are in!</div>
+      <div className="votingReveal background-container">
+        <div className="votingReveal header">The votes have been counted!</div>
+        {content}
         {(() => {
           if (!ready) {
             return (
-              <div className="votingReveal container">
-                {content}
+              <div className="votingReveal button-container">
                 {username !== hostName &&
                 <Button
                   width="100%"
@@ -274,9 +314,8 @@ const VotingReveal = () => {
           } else {
             return (
               <div className="votingReveal container">
-                <div className="votingReveal heading">
-                  Waiting for all players to press Ok
-                </div>
+                <div className="votingReveal wait">Waiting for other players...</div>
+                <Spinner />
               </div>
             );
           }

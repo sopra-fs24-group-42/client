@@ -12,8 +12,8 @@ import PropTypes from "prop-types";
 import { User } from "types";
 
 const LobbyMember = ({ user }: { user: User }) => (
-  <div className="player container">
-    <div className="player username">{user.username}</div>
+  <div className="waitingRoom player-container">
+    <div className="waitingRoom player-username">{user.username}</div>
   </div>
 );
 
@@ -24,9 +24,7 @@ LobbyMember.propTypes = {
 const WaitingRoom = () => {
   // variables needed for establishing websocket connection
   const [connection, setConnection] = useState(null);
-  //const [stompClient, setStompClient] = useState(null);
-  //const [subscription, setSubscription] = useState(null);
-  //let connection = false;
+  const [alreadySent, setAlreadySent] = useState(false);
   const baseURL = getDomain();
   var stompClient = null;
   var subscription = null;
@@ -42,7 +40,7 @@ const WaitingRoom = () => {
   const [role, setRole] = useState(null);
 
   // variables needed for UI
-  const waitingHeading = "Waiting for all players to join...";
+  const waitingHeading = "Waiting for all players to join";
   const readyHeading = `Everyone's here! ${hostName}, start the game.`;
   const lobbyCode = localStorage.getItem("lobbyCode"); // need this to display at the top of the waitingRoom
   
@@ -58,10 +56,7 @@ const WaitingRoom = () => {
       stompClient.connect({}, function (frame) { // connecting to server websocket: instructions inside "function" will only be executed once we get something (i.e. a connect frame back from the server). Parameter "frame" is what we get from the server. 
         console.log("socket was successfully connected: " + frame);
         setConnection(true);
-        //stompClient.heartbeat.outgoing = 20000;
-        //stompClient.heartbeat.incoming = 10000;
-        //stompClient.reconnect_delay = 5000;
-        //connection = true;
+
         setTimeout(function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
           //const response = await callback();
           console.log("I waited: I received  MESSAGE frame back based on subscribing!!");
@@ -123,7 +118,9 @@ const WaitingRoom = () => {
       };
       const body = JSON.stringify({lobbyId});
       try{
-        stompClient.send("/app/startgame", headers, body);
+        if(!alreadySent) {
+          stompClient.send("/app/startgame", headers, body);
+        }
       } catch (e) {
         console.log("Something went wrong starting the game :/");
       }
@@ -131,7 +128,6 @@ const WaitingRoom = () => {
   }, []);
 
   useEffect(() => { // This useEffect tracks changes in the lobby
-    console.log("something is hapaapapapeenning");
     if (messageReceived && messageReceived.players) {
       if ((messageReceived.playerMap[`${user}`].roleName) !== null) { //checking if role has been assigned
         setRole(messageReceived.playerMap[`${user}`].roleName);
@@ -154,15 +150,7 @@ const WaitingRoom = () => {
   }
 
   const doStartGame = () => {
-    // Calling send here does not work, because the stompClient variable is null for some reason.
-    // This is very strange, because the connection (and subscription) is still active and stompClient is a global variable..
-    // I cannot explain why it's null.
-    // --> workaround: calling it in the useEffect unmount (return) works. 
-    /*const headers = {
-      "Content-type": "application/json"
-    };
-    const body = JSON.stringify({lobbyId});
-    stompClient.send("/app/startgame", headers, body);*/
+    setAlreadySent(true);
     navigate("/rolereveal"); //--> This triggers dismount of this component, which triggers return value of first useEffect, which triggers a send message to /app/startgame which triggers a broadcast to all players which gets caught in subscribe callback and set as MessageReceived, where I check if role is null, which if it isn't, everyone gets rerouted to /rolereveal
   }
 
@@ -171,8 +159,8 @@ const WaitingRoom = () => {
 
   if (messageReceived !== null) {
     content = (
-      <div className ="game">
-        <ul className= "game user-list">
+      <div className ="waitingRoom game-container">
+        <ul className= "waitingRoom game-user-list">
           {playersInLobby.map((user: User) => (
             <li key={user.username}>
               < LobbyMember user={user} />
@@ -181,32 +169,33 @@ const WaitingRoom = () => {
         </ul>
       </div>
     );
-    if (checkIfAllPlayersHere() === true) {
-      headerMessage = readyHeading;}
-    else {headerMessage = waitingHeading;}
+    // if (checkIfAllPlayersHere() === true) {
+    //   headerMessage = readyHeading;}
+    // else {headerMessage = waitingHeading;}
   }
 
   return (
     <BaseContainer>
-      <div className= "waitingRoom header">Welcome to game 
-        <div className= "waitingRoom highlight">{lobbyCode}
-          <div className= "waitingRoom heading"> {headerMessage}</div>
-        </div>
-      </div>
-      <div>
-      </div>
-      <div className= "waitingRoom container">
-        {content}
-        <div className="waitingRoom button-container">
-          { user === hostName &&
-          <Button
-            width="100%"
-            height="40px"
-            disabled={checkIfAllPlayersHere() === false}
-            onClick={() => doStartGame()}
-          >
-            Start Game
-          </Button>}
+      <div className="waitingRoom background-container">
+        <div className= "waitingRoom header">Welcome to game</div>
+        <div className= "waitingRoom highlight">{lobbyCode}</div>
+        {checkIfAllPlayersHere() ? 
+          (<div className="waitingRoom heading">Everyone is here!<br></br>{hostName}, start the game.</div>):
+          (<div className="waitingRoom heading">{numberOfPlayersInLobby} out of {numberOfPlayers} players have joined,<br></br>
+        waiting for {numberOfPlayers - numberOfPlayersInLobby} more.<Spinner /></div>)
+        }  
+        <div className= "waitingRoom container">
+          {content}
+          <div className="waitingRoom button-container">
+            { user === hostName &&
+            <Button
+              width="100%"
+              height="40px"
+              disabled={checkIfAllPlayersHere() === false}
+              onClick={() => doStartGame()}
+            >Start Game
+            </Button>}
+          </div>
         </div>
       </div>
     </BaseContainer>

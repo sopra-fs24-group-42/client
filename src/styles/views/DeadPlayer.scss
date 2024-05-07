@@ -1,6 +1,6 @@
 @import "../theme";
 
-.votingReveal     {
+.deadPlayer {
 
   &.background-container {
     //background: url('../../../resources/kingCard.jpg');
@@ -21,15 +21,14 @@
     border-radius: 15px;
     @include center;
     display: flex;
-    //justify-content: center; // content is vertically centered
-    justify-content: flex-start; // content vertically starts at the top
+    justify-content: center; // content is vertically centered
+    //justify-content: flex-start; // content vertically starts at the top
     flex-direction: column;
     min-height: 100vh;
     align-items: center;
     position: fixed;
   }
-
-  &.highlight {
+    &.highlight {
     @include center;
     display: flex;
     justify-content: center;
@@ -45,6 +44,21 @@
     }
 
     &.header {
+        @include center;
+        padding: 2px;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center; // Centers content horizontally in the flex container
+        align-items: center;     // Centers content vertically in the flex container
+        flex-direction: column;  // Stacks items vertically
+        font-weight: bold;
+        font-size: 25px;
+        text-align: center;
+        color: black;
+    }
+
+    &.heading {
       @include center;
       padding: 2px;
       left: 0;
@@ -54,19 +68,9 @@
       align-items: center;     // Centers content vertically in the flex container
       flex-direction: column;  // Stacks items vertically
       font-weight: bold;
-      font-size: 25px;
+      font-size: 18px;
       text-align: center;
       color: black;
-  }
-
-    &.heading {
-      @include center;
-      display: flex;
-      justify-content: center; // Centers content horizontally in the flex container
-      align-items: center;     // Centers content vertically in the flex container
-      flex-direction: column;  // Stacks items vertically
-      font-weight: bold;
-      font-size: 20px;
     }
 
     &.container {
@@ -102,68 +106,30 @@
     width: 300px;
   }
 
-  &.wait {
-    @include center;
+  &.votedOut{
+    height: 200px;
+    width: 200px;
+    background: url('../../../resources/votedOut.jpg');
+    background-position: center;
+    background-size: cover;
+    border-radius: 100%;
+    background-color: rgba(255, 255, 255, 1);
     padding: 2px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center; // Centers content horizontally in the flex container
-    align-items: center;     // Centers content vertically in the flex container
-    flex-direction: column;  // Stacks items vertically
-    font-weight: normal;
-    font-size: 16px;
-    text-align: center;
-    color: black;
+    margin-top: 5px;
+    margin-bottom: 10px;
   }
 
-  &.werewolf {
+  &.rip {
     height: 200px;
     width: 200px;
-    background: url('../../../resources/wolfBody.png');
+    background: url('../../../resources/tombstone.png');
     background-position: center;
     background-size: cover;
     border-radius: 100%;
     background-color: rgba(255, 255, 255, 1);
+    padding: 2px;
+    margin-top: 5px;
+    margin-bottom: 10px;
   }
 
-  &.villager {
-    height: 200px;
-    width: 200px;
-    background: url('../../../resources/villageHouse.png');
-    background-position: center;
-    background-size: cover;
-    border-radius: 100%;
-    background-color: rgba(255, 255, 255, 1);
-  }
-
-  &.seer {
-    height: 200px;
-    width: 200px;
-    background: url('../../../resources/eye.png');
-    background-position: center;
-    background-size: cover;
-    border-radius: 100%;
-    background-color: rgba(255, 255, 255, 1);
-  }
-
-  &.protector {
-    height: 200px;
-    width: 200px;
-    background: url('../../../resources/flowersProtect.svg');//TODO: picture for protector
-    background-position: center;
-    background-size: cover;
-    border-radius: 100%;
-    background-color: rgba(255, 255, 255, 1);
-  }
-
-  &.sacrifice {
-    height: 200px;
-    width: 200px;
-    background: url('../../../resources/candle.png');//TODO: picture for sacrifice
-    background-position: center;
-    background-size: cover;
-    border-radius: 100%;
-    background-color: rgba(255, 255, 255, 1);
-  }
 }
