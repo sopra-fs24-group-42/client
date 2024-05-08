@@ -129,6 +129,7 @@ const NightReveal = () => {
   useEffect(() => { // This useEffect tracks changes in the lobby --> do I need this for roleReveal?
     console.log("I am in Role reveal useEffect now!");
     if (messageReceived) {
+      findKilledPlayers();
       setHostName(messageReceived.hostName);
       if (messageReceived.gameState === "DISCUSSION") {
         navigate("/discussion");
