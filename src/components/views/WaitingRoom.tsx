@@ -154,6 +154,10 @@ const WaitingRoom = () => {
     navigate("/rolereveal"); //--> This triggers dismount of this component, which triggers return value of first useEffect, which triggers a send message to /app/startgame which triggers a broadcast to all players which gets caught in subscribe callback and set as MessageReceived, where I check if role is null, which if it isn't, everyone gets rerouted to /rolereveal
   }
 
+  const doUpdateGameSettings = () => {
+
+  }
+
   let content = <Spinner />;
   let headerMessage = "";
 
@@ -191,6 +195,12 @@ const WaitingRoom = () => {
               disabled={checkIfAllPlayersHere() === false}
               onClick={() => doStartGame()}
             >Start Game
+            </Button>}
+            <Button
+              width="100%"
+              height="40px"
+              onClick={() => doUpdateGameSettings()}
+            >Set Game Settings
             </Button>}
           </div>
         </div>
