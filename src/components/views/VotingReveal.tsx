@@ -2,14 +2,12 @@ import React, { useState, useEffect } from "react";
 import SockJS from "sockjs-client";
 import { over } from "stompjs";
 import { getDomain } from "../../helpers/getDomain";
-import { api, handleError } from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
 import {useNavigate, useLocation} from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/VotingReveal.scss";
 import BaseContainer from "components/ui/BaseContainer";
-import PropTypes from "prop-types";
-import { User } from "types";
+import { Table, TableData } from "@mantine/core"; // TODO: implement detailed 
 
 const VotingReveal = () => {
   localStorage.removeItem("selected");
@@ -34,7 +32,6 @@ const VotingReveal = () => {
   let gameState = "REVEALVOTING";
   const [alreadySent, setAlreadySent] = useState(false);
 
-
   const lobbyId = localStorage.getItem("lobbyId");
 
   //variables needed for TexttoSpeechAPI
@@ -42,7 +39,6 @@ const VotingReveal = () => {
   const [audioUrl, setAudioUrl] = useState(null);
   const [playPressed, setPlayPressed] = useState(false);  // State to track if Playbutton has been pressed
   const [hostName, setHostName] = useState(null); //required so that the APIcall gets only made by the host and only the host can play the sound
-
 
   const findVotedPlayer = () => {
     for(let i=0; i<messageReceived.players.length; i++) { // iterating through list of players to check their isKilled field
@@ -57,8 +53,7 @@ const VotingReveal = () => {
       }
     }
     let playersCopy = messageReceived.players
-    playersCopy.sort((a,b) => a.numberOfvotes - b.numberOfVotes); //sorting players according to number of votes in asc order
-    playersCopy.reverse();
+    playersCopy.sort((a,b) => a.numberOfvotes - b.numberOfVotes); //sorting players according to number of votes in desc order
     firstVotedPlayer = playersCopy[0];
     secondVotedPlayer = playersCopy[1];
     thirdVotedPlayer = playersCopy[2];
@@ -147,21 +142,30 @@ const VotingReveal = () => {
   let content = <Spinner />; // fetching data
   if(messageReceived !== null) {
     findVotedPlayer();
+    // attempt to use table from Mantine....
+    // const tableData: TableData = {
+    //   head: ['Player', 'Number of Votes'],
+    //   body: [
+    //     [firstVotedPlayer.username, firstVotedPlayer.numberOfVotes],
+    //     [secondVotedPlayer.username, secondVotedPlayer.numberOfVotes],
+    //     [thirdVotedPlayer.username, thirdVotedPlayer.numberOfVotes],
+    //   ],
+    // };
     let details = (
+      // <div>
+      // <Table data={tableData} />
+      // </div>
       <div className="votingReveal container">
         <div className="votingReveal details-container">
-          <div className="votingReveal heading">Detailed results:</div>
+          <div className="votingReveal details-heading">Detailed results:</div>
           <div className="votingReveal heading">
-            <div className="votingReveal details-highlight">{firstVotedPlayer.username}</div>
-            <div className="votingReveal heading">received {firstVotedPlayer.numberOfVotes} votes<br></br></div>
+            <div className="votingReveal heading">{firstVotedPlayer.username} received {firstVotedPlayer.numberOfVotes} votes<br></br></div>
           </div>
           <div className="votingReveal heading">
-            <div className="votingReveal details-highlight">{secondVotedPlayer.username}</div>
-            <div className="votingReveal heading">received {secondVotedPlayer.numberOfVotes} votes<br></br></div>
+            <div className="votingReveal heading">{secondVotedPlayer.username} received {secondVotedPlayer.numberOfVotes} votes<br></br></div>
           </div>
           <div className="votingReveal heading">
-            <div className="votingReveal details-highlight">{thirdVotedPlayer.username}</div>
-            <div className="votingReveal heading">received {thirdVotedPlayer.numberOfVotes} votes<br></br></div>
+            <div className="votingReveal heading">{thirdVotedPlayer.username} received {thirdVotedPlayer.numberOfVotes} votes<br></br></div>
           </div>
         </div>
       </div>
@@ -169,7 +173,8 @@ const VotingReveal = () => {
     if(!votedPlayer) { // i.e. there was at least one tie (no one gets voted out)
       content = (
         <div className="votingReveal container">
-          <div className="votingReveal highlight"> There was a tie... No one was voted out!</div>
+          <div className="votingReveal header"> There was a tie...</div>
+          <div className="votingReveal highlight">No one was voted out!</div>
           {details}
         </div>
       )
