@@ -2,14 +2,12 @@ import React, { useState, useEffect } from "react";
 import SockJS from "sockjs-client";
 import { over } from "stompjs";
 import { getDomain } from "../../helpers/getDomain";
-import { api, handleError } from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
 import {useNavigate, useLocation} from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/VotingReveal.scss";
 import BaseContainer from "components/ui/BaseContainer";
-import PropTypes from "prop-types";
-import { User } from "types";
+import { Table, TableData } from "@mantine/core"; // TODO: implement detailed 
 
 const VotingReveal = () => {
   localStorage.removeItem("selected");
@@ -25,11 +23,14 @@ const VotingReveal = () => {
   // variables needed for role reveal
   const [messageReceived, setMessageReceived] = useState(null);
   var votedPlayer = null;
+  var firstVotedPlayer = null;
+  var secondVotedPlayer = null;
+  var thirdVotedPlayer = null;
+  var sortedPlayersByVotes = [];
   const username = localStorage.getItem("user"); //fetching username from localstorage
   const [ready, setReady] = useState(false);
   let gameState = "REVEALVOTING";
   const [alreadySent, setAlreadySent] = useState(false);
-
 
   const lobbyId = localStorage.getItem("lobbyId");
 
@@ -40,31 +41,31 @@ const VotingReveal = () => {
   const [hostName, setHostName] = useState(null); //required so that the APIcall gets only made by the host and only the host can play the sound
 
   const findVotedPlayer = () => {
-    console.log("Inside findVotedPlayer");
     for(let i=0; i<messageReceived.players.length; i++) { // iterating through list of players to check their isKilled field
       let currentPlayer = messageReceived.players[i];
       if(messageReceived.playerMap[`${currentPlayer.username}`].isKilled) {
         votedPlayer = currentPlayer;
       }
     }
-    if(votedPlayer) {
+    if(votedPlayer) { //re-routing the voted out player to /deadscreen
       if (username === votedPlayer.username) {
         navigate("/deadscreen", {state: votedPlayer});
       }
     }
+    let playersCopy = messageReceived.players
+    playersCopy.sort((a,b) => a.numberOfvotes - b.numberOfVotes); //sorting players according to number of votes in desc order
+    firstVotedPlayer = playersCopy[0];
+    secondVotedPlayer = playersCopy[1];
+    thirdVotedPlayer = playersCopy[2];
   }
 
   const connect = async () => {
     return new Promise((resolve, reject) => {
-      console.log("INSIDE CONNECT");
       const socket = new SockJS(baseURL+"/game"); // creating a new SockJS object (essentially a websocket object)
       stompClient = over(socket); // specifying that it's a special type of websocket connection (i.e. using sockJS)
       stompClient.connect({}, function (frame) { // connecting to server websocket: instructions inside "function" will only be executed once we get something (i.e. a connect frame back from the server). Parameter "frame" is what we get from the server.
-        console.log("socket was successfully connected: " + frame);
         connection = true;
         setTimeout( function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
-          //const response = await callback();
-          console.log("I waited: I received  MESSAGE frame back based on subscribing!!");
           resolve(stompClient);
         }, 500);
       });
@@ -78,9 +79,7 @@ const VotingReveal = () => {
   const subscribe = async (destination) => {
     return new Promise( (resolve, reject) => {
       subscription = stompClient.subscribe(destination, async function(message) {
-        console.log("I AM STILL SUBSCRIBED AND RECEIVED A MESSAGE");
         // all of this only gets executed when message is received
-        console.log("this is the message: " + JSON.stringify(message));
         setMessageReceived(JSON.parse(message.body));
         setHostName(JSON.parse(message.body).hostName);
         resolve(subscription);
@@ -143,18 +142,51 @@ const VotingReveal = () => {
   let content = <Spinner />; // fetching data
   if(messageReceived !== null) {
     findVotedPlayer();
+    // attempt to use table from Mantine....
+    // const tableData: TableData = {
+    //   head: ['Player', 'Number of Votes'],
+    //   body: [
+    //     [firstVotedPlayer.username, firstVotedPlayer.numberOfVotes],
+    //     [secondVotedPlayer.username, secondVotedPlayer.numberOfVotes],
+    //     [thirdVotedPlayer.username, thirdVotedPlayer.numberOfVotes],
+    //   ],
+    // };
+    let details = (
+      // <div>
+      // <Table data={tableData} />
+      // </div>
+      <div className="votingReveal container">
+        <div className="votingReveal details-container">
+          <div className="votingReveal details-heading">Detailed results:</div>
+          <div className="votingReveal heading">
+            <div className="votingReveal heading">{firstVotedPlayer.username} received {firstVotedPlayer.numberOfVotes} votes<br></br></div>
+          </div>
+          <div className="votingReveal heading">
+            <div className="votingReveal heading">{secondVotedPlayer.username} received {secondVotedPlayer.numberOfVotes} votes<br></br></div>
+          </div>
+          <div className="votingReveal heading">
+            <div className="votingReveal heading">{thirdVotedPlayer.username} received {thirdVotedPlayer.numberOfVotes} votes<br></br></div>
+          </div>
+        </div>
+      </div>
+    )
     if(!votedPlayer) { // i.e. there was at least one tie (no one gets voted out)
       content = (
-        <div className="nightAction highlight"> There was a tie... No one was voted out!</div>
+        <div className="votingReveal container">
+          <div className="votingReveal header"> There was a tie...</div>
+          <div className="votingReveal highlight">No one was voted out!</div>
+          {details}
+        </div>
       )
     } else { // there was no tie: a player was voted out
       if(votedPlayer.roleName === "Seer") {
         content = (
           <div className = "votingReveal container">
             <div className = "votingReveal seer"></div>
-            <div className = "votingReveal header">{votedPlayer.username}, <br></br> a</div>
-            <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
+            <div className = "votingReveal header">{votedPlayer.username}, <br></br> a
+              <div className = "votingReveal highlight">{votedPlayer.roleName}</div></div>
             <div className = "votingReveal header">was voted out!</div>
+            {details}
           </div>)
       } else if (votedPlayer.roleName === "Villager") {
         content = (
@@ -163,6 +195,7 @@ const VotingReveal = () => {
             <div className = "votingReveal header">{votedPlayer.username}, <br></br> a</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
+            {details}
           </div>)
       } else if (votedPlayer.roleName === "Werewolf") {
         content = (
@@ -171,6 +204,7 @@ const VotingReveal = () => {
             <div className = "votingReveal header">{votedPlayer.username}, <br></br> a</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
+            {details}
           </div>)
       } else if (votedPlayer.roleName === "Protector") {
         content = (
@@ -179,6 +213,7 @@ const VotingReveal = () => {
             <div className = "votingReveal header">{votedPlayer.username}, <br></br> a</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
+            {details}
           </div>)
       } else if (votedPlayer.roleName === "Sacrifice") {
         content = (
@@ -187,6 +222,7 @@ const VotingReveal = () => {
             <div className = "votingReveal header">{votedPlayer.username}, <br></br> a</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
+            {details}
           </div>)
       }
     }

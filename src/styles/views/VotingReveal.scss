@@ -44,6 +44,40 @@
     margin-top: 10px;
     }
 
+    &.details-container {
+      left:0;
+      right:0;
+      width: 375px;
+      max-width: 100vw;
+      display: flex;
+      justify-content: flex-start;
+      flex-direction: column; // i don't want details to be centered
+      border-radius: 0px;
+      font-size: 22px;
+      align-items: flex-start;
+      padding: 2px;
+      background-color: white;
+      padding-left: 20px;
+      padding-top: 30px;
+      padding-bottom: 50px;
+      margin-top: 30px;
+  }
+
+  &.details-highlight {
+    @include center;
+    //display: flex;
+    //justify-content: center;
+    //flex-direction: column;
+    font-weight: bold;
+    font-size: 18px;
+    max-width: 30em;
+    //padding-left: 37px;
+    //padding-right: 37px;
+    border-radius: 0.75em;
+    background-color: #c62121;
+    margin-top: 2px;
+    }
+
     &.header {
       @include center;
       padding: 2px;
@@ -59,14 +93,26 @@
       color: black;
   }
 
+  &.details-heading {
+    @include center;
+    display: flex;
+    justify-content: center; // Centers content horizontally in the flex container
+    align-items: center;     // Centers content vertically in the flex container
+    flex-direction: column;  // Stacks items vertically
+    font-weight: bold;
+    font-size: 18px;
+    color: black;
+  }
+
     &.heading {
       @include center;
       display: flex;
       justify-content: center; // Centers content horizontally in the flex container
       align-items: center;     // Centers content vertically in the flex container
       flex-direction: column;  // Stacks items vertically
-      font-weight: bold;
-      font-size: 20px;
+      font-weight: normal;
+      font-size: 18px;
+      color: black;
     }
 
     &.container {

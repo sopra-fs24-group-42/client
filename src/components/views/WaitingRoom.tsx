@@ -40,8 +40,6 @@ const WaitingRoom = () => {
   const [role, setRole] = useState(null);
 
   // variables needed for UI
-  const waitingHeading = "Waiting for all players to join";
-  const readyHeading = `Everyone's here! ${hostName}, start the game.`;
   const lobbyCode = localStorage.getItem("lobbyCode"); // need this to display at the top of the waitingRoom
   
   // variables needed for conditional button display
@@ -171,9 +169,6 @@ const WaitingRoom = () => {
         </ul>
       </div>
     );
-    // if (checkIfAllPlayersHere() === true) {
-    //   headerMessage = readyHeading;}
-    // else {headerMessage = waitingHeading;}
   }
 
   return (
@@ -183,7 +178,7 @@ const WaitingRoom = () => {
         <div className= "waitingRoom highlight">{lobbyCode}</div>
         {checkIfAllPlayersHere() ? 
           (<div className="waitingRoom heading">Everyone is here!<br></br>{hostName}, start the game.</div>):
-          (<div className="waitingRoom heading">{numberOfPlayersInLobby} out of {numberOfPlayers} players have joined,<br></br>
+          (<div className="waitingRoom heading">{numberOfPlayersInLobby} / {numberOfPlayers} players have joined,<br></br>
         waiting for {numberOfPlayers - numberOfPlayersInLobby} more.<Spinner /></div>)
         }  
         <div className= "waitingRoom container">
