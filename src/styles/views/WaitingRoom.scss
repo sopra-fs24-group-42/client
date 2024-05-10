@@ -66,7 +66,6 @@
       color: black;
     }
 
-
     &.container {
       @include center;
       left: 0;
@@ -155,5 +154,38 @@
     list-style: none;
     padding-left: 0;
   }
+
+  &.dropdown {
+    @include center;
+    background-color: #FB6D48;
+    color: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    // display: flex;
+    // @include center;
+    align-items: center;
+    position: fixed;
+    left: 0;
+    right: 0;
+    margin-top: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-top: 5px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+  }
+
+  &.icon {
+  }
+
 
 }

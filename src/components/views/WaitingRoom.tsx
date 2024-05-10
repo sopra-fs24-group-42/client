@@ -6,10 +6,13 @@ import { api, handleError } from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
 import {useNavigate, useLocation} from "react-router-dom";
 import { Button } from "components/ui/Button";
+import RoleNumberInput from "components/ui/RoleNumberInput";
 import "styles/views/WaitingRoom.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { User } from "types";
+import { ActionIcon, Popover, NumberInput } from "@mantine/core";
+import { IconAdjustments } from "@tabler/icons-react";
 
 const LobbyMember = ({ user }: { user: User }) => (
   <div className="waitingRoom player-container">
@@ -38,6 +41,8 @@ const WaitingRoom = () => {
   const [numberOfPlayers, setNumberOfPlayers] = useState(0);
   const [hostName, setHostName] = useState(null);
   const [role, setRole] = useState(null);
+  const [popoverOpened, setPopoverOpened] = useState(false);
+  const [settings, setNewSettings] = useState(null);
 
   // variables needed for UI
   const lobbyCode = localStorage.getItem("lobbyCode"); // need this to display at the top of the waitingRoom
@@ -155,7 +160,12 @@ const WaitingRoom = () => {
   }
 
   const doUpdateGameSettings = () => {
+    console.log("Settings!");
+    setPopoverOpened((open) => !open);
+  }
 
+  const doSave = () => {
+    console.log("Save!");
   }
 
   let content = <Spinner />;
@@ -178,7 +188,17 @@ const WaitingRoom = () => {
   return (
     <BaseContainer>
       <div className="waitingRoom background-container">
-        <div className= "waitingRoom header">Welcome to game</div>
+        <div className= "waitingRoom header">
+          Welcome to game
+          <ActionIcon className="waitingRoom icon"
+            variant="transparent"
+            color="orange"
+            aria-label="Settings"
+            onClick={doUpdateGameSettings}
+          >
+            <IconAdjustments style={{ width: "70%", height: "70%" }} stroke={1.5} />
+          </ActionIcon>
+        </div>
         <div className= "waitingRoom highlight">{lobbyCode}</div>
         {checkIfAllPlayersHere() ? 
           (<div className="waitingRoom heading">Everyone is here!<br></br>{hostName}, start the game.</div>):
@@ -196,13 +216,34 @@ const WaitingRoom = () => {
               onClick={() => doStartGame()}
             >Start Game
             </Button>}
+          </div>
+        </div>
+        <div className="waitingRoom popOver-container">
+        {popoverOpened && (
+          <Popover
+            opened={popoverOpened}
+            onClose={() => setPopoverOpened(false)}
+            //width={200}
+            trapFocus
+            withArrow
+            shadow="md"
+          >
+            <Popover.Dropdown className="waitingRoom dropdown">
+              <RoleNumberInput label="Werewolf" placeholder="0" min={1} size="xs"/>
+              <RoleNumberInput label="Seer" placeholder="0" min={0} size="xs" />
+              <RoleNumberInput label="Villager" placeholder="0" min={0} size="xs" />
+              <RoleNumberInput label="Protector" placeholder="0" min={0} size="xs" />
+              <RoleNumberInput label="Sacrifice" placeholder="0" min={0} size="xs" />
             <Button
               width="100%"
               height="40px"
-              onClick={() => doUpdateGameSettings()}
-            >Set Game Settings
-            </Button>}
-          </div>
+              onClick={() => doSave()}
+            >Save
+            </Button>
+            </Popover.Dropdown>
+
+          </Popover>
+        )}
         </div>
       </div>
     </BaseContainer>
