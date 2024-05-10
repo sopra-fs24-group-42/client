@@ -24,12 +24,14 @@ LobbyMember.propTypes = {
   user: PropTypes.object,
 };
 
+let stompClient = null;
+
+
 const WaitingRoom = () => {
   // variables needed for establishing websocket connection
   const [connection, setConnection] = useState(null);
   const [alreadySent, setAlreadySent] = useState(false);
   const baseURL = getDomain();
-  var stompClient = null;
   var subscription = null;
 
   const navigate = useNavigate();
@@ -41,8 +43,13 @@ const WaitingRoom = () => {
   const [numberOfPlayers, setNumberOfPlayers] = useState(0);
   const [hostName, setHostName] = useState(null);
   const [role, setRole] = useState(null);
+  // game settings update
   const [popoverOpened, setPopoverOpened] = useState(false);
-  const [settings, setNewSettings] = useState(null);
+  const [numberOfWerewolves, setNumberOfWerewolves] = useState(null);
+  const [numberOfVillagers, setNumberOfVillagers] = useState(null);
+  const [numberOfSeers, setNumberOfSeers] = useState(null);
+  const [numberOfSacrifices, setNumberOfSacrifices] = useState(null);
+  const [numberOfProtectors, setNumberOfProtectors] = useState(null);
 
   // variables needed for UI
   const lobbyCode = localStorage.getItem("lobbyCode"); // need this to display at the top of the waitingRoom
@@ -56,7 +63,7 @@ const WaitingRoom = () => {
       const socket = new SockJS(baseURL+"/game"); // creating a new SockJS object (essentially a websocket object)
       //const client = over(socket); // specifying that it's a special type of websocket connection (i.e. using sockJS)
       stompClient = over(socket); // specifying that it's a special type of websocket connection (i.e. using sockJS)
-      stompClient.connect({}, function (frame) { // connecting to server websocket: instructions inside "function" will only be executed once we get something (i.e. a connect frame back from the server). Parameter "frame" is what we get from the server. 
+      stompClient.connect({}, function (frame) { // connecting to server websocket: instructions inside "function" will only be executed once we get something (i.e. a connect frame back from the server). Parameter "frame" is what we get from the server.
         console.log("socket was successfully connected: " + frame);
         setConnection(true);
 
@@ -73,7 +80,7 @@ const WaitingRoom = () => {
     });
   };
 
-  const subscribe = async (destination) => { 
+  const subscribe = async (destination) => {
     return new Promise( (resolve, reject) => {
       //stompClient.subscribe(destination, async function(message) {
       subscription = stompClient.subscribe(destination, async function(message) { 
@@ -92,7 +99,7 @@ const WaitingRoom = () => {
   }
 
   useEffect(() => { // This is executed once upon mounting of waitingRoom --> establishes ws connection & subscribes
-    if(!connection) { 
+    if(!connection) {
       const connectAndSubscribe = async () => { 
         try {
           await connect();
@@ -164,8 +171,32 @@ const WaitingRoom = () => {
     setPopoverOpened((open) => !open);
   }
 
-  const doSave = () => {
+  const doSave = async () => {
+  return new Promise( (resolve, reject) => {
+    console.log("stompClient: ", stompClient);
+
+    const headers = {"Content-type": "application/json"};
     console.log("Save!");
+    console.log("number of players werewolves: " + numberOfWerewolves);
+    console.log("number of players villagers: " + numberOfVillagers);
+    console.log("number of players seers: " + numberOfSeers);
+    console.log("number of players sacrifices: " + numberOfSacrifices);
+    console.log("number of players protectors: " + numberOfProtectors);
+
+    if(stompClient){
+     try{
+      const body = JSON.stringify({numberOfWerewolves, numberOfVillagers, numberOfProtectors, numberOfSeers, numberOfSacrifices});
+      console.log("body for send:" + body);
+
+      stompClient.send(`/app/settings/${lobbyId}`, headers, body);
+     } catch(e){
+       console.log("Something went wrong while updating settings :/" + e.message);
+     }
+     }else{
+    console.log("found the issue");
+
+     }
+    });
   }
 
   let content = <Spinner />;
@@ -228,11 +259,11 @@ const WaitingRoom = () => {
               shadow="md"
             >
               <Popover.Dropdown className="waitingRoom dropdown">
-                <RoleNumberInput label="Werewolf" placeholder="0" min={1} size="xs"/>
-                <RoleNumberInput label="Seer" placeholder="0" min={0} size="xs" />
-                <RoleNumberInput label="Villager" placeholder="0" min={0} size="xs" />
-                <RoleNumberInput label="Protector" placeholder="0" min={0} size="xs" />
-                <RoleNumberInput label="Sacrifice" placeholder="0" min={0} size="xs" />
+                <RoleNumberInput label="Werewolf" placeholder="1" min={1} size="xs" value={numberOfWerewolves} onChange={setNumberOfWerewolves} />
+                <RoleNumberInput label="Seer" placeholder="0" min={0} size="xs" value={numberOfSeers} onChange={setNumberOfSeers} />
+                <RoleNumberInput label="Villager" placeholder="0" min={0} size="xs" value={numberOfVillagers} onChange={setNumberOfVillagers} />
+                <RoleNumberInput label="Protector" placeholder="0" min={0} size="xs" value={numberOfProtectors} onChange={setNumberOfProtectors} />
+                <RoleNumberInput label="Sacrifice" placeholder="0" min={0} size="xs" value={numberOfSacrifices} onChange={setNumberOfSacrifices} />
                 <Button
                   width="100%"
                   height="40px"
