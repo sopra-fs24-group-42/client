@@ -219,31 +219,29 @@ const WaitingRoom = () => {
           </div>
         </div>
         <div className="waitingRoom popOver-container">
-        {popoverOpened && (
-          <Popover
-            opened={popoverOpened}
-            onClose={() => setPopoverOpened(false)}
-            //width={200}
-            trapFocus
-            withArrow
-            shadow="md"
-          >
-            <Popover.Dropdown className="waitingRoom dropdown">
-              <RoleNumberInput label="Werewolf" placeholder="0" min={1} size="xs"/>
-              <RoleNumberInput label="Seer" placeholder="0" min={0} size="xs" />
-              <RoleNumberInput label="Villager" placeholder="0" min={0} size="xs" />
-              <RoleNumberInput label="Protector" placeholder="0" min={0} size="xs" />
-              <RoleNumberInput label="Sacrifice" placeholder="0" min={0} size="xs" />
-            <Button
-              width="100%"
-              height="40px"
-              onClick={() => doSave()}
-            >Save
-            </Button>
-            </Popover.Dropdown>
-
-          </Popover>
-        )}
+          {popoverOpened && (
+            <Popover
+              opened={popoverOpened}
+              onClose={() => setPopoverOpened(false)}
+              trapFocus
+              withArrow
+              shadow="md"
+            >
+              <Popover.Dropdown className="waitingRoom dropdown">
+                <RoleNumberInput label="Werewolf" placeholder="0" min={1} size="xs"/>
+                <RoleNumberInput label="Seer" placeholder="0" min={0} size="xs" />
+                <RoleNumberInput label="Villager" placeholder="0" min={0} size="xs" />
+                <RoleNumberInput label="Protector" placeholder="0" min={0} size="xs" />
+                <RoleNumberInput label="Sacrifice" placeholder="0" min={0} size="xs" />
+                <Button
+                  width="100%"
+                  height="40px"
+                  onClick={() => doSave()}
+                >Save
+                </Button>
+              </Popover.Dropdown>
+            </Popover>
+          )}
         </div>
       </div>
     </BaseContainer>
