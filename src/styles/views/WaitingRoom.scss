@@ -157,7 +157,7 @@
 
   &.dropdown {
     @include center;
-    background-color: #FB6D48;
+    background-color: #b4b4b4;
     color: #ffffff;
     padding: 15px;
     border-radius: 10px;
@@ -172,16 +172,19 @@
     margin-left: auto;
     padding-left: 20px;
     padding-right: 20px;
-    padding-bottom: 10px;
-    padding-top: 5px;
     border-radius: 15px;
     flex-direction: column;
     align-items: center;
     position: fixed;
-    width: 375px;
+    // width: 500px; ?????????
   }
 
-  &.icon {
+  &.setting-button {
+    color: #FB6D48 ;
+    border: 0.1px;
+    border-radius: 50%;
+    background-color: rgba(225, 225, 225, 1);
+    width: 70px;
   }
 
 

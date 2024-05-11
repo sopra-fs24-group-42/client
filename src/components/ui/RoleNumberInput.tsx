@@ -1,5 +1,5 @@
-import React from 'react';
-import { NumberInput, NumberInputProps } from '@mantine/core';
+import React from "react";
+import { NumberInput, NumberInputProps } from "@mantine/core";
 
 const RoleNumberInput: React.FC<NumberInputProps> = (props) => {
   const inputStyles = {

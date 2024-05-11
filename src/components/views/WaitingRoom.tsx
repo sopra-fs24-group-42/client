@@ -219,9 +219,7 @@ const WaitingRoom = () => {
       <div className="waitingRoom background-container">
         <div className= "waitingRoom header">
           Welcome to game
-          <ActionIcon className="waitingRoom icon"
-            variant="transparent"
-            color="orange"
+          <ActionIcon className="waitingRoom setting-button"
             aria-label="Settings"
             onClick={doUpdateGameSettings}
           >
@@ -247,31 +245,29 @@ const WaitingRoom = () => {
             </Button>}
           </div>
         </div>
-        <div className="waitingRoom popOver-container">
-          {popoverOpened && (
-            <Popover
-              opened={popoverOpened}
-              onClose={() => setPopoverOpened(false)}
-              trapFocus
-              withArrow
-              shadow="md"
-            >
-              <Popover.Dropdown className="waitingRoom dropdown">
-                <RoleNumberInput label="Werewolf" placeholder="1" min={1} size="xs" value={numberOfWerewolves} onChange={setNumberOfWerewolves} />
-                <RoleNumberInput label="Seer" placeholder="0" min={0} size="xs" value={numberOfSeers} onChange={setNumberOfSeers} />
-                <RoleNumberInput label="Villager" placeholder="0" min={0} size="xs" value={numberOfVillagers} onChange={setNumberOfVillagers} />
-                <RoleNumberInput label="Protector" placeholder="0" min={0} size="xs" value={numberOfProtectors} onChange={setNumberOfProtectors} />
-                <RoleNumberInput label="Sacrifice" placeholder="0" min={0} size="xs" value={numberOfSacrifices} onChange={setNumberOfSacrifices} />
-                <Button
-                  width="100%"
-                  height="40px"
-                  onClick={() => doSave()}
-                >Save
-                </Button>
-              </Popover.Dropdown>
-            </Popover>
-          )}
-        </div>
+        {popoverOpened && (
+          <Popover
+            opened={popoverOpened}
+            onClose={() => setPopoverOpened(false)}
+            trapFocus
+            withArrow
+            shadow="md"
+          >
+            <Popover.Dropdown className="waitingRoom dropdown">
+              <RoleNumberInput label="Werewolf" placeholder="1" min={1} value={numberOfWerewolves} onChange={setNumberOfWerewolves} />
+              <RoleNumberInput label="Seer" placeholder="0" min={0} value={numberOfSeers} onChange={setNumberOfSeers} />
+              <RoleNumberInput label="Villager" placeholder="0" min={0} value={numberOfVillagers} onChange={setNumberOfVillagers} />
+              <RoleNumberInput label="Protector" placeholder="0" min={0} value={numberOfProtectors} onChange={setNumberOfProtectors} />
+              <RoleNumberInput label="Sacrifice" placeholder="0" min={0} value={numberOfSacrifices} onChange={setNumberOfSacrifices} />
+              <Button
+                width="100%"
+                height="40px"
+                onClick={() => doSave()}
+              >Save
+              </Button>
+            </Popover.Dropdown>
+          </Popover>
+        )}
       </div>
     </BaseContainer>
   );
