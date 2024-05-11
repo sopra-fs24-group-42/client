@@ -12,6 +12,7 @@ const RoleNumberInput: React.FC<NumberInputProps> = (props) => {
       marginBottom: "10px",
       backgroundColor: "rgba(255, 255, 255, 0.65)",
       color: "black",
+      width: "270px"
     },
 
     label: {
