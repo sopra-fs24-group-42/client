@@ -172,30 +172,28 @@ const WaitingRoom = () => {
   }
 
   const doSave = async () => {
-  return new Promise( (resolve, reject) => {
-    console.log("stompClient: ", stompClient);
+    return new Promise( (resolve, reject) => {
+      console.log("stompClient: ", stompClient);
 
-    const headers = {"Content-type": "application/json"};
-    console.log("Save!");
-    console.log("number of players werewolves: " + numberOfWerewolves);
-    console.log("number of players villagers: " + numberOfVillagers);
-    console.log("number of players seers: " + numberOfSeers);
-    console.log("number of players sacrifices: " + numberOfSacrifices);
-    console.log("number of players protectors: " + numberOfProtectors);
+      const headers = {"Content-type": "application/json"};
+      console.log("Save!");
+      console.log("number of players werewolves: " + numberOfWerewolves);
+      console.log("number of players villagers: " + numberOfVillagers);
+      console.log("number of players seers: " + numberOfSeers);
+      console.log("number of players sacrifices: " + numberOfSacrifices);
+      console.log("number of players protectors: " + numberOfProtectors);
 
-    if(stompClient){
-     try{
-      const body = JSON.stringify({numberOfWerewolves, numberOfVillagers, numberOfProtectors, numberOfSeers, numberOfSacrifices});
-      console.log("body for send:" + body);
-
-      stompClient.send(`/app/settings/${lobbyId}`, headers, body);
-     } catch(e){
-       console.log("Something went wrong while updating settings :/" + e.message);
-     }
-     }else{
-    console.log("found the issue");
-
-     }
+      if(stompClient){
+        try{
+          const body = JSON.stringify({numberOfWerewolves, numberOfVillagers, numberOfProtectors, numberOfSeers, numberOfSacrifices});
+          console.log("body for send:" + body);
+          stompClient.send(`/app/settings/${lobbyId}`, headers, body);
+        } catch(e) {
+          console.log("Something went wrong while updating settings :/" + e.message);
+        }
+      } else {
+        console.log("found the issue");
+      }
     });
   }
 
