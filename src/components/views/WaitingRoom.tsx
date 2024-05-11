@@ -75,8 +75,11 @@ const WaitingRoom = () => {
         }, 500);
       });
       stompClient.onclose = reason => {
-        setConnection(false);
         console.log("Socket was closed, Reason: " + reason);
+        setConnection(false);
+        setTimeout(() => {
+          connect().then(() => console.log("Reconnected")).catch(console.error);
+        }, 5000);
         reject(reason);}
     });
   };
@@ -143,8 +146,8 @@ const WaitingRoom = () => {
   }, []);
 
   useEffect(() => { // This useEffect tracks changes in the lobby
-      console.log("here 4 lobby changed");
-      console.log("stompClient 3: ", stompClient);
+    console.log("here 4 lobby changed");
+    console.log("stompClient 3: ", stompClient);
 
     if (messageReceived && messageReceived.players) {
       if ((messageReceived.playerMap[`${user}`].roleName) !== null) { //checking if role has been assigned
@@ -179,44 +182,36 @@ const WaitingRoom = () => {
     setPopoverOpened((open) => !open);
   }
 
-  const reconnect = async () => {
-  console.log("tried to reconnect");
-        try {
-          await connect();
-          subscription = await subscribe(`/topic/lobby/${lobbyId}`);
-        } catch (error) {
-          console.error("There was an error connecting or subscribing: ", error);
-        }
-  }
-
   const doSave = async () => {
-    return new Promise( (resolve, reject) => {
-      console.log("stompClient 1: ", stompClient);
+    if (!stompClient || !stompClient.connected) {
+      console.log("Stomp client is not connected, trying to reconnect...");
+      try {
+        await connect();
+        console.log("Reconnected successfully.");
+      } catch (error) {
+        console.error("Failed to reconnect:", error);
 
-      const headers = {"Content-type": "application/json"};
-      console.log("Save!");
-      console.log("number of players werewolves: " + numberOfWerewolves);
-      console.log("number of players villagers: " + numberOfVillagers);
-      console.log("number of players seers: " + numberOfSeers);
-      console.log("number of players sacrifices: " + numberOfSacrifices);
-      console.log("number of players protectors: " + numberOfProtectors);
-
-
-      if(stompClient) {
-        try{
-          const body = JSON.stringify({numberOfWerewolves, numberOfVillagers, numberOfProtectors, numberOfSeers, numberOfSacrifices});
-          console.log("body for send:" + body);
-          stompClient.send(`/app/settings/${lobbyId}`, headers, body);
-        } catch(e) {
-          console.log("Something went wrong while updating settings :/" + e.message);
-        }
+        return;
       }
-      else {
-        console.log("stompClient is nulll");
-      }
+    }
+
+    const headers = { "Content-type": "application/json" };
+    const gameSettings = { numberOfWerewolves, numberOfVillagers, numberOfProtectors, numberOfSeers, numberOfSacrifices};
+    const body = JSON.stringify(gameSettings);
+    console.log("Save!");
+    console.log("number of players werewolves: " + numberOfWerewolves);
+    console.log("number of players villagers: " + numberOfVillagers);
+    console.log("number of players seers: " + numberOfSeers);
+    console.log("number of players sacrifices: " + numberOfSacrifices);
+    console.log("number of players protectors: " + numberOfProtectors);
+
+    try {
+      stompClient.send(`/app/settings/${lobbyId}`, headers, body);
       setPopoverOpened(false);
-    });
-  }
+    } catch (e) {
+      console.error("Something went wrong while updating settings:", e.message);
+    }
+  };
 
   let content = <Spinner />;
   let headerMessage = "";
