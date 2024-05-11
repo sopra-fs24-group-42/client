@@ -60,7 +60,6 @@ const WaitingRoom = () => {
 
   const connect = async () => {
     return new Promise((resolve, reject) => {
-      console.log("Here 1 ");
       const socket = new SockJS(baseURL+"/game"); // creating a new SockJS object (essentially a websocket object)
       //const client = over(socket); // specifying that it's a special type of websocket connection (i.e. using sockJS)
       stompClient = over(socket); // specifying that it's a special type of websocket connection (i.e. using sockJS)
@@ -86,7 +85,6 @@ const WaitingRoom = () => {
 
   const subscribe = async (destination) => {
     return new Promise( (resolve, reject) => {
-      console.log("Here 2 ");
       //stompClient.subscribe(destination, async function(message) {
       subscription = stompClient.subscribe(destination, async function(message) { 
         console.log("Subscription: " + JSON.stringify(subscription));
@@ -106,8 +104,7 @@ const WaitingRoom = () => {
   // this is executed anytime page is reloaded
   useEffect(() => { // This is executed once upon mounting of waitingRoom --> establishes ws connection & subscribes
     if(!connection) {
-      console.log("here 3");
-      const connectAndSubscribe = async () => { 
+      const connectAndSubscribe = async () => {
         try {
           await connect();
           subscription = await subscribe(`/topic/lobby/${lobbyId}`);     
@@ -146,9 +143,6 @@ const WaitingRoom = () => {
   }, []);
 
   useEffect(() => { // This useEffect tracks changes in the lobby
-    console.log("here 4 lobby changed");
-    console.log("stompClient 3: ", stompClient);
-
     if (messageReceived && messageReceived.players) {
       if ((messageReceived.playerMap[`${user}`].roleName) !== null) { //checking if role has been assigned
         setRole(messageReceived.playerMap[`${user}`].roleName);
@@ -177,7 +171,6 @@ const WaitingRoom = () => {
   }
 
   const doUpdateGameSettings = () => {
-    console.log("stompClient 2: ", stompClient);
     console.log("Settings!");
     setPopoverOpened((open) => !open);
   }
