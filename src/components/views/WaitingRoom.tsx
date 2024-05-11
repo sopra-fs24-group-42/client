@@ -60,6 +60,7 @@ const WaitingRoom = () => {
 
   const connect = async () => {
     return new Promise((resolve, reject) => {
+      console.log("Here 1 ");
       const socket = new SockJS(baseURL+"/game"); // creating a new SockJS object (essentially a websocket object)
       //const client = over(socket); // specifying that it's a special type of websocket connection (i.e. using sockJS)
       stompClient = over(socket); // specifying that it's a special type of websocket connection (i.e. using sockJS)
@@ -82,6 +83,7 @@ const WaitingRoom = () => {
 
   const subscribe = async (destination) => {
     return new Promise( (resolve, reject) => {
+      console.log("Here 2 ");
       //stompClient.subscribe(destination, async function(message) {
       subscription = stompClient.subscribe(destination, async function(message) { 
         console.log("Subscription: " + JSON.stringify(subscription));
@@ -98,8 +100,10 @@ const WaitingRoom = () => {
     }); 
   }
 
+  // this is executed anytime page is reloaded
   useEffect(() => { // This is executed once upon mounting of waitingRoom --> establishes ws connection & subscribes
     if(!connection) {
+      console.log("here 3");
       const connectAndSubscribe = async () => { 
         try {
           await connect();
@@ -139,6 +143,9 @@ const WaitingRoom = () => {
   }, []);
 
   useEffect(() => { // This useEffect tracks changes in the lobby
+      console.log("here 4 lobby changed");
+      console.log("stompClient 3: ", stompClient);
+
     if (messageReceived && messageReceived.players) {
       if ((messageReceived.playerMap[`${user}`].roleName) !== null) { //checking if role has been assigned
         setRole(messageReceived.playerMap[`${user}`].roleName);
@@ -167,13 +174,24 @@ const WaitingRoom = () => {
   }
 
   const doUpdateGameSettings = () => {
+    console.log("stompClient 2: ", stompClient);
     console.log("Settings!");
     setPopoverOpened((open) => !open);
   }
 
+  const reconnect = async () => {
+  console.log("tried to reconnect");
+        try {
+          await connect();
+          subscription = await subscribe(`/topic/lobby/${lobbyId}`);
+        } catch (error) {
+          console.error("There was an error connecting or subscribing: ", error);
+        }
+  }
+
   const doSave = async () => {
     return new Promise( (resolve, reject) => {
-      console.log("stompClient: ", stompClient);
+      console.log("stompClient 1: ", stompClient);
 
       const headers = {"Content-type": "application/json"};
       console.log("Save!");
@@ -183,7 +201,8 @@ const WaitingRoom = () => {
       console.log("number of players sacrifices: " + numberOfSacrifices);
       console.log("number of players protectors: " + numberOfProtectors);
 
-      if(stompClient){
+
+      if(stompClient) {
         try{
           const body = JSON.stringify({numberOfWerewolves, numberOfVillagers, numberOfProtectors, numberOfSeers, numberOfSacrifices});
           console.log("body for send:" + body);
@@ -191,9 +210,11 @@ const WaitingRoom = () => {
         } catch(e) {
           console.log("Something went wrong while updating settings :/" + e.message);
         }
-      } else {
-        console.log("found the issue");
       }
+      else {
+        console.log("stompClient is nulll");
+      }
+      setPopoverOpened(false);
     });
   }
 
@@ -247,21 +268,21 @@ const WaitingRoom = () => {
         </div>
         {popoverOpened && (
           <Popover
-            opened={popoverOpened}
-            onClose={() => setPopoverOpened(false)}
+            opened={popoverOpened} onClose={() => setPopoverOpened(false)}
             trapFocus
             withArrow
             shadow="md"
           >
             <Popover.Dropdown className="waitingRoom dropdown">
               <RoleNumberInput label="Werewolf" placeholder="1" min={1} value={numberOfWerewolves} onChange={setNumberOfWerewolves} />
-              <RoleNumberInput label="Seer" placeholder="0" min={0} value={numberOfSeers} onChange={setNumberOfSeers} />
-              <RoleNumberInput label="Villager" placeholder="0" min={0} value={numberOfVillagers} onChange={setNumberOfVillagers} />
-              <RoleNumberInput label="Protector" placeholder="0" min={0} value={numberOfProtectors} onChange={setNumberOfProtectors} />
+              <RoleNumberInput label="Seer" placeholder="1" min={1} value={numberOfSeers} onChange={setNumberOfSeers} />
+              <RoleNumberInput label="Villager" placeholder="1" min={1} value={numberOfVillagers} onChange={setNumberOfVillagers} />
+              <RoleNumberInput label="Protector" placeholder="1" min={1} value={numberOfProtectors} onChange={setNumberOfProtectors} />
               <RoleNumberInput label="Sacrifice" placeholder="0" min={0} value={numberOfSacrifices} onChange={setNumberOfSacrifices} />
               <Button
                 width="100%"
                 height="40px"
+                disabled={(numberOfWerewolves + numberOfSeers + numberOfVillagers + numberOfProtectors + numberOfSacrifices) < numberOfPlayersInLobby}
                 onClick={() => doSave()}
               >Save
               </Button>
