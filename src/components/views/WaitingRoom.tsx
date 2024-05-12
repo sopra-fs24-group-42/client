@@ -12,7 +12,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { User } from "types";
 import { ActionIcon, Popover, NumberInput } from "@mantine/core";
-import { Settings } from 'tabler-icons-react';
+import { Settings } from "tabler-icons-react";
 import { IconAdjustments } from "@tabler/icons-react";
 
 const LobbyMember = ({ user }: { user: User }) => (
@@ -32,6 +32,7 @@ const WaitingRoom = () => {
   // variables needed for establishing websocket connection
   const [connection, setConnection] = useState(null);
   const [alreadySent, setAlreadySent] = useState(false);
+  const [leftGame, setLeftGame] = useState(false);
   const baseURL = getDomain();
   var subscription = null;
 
@@ -45,6 +46,7 @@ const WaitingRoom = () => {
   const [hostName, setHostName] = useState(null);
   const [role, setRole] = useState(null);
   // game settings update
+  const [popoverLeaveGame, setPopoverLeaveGame] = useState(false);
   const [popoverOpened, setPopoverOpened] = useState(false);
   const [numberOfWerewolves, setNumberOfWerewolves] = useState(null);
   const [numberOfVillagers, setNumberOfVillagers] = useState(null);
@@ -54,7 +56,7 @@ const WaitingRoom = () => {
 
   // variables needed for UI
   const lobbyCode = localStorage.getItem("lobbyCode"); // need this to display at the top of the waitingRoom
-  
+
   // variables needed for conditional button display
   const lobbyId = localStorage.getItem("lobbyId");
   const username = localStorage.getItem("user");
@@ -116,7 +118,7 @@ const WaitingRoom = () => {
       };
       connectAndSubscribe();
 
-      if (messageReceived && messageReceived.players) {
+      if (messageReceived && messageReceived.players && !leftGame) {
         if ((messageReceived.playerMap[`${username}`].roleName) !== null) { //checking if role has been assigned
           setRole(messageReceived.playerMap[`${username}`].roleName);
           navigate("/rolereveal");
@@ -145,7 +147,7 @@ const WaitingRoom = () => {
   }, []);
 
   useEffect(() => { // This useEffect tracks changes in the lobby
-    if (messageReceived && messageReceived.players) {
+    if (messageReceived && messageReceived.players && !leftGame) {
       if ((messageReceived.playerMap[`${username}`].roleName) !== null) { //checking if role has been assigned
         setRole(messageReceived.playerMap[`${username}`].roleName);
         navigate("/rolereveal");
@@ -172,8 +174,14 @@ const WaitingRoom = () => {
     navigate("/rolereveal"); //--> This triggers dismount of this component, which triggers return value of first useEffect, which triggers a send message to /app/startgame which triggers a broadcast to all players which gets caught in subscribe callback and set as MessageReceived, where I check if role is null, which if it isn't, everyone gets rerouted to /rolereveal
   }
 
+  const tryLeaveGame = () => {
+    setPopoverLeaveGame((open) => !open);
+  }
+
   const doLeaveGame = async () => {
     try {
+      setAlreadySent(true);
+      setLeftGame(true);
       console.log(`username: ${username}`);
       await api.delete(`/players/${username}`);
       navigate("/frontpage");
@@ -264,7 +272,7 @@ const WaitingRoom = () => {
                   <Settings 
                     size={42}
                     strokeWidth={1.8}
-                    color={'#97ABFF'}/>
+                    color={"#262632"}/>
                 </ActionIcon>
               </div>
               <div className= "waitingRoom header">
@@ -289,34 +297,34 @@ const WaitingRoom = () => {
                   <Button
                     width="100%"
                     height="40px"
-                    onClick={() => doLeaveGame()}
+                    onClick={() => tryLeaveGame()}
                   >Leave Game
                   </Button>
                 </div>
+                {popoverOpened && (
+                  <Popover
+                    opened={popoverOpened} onClose={() => setPopoverOpened(false)}
+                    trapFocus
+                    withArrow
+                    shadow="md"
+                  >
+                    <Popover.Dropdown className="waitingRoom settings-dropdown">
+                      <RoleNumberInput label="Werewolf" placeholder="1" min={1} value={numberOfWerewolves} onChange={setNumberOfWerewolves} />
+                      <RoleNumberInput label="Seer" placeholder="1" min={1} value={numberOfSeers} onChange={setNumberOfSeers} />
+                      <RoleNumberInput label="Villager" placeholder="1" min={1} value={numberOfVillagers} onChange={setNumberOfVillagers} />
+                      <RoleNumberInput label="Protector" placeholder="1" min={1} value={numberOfProtectors} onChange={setNumberOfProtectors} />
+                      <RoleNumberInput label="Sacrifice" placeholder="0" min={0} value={numberOfSacrifices} onChange={setNumberOfSacrifices} />
+                      <Button
+                        width="100%"
+                        height="40px"
+                        disabled={(numberOfWerewolves + numberOfSeers + numberOfVillagers + numberOfProtectors + numberOfSacrifices) < numberOfPlayersInLobby}
+                        onClick={() => doSave()}
+                      >Save
+                      </Button>
+                    </Popover.Dropdown>
+                  </Popover>
+                )}
               </div>
-              {popoverOpened && (
-                <Popover
-                  opened={popoverOpened} onClose={() => setPopoverOpened(false)}
-                  trapFocus
-                  withArrow
-                  shadow="md"
-                >
-                  <Popover.Dropdown className="waitingRoom dropdown">
-                    <RoleNumberInput label="Werewolf" placeholder="1" min={1} value={numberOfWerewolves} onChange={setNumberOfWerewolves} />
-                    <RoleNumberInput label="Seer" placeholder="1" min={1} value={numberOfSeers} onChange={setNumberOfSeers} />
-                    <RoleNumberInput label="Villager" placeholder="1" min={1} value={numberOfVillagers} onChange={setNumberOfVillagers} />
-                    <RoleNumberInput label="Protector" placeholder="1" min={1} value={numberOfProtectors} onChange={setNumberOfProtectors} />
-                    <RoleNumberInput label="Sacrifice" placeholder="0" min={0} value={numberOfSacrifices} onChange={setNumberOfSacrifices} />
-                    <Button
-                      width="100%"
-                      height="40px"
-                      disabled={(numberOfWerewolves + numberOfSeers + numberOfVillagers + numberOfProtectors + numberOfSacrifices) < numberOfPlayersInLobby}
-                      onClick={() => doSave()}
-                    >Save
-                    </Button>
-                  </Popover.Dropdown>
-                </Popover>
-              )}
             </div>
           )
         } else { // non-host view
@@ -338,7 +346,7 @@ const WaitingRoom = () => {
                 <Button
                   width="100%"
                   height="40px"
-                  onClick={() => doLeaveGame()}
+                  onClick={() => tryLeaveGame()}
                 >Leave Game
                 </Button>
               </div>
@@ -346,7 +354,31 @@ const WaitingRoom = () => {
           )
         }
       })()}          
-
+      {popoverLeaveGame && (
+        <Popover
+          opened={popoverLeaveGame} onClose={() => setPopoverLeaveGame(false)}
+          withArrow
+          shadow="md"
+        >
+          <Popover.Dropdown className="waitingRoom dropdown">
+            <div className="waitingRoom popover-container">
+              <div className="waitingRoom heading">Are you sure you want to leave the game?</div>
+              <Button
+                width="100%"
+                height="40px"
+                onClick={() => doLeaveGame()}
+              >Yes
+              </Button>
+              <Button
+                width="100%"
+                height="40px"
+                onClick={() => setPopoverLeaveGame(false)}
+              >Nevermind
+              </Button>
+            </div>
+          </Popover.Dropdown>
+        </Popover>
+      )}
     </BaseContainer>
   );
 };
