@@ -11,13 +11,17 @@
       transform: none;
     }
   }
+  // &:colors{
+  //   background-color: $accent;
+  //   color: $background;
+  // }
   display: flex;
   flex-direction: column;
   justify-content: center; 
   align-items: center; 
   width: 100%;
   padding: 7px;
-  margin-top: 10px;
+  margin-top: 7px;
   font-weight: 700;
   font-size: 18px;
   text-align: center;
