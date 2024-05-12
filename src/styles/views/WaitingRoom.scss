@@ -179,12 +179,12 @@
     color: #ffffff;
     padding: 15px;
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 12px 12px 5px rgba(0, 0, 0, 0.15);
     z-index: 9999;
     display: flex;
     left: 0;
     right: 0;
-    margin-top: 200px;
+    //margin-top: 200px;
     margin-left: auto;
     margin-right: auto;
     margin-left: auto;
@@ -200,9 +200,8 @@
   &.setting-button {
     color: #FB6D48 ;
     border: 0.1px;
-    border-radius: 50%;
-    background-color: rgba(225, 225, 225, 1);
-    width: 70px;
+    background-color:transparent;
+    //width: 70px;
   }
 
   &.settings-container {

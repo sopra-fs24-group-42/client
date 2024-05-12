@@ -12,6 +12,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { User } from "types";
 import { ActionIcon, Popover, NumberInput } from "@mantine/core";
+import { Settings } from 'tabler-icons-react';
 import { IconAdjustments } from "@tabler/icons-react";
 
 const LobbyMember = ({ user }: { user: User }) => (
@@ -174,7 +175,8 @@ const WaitingRoom = () => {
   const doLeaveGame = async () => {
     try {
       console.log(`username: ${username}`);
-      const response = await api.delete(`/players/${playerId}`, JSON.stringify({username}));
+      await api.delete(`/players/${username}`);
+      navigate("/frontpage");
     } catch (error) {
       alert(
         `Something went wrong during the deletion of a player: \n${handleError(error)}` 
@@ -259,7 +261,10 @@ const WaitingRoom = () => {
                   aria-label="Settings"
                   onClick={doUpdateGameSettings}
                 >
-                  <IconAdjustments style={{ width: "70%", height: "70%" }} stroke={1.5} />
+                  <Settings 
+                    size={42}
+                    strokeWidth={1.8}
+                    color={'#97ABFF'}/>
                 </ActionIcon>
               </div>
               <div className= "waitingRoom header">
