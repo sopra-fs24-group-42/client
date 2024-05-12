@@ -56,7 +56,8 @@ const WaitingRoom = () => {
   
   // variables needed for conditional button display
   const lobbyId = localStorage.getItem("lobbyId");
-  const user = localStorage.getItem("user");
+  const username = localStorage.getItem("user");
+  const playerId = localStorage.getItem("playerId");
 
   const connect = async () => {
     return new Promise((resolve, reject) => {
@@ -115,8 +116,8 @@ const WaitingRoom = () => {
       connectAndSubscribe();
 
       if (messageReceived && messageReceived.players) {
-        if ((messageReceived.playerMap[`${user}`].roleName) !== null) { //checking if role has been assigned
-          setRole(messageReceived.playerMap[`${user}`].roleName);
+        if ((messageReceived.playerMap[`${username}`].roleName) !== null) { //checking if role has been assigned
+          setRole(messageReceived.playerMap[`${username}`].roleName);
           navigate("/rolereveal");
         }
         setPlayersInLobby(messageReceived.players);
@@ -132,7 +133,7 @@ const WaitingRoom = () => {
       };
       const body = JSON.stringify({lobbyId});
       try{
-        if(!alreadySent && user === localStorage.getItem("toaster")) {
+        if(!alreadySent && username === localStorage.getItem("toaster")) {
           stompClient.send("/app/startgame", headers, body);
           localStorage.removeItem("toaster");
         }
@@ -144,8 +145,8 @@ const WaitingRoom = () => {
 
   useEffect(() => { // This useEffect tracks changes in the lobby
     if (messageReceived && messageReceived.players) {
-      if ((messageReceived.playerMap[`${user}`].roleName) !== null) { //checking if role has been assigned
-        setRole(messageReceived.playerMap[`${user}`].roleName);
+      if ((messageReceived.playerMap[`${username}`].roleName) !== null) { //checking if role has been assigned
+        setRole(messageReceived.playerMap[`${username}`].roleName);
         navigate("/rolereveal");
       }
       setPlayersInLobby(messageReceived.players);
@@ -168,6 +169,18 @@ const WaitingRoom = () => {
     setAlreadySent(true);
     localStorage.setItem("toaster", hostName);
     navigate("/rolereveal"); //--> This triggers dismount of this component, which triggers return value of first useEffect, which triggers a send message to /app/startgame which triggers a broadcast to all players which gets caught in subscribe callback and set as MessageReceived, where I check if role is null, which if it isn't, everyone gets rerouted to /rolereveal
+  }
+
+  const doLeaveGame = async () => {
+    try {
+      console.log(`username: ${username}`);
+      const response = await api.delete(`/players/${playerId}`, JSON.stringify({username}));
+    } catch (error) {
+      alert(
+        `Something went wrong during the deletion of a player: \n${handleError(error)}` 
+      )
+    }
+    
   }
 
   const doUpdateGameSettings = () => {
@@ -207,9 +220,21 @@ const WaitingRoom = () => {
   };
 
   let content = <Spinner />;
+  let hostContent = <Spinner />;
   let headerMessage = "";
 
   if (messageReceived !== null) {
+    hostContent = (
+      <div className ="waitingRoom host-game-container">
+        <ul className= "waitingRoom game-user-list">
+          {playersInLobby.map((user: User) => (
+            <li key={user.username}>
+              < LobbyMember user={user} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
     content = (
       <div className ="waitingRoom game-container">
         <ul className= "waitingRoom game-user-list">
@@ -225,59 +250,98 @@ const WaitingRoom = () => {
 
   return (
     <BaseContainer>
-      <div className="waitingRoom background-container">
-        <div className= "waitingRoom header">
-          Welcome to game
-          <ActionIcon className="waitingRoom setting-button"
-            aria-label="Settings"
-            onClick={doUpdateGameSettings}
-          >
-            <IconAdjustments style={{ width: "70%", height: "70%" }} stroke={1.5} />
-          </ActionIcon>
-        </div>
-        <div className= "waitingRoom highlight">{lobbyCode}</div>
-        {checkIfAllPlayersHere() ? 
-          (<div className="waitingRoom heading">Everyone is here!<br></br>{hostName}, start the game.</div>):
-          (<div className="waitingRoom heading">{numberOfPlayersInLobby} / {numberOfPlayers} players have joined,<br></br>
-        waiting for {numberOfPlayers - numberOfPlayersInLobby} more.<Spinner /></div>)
-        }  
-        <div className= "waitingRoom container">
-          {content}
-          <div className="waitingRoom button-container">
-            { user === hostName &&
-            <Button
-              width="100%"
-              height="40px"
-              disabled={checkIfAllPlayersHere() === false}
-              onClick={() => doStartGame()}
-            >Start Game
-            </Button>}
-          </div>
-        </div>
-        {popoverOpened && (
-          <Popover
-            opened={popoverOpened} onClose={() => setPopoverOpened(false)}
-            trapFocus
-            withArrow
-            shadow="md"
-          >
-            <Popover.Dropdown className="waitingRoom dropdown">
-              <RoleNumberInput label="Werewolf" placeholder="1" min={1} value={numberOfWerewolves} onChange={setNumberOfWerewolves} />
-              <RoleNumberInput label="Seer" placeholder="1" min={1} value={numberOfSeers} onChange={setNumberOfSeers} />
-              <RoleNumberInput label="Villager" placeholder="1" min={1} value={numberOfVillagers} onChange={setNumberOfVillagers} />
-              <RoleNumberInput label="Protector" placeholder="1" min={1} value={numberOfProtectors} onChange={setNumberOfProtectors} />
-              <RoleNumberInput label="Sacrifice" placeholder="0" min={0} value={numberOfSacrifices} onChange={setNumberOfSacrifices} />
-              <Button
-                width="100%"
-                height="40px"
-                disabled={(numberOfWerewolves + numberOfSeers + numberOfVillagers + numberOfProtectors + numberOfSacrifices) < numberOfPlayersInLobby}
-                onClick={() => doSave()}
-              >Save
-              </Button>
-            </Popover.Dropdown>
-          </Popover>
-        )}
-      </div>
+      {(() => {
+        if(username === hostName) { // host view
+          return (
+            <div className="waitingRoom background-container">
+              <div className="waitingRoom settings-container">
+                <ActionIcon className="waitingRoom setting-button"
+                  aria-label="Settings"
+                  onClick={doUpdateGameSettings}
+                >
+                  <IconAdjustments style={{ width: "70%", height: "70%" }} stroke={1.5} />
+                </ActionIcon>
+              </div>
+              <div className= "waitingRoom header">
+              Welcome to game
+              </div>
+              <div className= "waitingRoom highlight">{lobbyCode}</div>
+              {checkIfAllPlayersHere() ? 
+                (<div className="waitingRoom heading">Everyone is here!<br></br>{hostName}, start the game.</div>):
+                (<div className="waitingRoom heading">{numberOfPlayersInLobby} / {numberOfPlayers} players have joined,<br></br>
+                waiting for {numberOfPlayers - numberOfPlayersInLobby} more.<Spinner /></div>)
+              }
+              <div className= "waitingRoom container">
+                {hostContent}
+                <div className="waitingRoom button-container">
+                  <Button
+                    width="100%"
+                    height="40px"
+                    disabled={checkIfAllPlayersHere() === false}
+                    onClick={() => doStartGame()}
+                  >Start Game
+                  </Button>
+                  <Button
+                    width="100%"
+                    height="40px"
+                    onClick={() => doLeaveGame()}
+                  >Leave Game
+                  </Button>
+                </div>
+              </div>
+              {popoverOpened && (
+                <Popover
+                  opened={popoverOpened} onClose={() => setPopoverOpened(false)}
+                  trapFocus
+                  withArrow
+                  shadow="md"
+                >
+                  <Popover.Dropdown className="waitingRoom dropdown">
+                    <RoleNumberInput label="Werewolf" placeholder="1" min={1} value={numberOfWerewolves} onChange={setNumberOfWerewolves} />
+                    <RoleNumberInput label="Seer" placeholder="1" min={1} value={numberOfSeers} onChange={setNumberOfSeers} />
+                    <RoleNumberInput label="Villager" placeholder="1" min={1} value={numberOfVillagers} onChange={setNumberOfVillagers} />
+                    <RoleNumberInput label="Protector" placeholder="1" min={1} value={numberOfProtectors} onChange={setNumberOfProtectors} />
+                    <RoleNumberInput label="Sacrifice" placeholder="0" min={0} value={numberOfSacrifices} onChange={setNumberOfSacrifices} />
+                    <Button
+                      width="100%"
+                      height="40px"
+                      disabled={(numberOfWerewolves + numberOfSeers + numberOfVillagers + numberOfProtectors + numberOfSacrifices) < numberOfPlayersInLobby}
+                      onClick={() => doSave()}
+                    >Save
+                    </Button>
+                  </Popover.Dropdown>
+                </Popover>
+              )}
+            </div>
+          )
+        } else { // non-host view
+          return (
+            <div className="waitingRoom background-container">
+              <div className= "waitingRoom header">
+              Welcome to game
+              </div>
+              <div className= "waitingRoom highlight">{lobbyCode}</div>
+              {checkIfAllPlayersHere() ? 
+                (<div className="waitingRoom heading">Everyone is here!<br></br>{hostName}, start the game.</div>):
+                (<div className="waitingRoom heading">{numberOfPlayersInLobby} / {numberOfPlayers} players have joined,<br></br>
+                waiting for {numberOfPlayers - numberOfPlayersInLobby} more.<Spinner /></div>)
+              }
+              <div className= "waitingRoom container">
+                {content}
+              </div>
+              <div className="waitingRoom button-container">
+                <Button
+                  width="100%"
+                  height="40px"
+                  onClick={() => doLeaveGame()}
+                >Leave Game
+                </Button>
+              </div>
+            </div>
+          )
+        }
+      })()}          
+
     </BaseContainer>
   );
 };
