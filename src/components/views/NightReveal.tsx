@@ -148,14 +148,29 @@ const NightReveal = () => {
   if (messageReceived !== null) {
     if (killedPlayers.length > 0) {
       content = (
-        <div className="nightAction highlight">
-          {killedPlayers.map(player => (
-            <p key={player.username}>
+        <div>
+          {killedPlayers.map((player, index) => ( // Ensure index is correctly used here
+            <div
+              key={player.username}
+              className="nightAction highlight"
+              style={{ marginBottom: index !== killedPlayers.length - 1 ? "20px" : "0" }}
+            >
               {player.username}, a {player.roleName} was killed!
-            </p>
+            </div>
           ))}
         </div>
       );
+      /*
+        <div className="nightAction highlight">
+          {killedPlayers.map(player => (
+            <div key={player.username} className="killedPlayer">
+              {player.username}, a {player.roleName} was killed!
+            </div>
+          ))}
+        </div>
+      );
+      */
+
     } else {
       content = (
         <div className="nightAction highlight">
