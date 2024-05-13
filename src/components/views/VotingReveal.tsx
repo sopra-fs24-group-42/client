@@ -101,8 +101,8 @@ const VotingReveal = () => {
 
     if (messageReceived) {
       setHostName(messageReceived.hostName);
-      if (messageReceived.gameState === "NIGHT") { // happens after ready was sent by all
-        navigate("/nightaction");
+      if (messageReceived.gameState === "PRENIGHT") { // happens after ready was sent by all
+        navigate("/prenight");
       } else if (messageReceived.gameState === "ENDGAME") {
         navigate("/end");
       }
@@ -126,8 +126,8 @@ const VotingReveal = () => {
   useEffect(() => { // This useEffect tracks changes in the lobby --> do I need this for roleReveal?
     if (messageReceived) {
       setHostName(messageReceived.hostName);
-      if (messageReceived.gameState === "NIGHT") {
-        navigate("/nightaction");
+      if (messageReceived.gameState === "PRENIGHT") {
+        navigate("/prenight");
       } else if (messageReceived.gameState === "ENDGAME") {
         navigate("/end");
       }

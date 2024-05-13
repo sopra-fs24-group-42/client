@@ -2,18 +2,15 @@ import React, { useState, useEffect } from "react";
 import SockJS from "sockjs-client";
 import { over } from "stompjs";
 import { getDomain } from "../../helpers/getDomain";
-import { api, handleError } from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
 import {useNavigate, useLocation} from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/NightReveal.scss";
 import BaseContainer from "components/ui/BaseContainer";
-import PropTypes from "prop-types";
-import { User } from "types";
 import TextSamplesRevealNightpre from "helpers/TextSamples/TextSamplesRevealNightpre";
 import TextSamplesRevealNightpost from "helpers/TextSamples/TextSamplesRevealNightpost";
 
-const NightReveal = () => {
+const PreNight = () => {
   // variables needed for establishing websocket connection
   const baseURL = getDomain();
   const navigate = useNavigate();
@@ -26,31 +23,13 @@ const NightReveal = () => {
   
   // variables needed for role reveal
   const [messageReceived, setMessageReceived] = useState(null);
-  const [killedPlayers, setKilledPlayers] = useState([]);
   const username = localStorage.getItem("user"); //fetching username from localstorage
   const [ready, setReady] = useState(false);
   const [alreadySent, setAlreadySent] = useState(false);
   const [hostName, setHostName] = useState(null);
-  let gameState = "REVEALNIGHT";
+  let gameState = "PRENIGHT";
 
   const lobbyId = localStorage.getItem("lobbyId");
-
-  const findKilledPlayers = () => {
-    console.log("Inside findKilledPlayers");
-    let foundPlayers = [];
-    for (let i = 0; i < messageReceived.players.length; i++) { // iterating through list of players to check their isKilled field
-      let currentPlayer = messageReceived.players[i];
-      if (messageReceived.playerMap[currentPlayer.username].isKilled) { // Check if the current player was marked as killed
-        foundPlayers.push(currentPlayer); // Correctly pushing currentPlayer into the foundPlayers array
-      }
-    }
-    setKilledPlayers(foundPlayers); // Update the state with the list of killed players
-    foundPlayers.forEach(player => {
-      if (username === player.username) {
-        navigate("/deadscreen", { state: player }); // Navigate to deadscreen if the current user is one of the killed players
-      }
-    });
-  }
 
   const connect = async () => {
     return new Promise((resolve, reject) => {
@@ -101,10 +80,9 @@ const NightReveal = () => {
     console.log("I connected?");
 
     if (messageReceived) {
-      findKilledPlayers();
       setHostName(messageReceived.hostName);
-      if (messageReceived.gameState === "DISCUSSION") { // happens after ready was sent by all
-        navigate("/discussion");
+      if (messageReceived.gameState === "NIGHTREVEAL") { // happens after ready was sent by all
+        navigate("/nightreveal");
       } else if (messageReceived.gameState === "ENDGAME"){
         navigate("/end");
       }
@@ -129,10 +107,16 @@ const NightReveal = () => {
   useEffect(() => { // This useEffect tracks changes in the lobby --> do I need this for roleReveal?
     console.log("I am in Role reveal useEffect now!");
     if (messageReceived) {
-      findKilledPlayers();
       setHostName(messageReceived.hostName);
-      if (messageReceived.gameState === "DISCUSSION") {
-        navigate("/discussion");
+      /*for(let i=0; i<messageReceived.players.length; i++) { // iterating through list of players to check their isKilled field 
+        let currentPlayer = messageReceived.players[i];
+        if(messageReceived.playerMap[`${currentPlayer.username}`].isReady) {
+          setReady(true);
+          setAlreadySent(true);
+        }     
+      }*/
+      if (messageReceived.gameState === "NIGHT") {
+        navigate("/nightaction");
       } else if (messageReceived.gameState === "ENDGAME"){
         navigate("/end");
       }
@@ -144,41 +128,6 @@ const NightReveal = () => {
     setAlreadySent(true);
   }
 
-  let content = <Spinner />;
-  if (messageReceived !== null) {
-    if (killedPlayers.length > 0) {
-      content = (
-        <div>
-          {killedPlayers.map((player, index) => ( // Ensure index is correctly used here
-            <div
-              key={player.username}
-              className="nightAction highlight"
-              style={{ marginBottom: index !== killedPlayers.length - 1 ? "20px" : "0" }}
-            >
-              {player.username}, a {player.roleName} was killed!
-            </div>
-          ))}
-        </div>
-      );
-      /*
-        <div className="nightAction highlight">
-          {killedPlayers.map(player => (
-            <div key={player.username} className="killedPlayer">
-              {player.username}, a {player.roleName} was killed!
-            </div>
-          ))}
-        </div>
-      );
-      */
-
-    } else {
-      content = (
-        <div className="nightAction highlight">
-          Everyone survived last night!
-        </div>
-      );
-    }
-  }
   //variables needed for TexttoSpeechAPI
   const [data, setData] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
@@ -266,57 +215,39 @@ const NightReveal = () => {
 
   return (
     <BaseContainer>
-      <div className ="nightReveal background-container">
-        <div className="nightReveal container">
-          <div className="nightReveal header">Dawn has broken...</div>
-          {content}
-          {(() => {
-            if (!ready) {
-              return (
-                <div className="nightReveal button-container">
-                  {username !== hostName &&
-                  <Button
-                    width="100%"
-                    height="40px"
-                    onClick={() => doSendReady()}
-                  >Ok
-                  </Button>
-                  }
-                  {username === hostName &&
-                  <Button
-                    width="100%"
-                    height="40px"
-                    onClick={() => doSendReady()}
-                    disabled={!playPressed}  // Disable OK button until audio is played
-                  >Ok
-                  </Button>
-                  }
-                  { username === hostName &&
-                  <Button
-                    width="100%"
-                    height="40px"
-                    onClick={DecodeAndPlay}
-                  >Press to Play
-                  </Button>
-                  }
-                  {audioUrl && (
-                    <audio controls src={audioUrl} autoPlay />
-                  )}
-                </div>
-              );
-            } else {
-              return (
-                <div className="nightReveal container">
-                  <div className="nightReveal wait">Waiting for other players...</div>
-                  <Spinner />
-                </div>
-              );
+      <div className ="PreNight background-container">
+        <div className="PreNight container">
+          <div className="PreNight header">Night has Fallen...</div>
+          <div className="nightReveal container">
+            <div className="nightReveal wait">Listen to the Narrator on the Hosts Device...</div>
+            <Spinner />
+          </div>
+          <div className="PreNight button-container">
+            {username === hostName &&
+            <Button
+              width="100%"
+              height="40px"
+              onClick={() => doSendReady()}
+              disabled={!playPressed}  // Disable OK button until audio is played
+            >Ok
+            </Button>
             }
-          })()}
+            { username === hostName &&
+            <Button
+              width="100%"
+              height="40px"
+              onClick={DecodeAndPlay}
+            >Press to Play
+            </Button>
+            }
+            {audioUrl && (
+              <audio controls src={audioUrl} autoPlay />
+            )}
+          </div>
         </div>
       </div>
     </BaseContainer>
   );
 };
 
-export default NightReveal;
+export default PreNight;

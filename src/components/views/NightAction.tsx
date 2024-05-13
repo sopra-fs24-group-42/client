@@ -547,7 +547,7 @@ const NightAction = () => {
                             height="40px"
                             onClick={() => doSendSelected()}
                             disabled={true}
-                          >See role
+                          >Sacrifice
                           </Button>
                           <Button
                             width="100%"
