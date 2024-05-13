@@ -16,6 +16,7 @@ import Voting from "../../views/Voting";
 import NarrationPhase from "../../views/NarrationPhase";
 import End from "../../views/End";
 import DeadScreen from "../../views/DeadPlayer";
+import PreNight from "../../views/PreNight";
 
 
 /**
@@ -45,6 +46,7 @@ const AppRouter = () => {
         <Route path="/NarrationPhase" element={<NarrationPhase />} />
         <Route path="/end" element={<End />} />
         <Route path="/deadscreen" element={<DeadScreen />} />
+        <Route path="/prenight" element={<PreNight />} />
 
 
         <Route path="/game/*" element={<GameGuard><GameRouter /></GameGuard>} />

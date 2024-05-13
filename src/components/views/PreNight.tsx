@@ -10,7 +10,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import TextSamplesRevealNightpre from "helpers/TextSamples/TextSamplesRevealNightpre";
 import TextSamplesRevealNightpost from "helpers/TextSamples/TextSamplesRevealNightpost";
 
-const NightReveal = () => {
+const PreNight = () => {
   // variables needed for establishing websocket connection
   const baseURL = getDomain();
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const NightReveal = () => {
   const [ready, setReady] = useState(false);
   const [alreadySent, setAlreadySent] = useState(false);
   const [hostName, setHostName] = useState(null);
-  let gameState = "NIGHTNARRATION";
+  let gameState = "PRENIGHT";
 
   const lobbyId = localStorage.getItem("lobbyId");
 
@@ -108,8 +108,15 @@ const NightReveal = () => {
     console.log("I am in Role reveal useEffect now!");
     if (messageReceived) {
       setHostName(messageReceived.hostName);
-      if (messageReceived.gameState === "NIGHTREVEAL") {
-        navigate("/nightreveal");
+      /*for(let i=0; i<messageReceived.players.length; i++) { // iterating through list of players to check their isKilled field 
+        let currentPlayer = messageReceived.players[i];
+        if(messageReceived.playerMap[`${currentPlayer.username}`].isReady) {
+          setReady(true);
+          setAlreadySent(true);
+        }      
+      }*/
+      if (messageReceived.gameState === "NIGHT") {
+        navigate("/nightaction");
       } else if (messageReceived.gameState === "ENDGAME"){
         navigate("/end");
       }
@@ -121,7 +128,6 @@ const NightReveal = () => {
     setAlreadySent(true);
   }
 
-  }
   //variables needed for TexttoSpeechAPI
   const [data, setData] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
@@ -209,22 +215,13 @@ const NightReveal = () => {
 
   return (
     <BaseContainer>
-      <div className ="nightReveal background-container">
-        <div className="nightReveal container">
-          <div className="nightReveal header">Dawn has broken...</div>
-          {content}
+      <div className ="PreNight background-container">
+        <div className="PreNight container">
+          <div className="PreNight header">Night has Fallen...</div>
           {(() => {
             if (!ready) {
               return (
-                <div className="nightReveal button-container">
-                  {username !== hostName &&
-                  <Button
-                    width="100%"
-                    height="40px"
-                    onClick={() => doSendReady()}
-                  >Ok
-                  </Button>
-                  }
+                <div className="PreNight button-container">
                   {username === hostName &&
                   <Button
                     width="100%"
@@ -250,7 +247,7 @@ const NightReveal = () => {
             } else {
               return (
                 <div className="nightReveal container">
-                  <div className="nightReveal wait">Waiting for other players...</div>
+                  <div className="nightReveal wait">Listen to the Narrator on the Hosts Device...</div>
                   <Spinner />
                 </div>
               );
@@ -262,4 +259,4 @@ const NightReveal = () => {
   );
 };
 
-export default NightReveal;
+export default PreNight;
