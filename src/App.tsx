@@ -1,5 +1,6 @@
 import React from "react";
 import AppRouter from "./components/routing/routers/AppRouter";
+import { MantineProvider } from "@mantine/core";
 
 /**
  * Happy coding!
@@ -9,9 +10,9 @@ import AppRouter from "./components/routing/routers/AppRouter";
  */
 const App = () => {
   return (
-    <div>
+    <MantineProvider theme={{ colorScheme: "light" }} withGlobalStyles withNormalizeCSS>
       <AppRouter />
-    </div>
+    </MantineProvider>
   );
 };
 
