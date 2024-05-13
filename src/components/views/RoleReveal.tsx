@@ -103,9 +103,9 @@ const RoleReveal = () => {
     connectAndSubscribe();
     if (messageReceived) {
       console.log("GAME STATE: " + messageReceived.gameState);
-      if (messageReceived.gameState === "NIGHT") {
+      if (messageReceived.gameState === "PRENIGHT") {
         localStorage.setItem("role", role);
-        navigate("/nightaction");
+        navigate("/prenight");
       }
       setPermRole(messageReceived.playerMap[`${username}`].roleName);
       console.log(`This is PERMROLE inside first useEffect: ${permRole}`);
@@ -129,9 +129,9 @@ const RoleReveal = () => {
 
   useEffect(() => { // This useEffect tracks changes in the lobby
     if (messageReceived) {
-      if (messageReceived.gameState === "NIGHT") {
+      if (messageReceived.gameState === "PRENIGHT") {
         localStorage.setItem("role", role);
-        navigate("/nightaction");
+        navigate("/prenight");
       }
       setPermRole(messageReceived.playerMap[`${username}`].roleName);
       console.log(`This is PERMROLE inside second useEffect: ${permRole}`);
