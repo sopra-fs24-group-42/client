@@ -159,13 +159,13 @@ const VotingReveal = () => {
         <div className="votingReveal details-container">
           <div className="votingReveal details-heading">Detailed results:</div>
           <div className="votingReveal heading">
-            <div className="votingReveal heading">{firstVotedPlayer.username} received {firstVotedPlayer.numberOfVotes} votes<br></br></div>
+            <div className="votingReveal heading">{firstVotedPlayer.username.slice(0,-5)} received {firstVotedPlayer.numberOfVotes} votes<br></br></div>
           </div>
           <div className="votingReveal heading">
-            <div className="votingReveal heading">{secondVotedPlayer.username} received {secondVotedPlayer.numberOfVotes} votes<br></br></div>
+            <div className="votingReveal heading">{secondVotedPlayer.username.slice(0,-5)} received {secondVotedPlayer.numberOfVotes} votes<br></br></div>
           </div>
           <div className="votingReveal heading">
-            <div className="votingReveal heading">{thirdVotedPlayer.username} received {thirdVotedPlayer.numberOfVotes} votes<br></br></div>
+            <div className="votingReveal heading">{thirdVotedPlayer.username.slice(0,-5)} received {thirdVotedPlayer.numberOfVotes} votes<br></br></div>
           </div>
         </div>
       </div>
@@ -183,7 +183,7 @@ const VotingReveal = () => {
         content = (
           <div className = "votingReveal container">
             <div className = "votingReveal seer"></div>
-            <div className = "votingReveal header">{votedPlayer.username}, <br></br> a
+            <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, <br></br> a
               <div className = "votingReveal highlight">{votedPlayer.roleName}</div></div>
             <div className = "votingReveal header">was voted out!</div>
             {details}
@@ -192,7 +192,7 @@ const VotingReveal = () => {
         content = (
           <div className = "votingReveal container">
             <div className = "votingReveal villager"></div>
-            <div className = "votingReveal header">{votedPlayer.username}, <br></br> a</div>
+            <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, <br></br> a</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
             {details}
@@ -201,7 +201,7 @@ const VotingReveal = () => {
         content = (
           <div className = "votingReveal container">
             <div className = "votingReveal werewolf"></div>
-            <div className = "votingReveal header">{votedPlayer.username}, <br></br> a</div>
+            <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, <br></br> a</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
             {details}
@@ -210,7 +210,7 @@ const VotingReveal = () => {
         content = (
           <div className = "votingReveal container">
             <div className = "votingReveal protector"></div>
-            <div className = "votingReveal header">{votedPlayer.username}, <br></br> a</div>
+            <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, <br></br> a</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
             {details}
@@ -219,7 +219,7 @@ const VotingReveal = () => {
         content = (
           <div className = "votingReveal container">
             <div className = "votingReveal sacrifice"></div>
-            <div className = "votingReveal header">{votedPlayer.username}, <br></br> a</div>
+            <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, <br></br> a</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
             {details}

@@ -41,7 +41,7 @@ const RoleReveal = () => {
   const villagerInstructions = "Your goal is to survive and identify the werewolves!";
   const seerInstructions = "You can choose to see a player's role during the night.";
   const protectorInstructions = "You can protect another player during the night.";
-  const sacrificeInstructions = "You can sacrifice yourself and \ntake another player with you to death during night.";
+  const sacrificeInstructions = "You can sacrifice yourself and take another player with you to death during night.";
   let displayImage = "";
   let displayText = "";
 

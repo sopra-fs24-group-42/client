@@ -13,7 +13,7 @@ import { User } from "types";
 
 const LobbyMember = ({ user }: { user: User }) => (
   <div className="nightAction player-container">
-    <div className="nightAction player-username">{user.username}</div>
+    <div className="nightAction player-username">{user.username.slice(0,-5)}</div>
   </div>
 );
 
@@ -335,7 +335,7 @@ const NightAction = () => {
                       <div className="nightAction container">
                         {abstained ? 
                           <div className= "nightAction heading">You have chosen to abstain</div>:
-                          <div className= "nightAction heading">You have attempted to kill {selected}</div>
+                          <div className= "nightAction heading">You have attempted to kill {selected.slice(0,-5)}</div>
                         }
                         <div className= "nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
                         <Spinner />
@@ -343,7 +343,7 @@ const NightAction = () => {
                   else if (selected !== "" && !ready) { // selected someone but not confirmed
                     return (
                       <div className = "nightAction container">
-                        <div className= "nightAction heading">You have selected {selected} 
+                        <div className= "nightAction heading">You have selected {selected.slice(0,-5)} 
                           <div className= "nightAction container">{werewolfContent}
                             <div className = "nightAction button-container">
                               <Button
@@ -365,7 +365,7 @@ const NightAction = () => {
                   } else { // not selected anyone yet
                     return (
                       <div className = "nightAction container">
-                        <div className= "nightAction heading">{username},<br></br> select someone to kill.    
+                        <div className= "nightAction heading">{username.slice(0,-5)},<br></br> select someone to kill.    
                           <div className= "nightAction container">{werewolfContent} </div>
                           <div className = "nightAction button-container">
                             <Button
@@ -393,7 +393,7 @@ const NightAction = () => {
                 {(() => {
                   if (selected !== "" && !revealRole && !abstained) { // selected someone but not seen the role yet 
                     return (
-                      <div className="nightAction heading">You have selected <br></br> {selected}
+                      <div className="nightAction heading">You have selected <br></br> {selected.slice(0,-5)}
                         <div className="nightAction container">{content}
                           <div className="nightAction button-container">
                             <Button
@@ -448,7 +448,7 @@ const NightAction = () => {
                             )
                           }
                         })()}
-                        <div className="nightAction header1">{selected} is a</div>
+                        <div className="nightAction header1">{selected.slice(0,-5)} is a</div>
                         <div className="nightAction role-highlight">{revealRole}</div>
                         <div className="nightAction button-container">
                           <Button
@@ -465,7 +465,7 @@ const NightAction = () => {
                       <div className="nightAction container">
                         {abstained ? 
                           <div className="nightAction heading">You have chosen to abstain</div> :
-                          <div className="nightAction heading">You chose to look at <br></br>{selected}</div>
+                          <div className="nightAction heading">You chose to look at <br></br>{selected.slice(0,-5)}</div>
                         }
                         <div className="nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
                         <Spinner />
@@ -475,7 +475,7 @@ const NightAction = () => {
                   else { // not selected anyone yet (seer)
                     return (
                       <div className = "nightAction container">
-                        <div className="nightAction heading">{username},<br></br> whose role do you want to see?
+                        <div className="nightAction heading">{username.slice(0,-5)},<br></br> whose role do you want to see?
                           <div className="nightAction container">{content} </div>
                         </div>
                         <div className = "nightAction button-container">
@@ -507,7 +507,7 @@ const NightAction = () => {
                       <div className= "nightAction container">
                         {abstained ? 
                           <div className="nightAction heading">You have chosen to abstain</div> :
-                          <div className="nightAction heading">You have chosen to die with <br></br>{selected}</div>
+                          <div className="nightAction heading">You have chosen to die with <br></br>{selected.slice(0,-5)}</div>
                         }
                         <div className= "nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
                         <Spinner />
@@ -515,7 +515,7 @@ const NightAction = () => {
                   } else if (selected !== "" && !ready) { // selected someone but not confirmed
                     return(
                       <div className = "nightAction container">
-                        <div className= "nightAction heading">You have selected <br></br> {selected}
+                        <div className= "nightAction heading">You have selected <br></br> {selected.slice(0,-5)}
                           <div className= "nightAction container">{content}
                             <div className="nightAction button-container">
                               <Button
@@ -538,7 +538,7 @@ const NightAction = () => {
                   } else { // not selected anyone yet (sacrifice)
                     return (
                       <div className = "nightAction container">
-                        <div className="nightAction heading">{username},<br></br> choose someone to die with you
+                        <div className="nightAction heading">{username.slice(0,-5)},<br></br> choose someone to die with you
                           <div className="nightAction container">{content} </div>
                         </div>
                         <div className = "nightAction button-container">
@@ -570,7 +570,7 @@ const NightAction = () => {
                       <div className= "nightAction container">
                         {abstained ? 
                           <div className="nightAction heading">You have chosen to abstain</div> :
-                          <div className="nightAction heading">You have chosen to protect <br></br>{selected}</div>
+                          <div className="nightAction heading">You have chosen to protect <br></br>{selected.slice(0,-5)}</div>
                         }
                         <div className= "nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
                         <Spinner />
@@ -578,7 +578,7 @@ const NightAction = () => {
                   } else if (selected !== "" && !ready) { // selected someone but not confirmed (protector)
                     return(
                       <div className = "nightAction container">
-                        <div className= "nightAction heading">You have selected <br></br> {selected}
+                        <div className= "nightAction heading">You have selected <br></br> {selected.slice(0,-5)}
                           <div className= "nightAction container">{protectorContent}
                             <div className="nightAction button-container">
                               <Button
@@ -601,7 +601,7 @@ const NightAction = () => {
                   } else { // not selected anyone yet (protector)
                     return (
                       <div className = "nightAction container">
-                        <div className="nightAction heading">{username},<br></br> choose someone to protect
+                        <div className="nightAction heading">{username.slice(0,-5)},<br></br> choose someone to protect
                           <div className="nightAction container">{protectorContent} </div>
                         </div>
                         <div className = "nightAction button-container">
@@ -641,7 +641,7 @@ const NightAction = () => {
                   else if (selected !== "" && !ready) { // selected someone but not confirmed yet (villager)
                     return(
                       <div className = "nightAction container">
-                        <div className= "nightAction heading">You have selected {selected}
+                        <div className= "nightAction heading">You have selected {selected.slice(0,-5)}
                           <div className= "nightAction container">{content}
                             <div className="nightAction button-container">
                               <Button
@@ -663,7 +663,7 @@ const NightAction = () => {
                   } else {
                     return (
                       <div className = "nightAction container">
-                        <div className= "nightAction heading">{username},<br></br> as a villager, you can only hope to survive the night
+                        <div className= "nightAction heading">{username.slice(0,-5)},<br></br> as a villager, you can only hope to survive the night
                           <div className= "nightAction container">{content} </div>
                           <div className="nightAction button-container">
                             <Button

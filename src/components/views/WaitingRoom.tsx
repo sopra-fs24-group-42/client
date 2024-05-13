@@ -17,7 +17,7 @@ import { IconAdjustments } from "@tabler/icons-react";
 
 const LobbyMember = ({ user }: { user: User }) => (
   <div className="waitingRoom player-container">
-    <div className="waitingRoom player-username">{user.username}</div>
+    <div className="waitingRoom player-username">{user.username.slice(0,-5)}</div>
   </div>
 );
 
@@ -197,7 +197,6 @@ const WaitingRoom = () => {
     try {
       setAlreadySent(true);
       setLeftGame(true);
-      console.log(`username: ${username}`);
       await api.delete(`/players/${username}`);
       navigate("/frontpage");
     } catch (error) {
