@@ -53,6 +53,8 @@ const WaitingRoom = () => {
   const [numberOfSeers, setNumberOfSeers] = useState(null);
   const [numberOfSacrifices, setNumberOfSacrifices] = useState(null);
   const [numberOfProtectors, setNumberOfProtectors] = useState(null);
+  const [everyoneHere, setEveryoneHere] = useState(false);
+
 
   // variables needed for UI
   const lobbyCode = localStorage.getItem("lobbyCode"); // need this to display at the top of the waitingRoom
@@ -171,17 +173,21 @@ const WaitingRoom = () => {
       setNumberOfSeers(messageReceived.gameSettings.numberOfSeers);
       setNumberOfProtectors(messageReceived.gameSettings.numberOfProtectors);
       setNumberOfSacrifices(messageReceived.gameSettings.numberOfSacrifices);
+      if(numberOfPlayers === numberOfPlayersInLobby) {
+        setEveryoneHere(true);}
+      //checkIfAllPlayersHere();
       console.log("number of players in lobby: " + numberOfPlayersInLobby);
     }
   }, [messageReceived]); 
 
-  const checkIfAllPlayersHere = () => {
-    if(numberOfPlayers === numberOfPlayersInLobby) {
-      return true;
-    }
+  // const checkIfAllPlayersHere = () => {
+  //   if(numberOfPlayers === numberOfPlayersInLobby) {
+  //     setEveryoneHere(true);
+  //     return true;
+  //   }
     
-    return false;
-  }
+  //   return false;
+  // }
 
   const doStartGame = () => {
     setAlreadySent(true);
@@ -243,8 +249,10 @@ const WaitingRoom = () => {
     }
   };
 
-  let content = <Spinner />;
-  let hostContent = <Spinner />;
+  let content = "";
+  let hostContent = "";
+  //let content = <Spinner />;
+  //let hostContent = <Spinner />;
   let headerMessage = "";
 
   if (messageReceived !== null) {
@@ -293,8 +301,8 @@ const WaitingRoom = () => {
               Welcome to game
               </div>
               <div className= "waitingRoom highlight">{lobbyCode}</div>
-              {checkIfAllPlayersHere() ? 
-                (<div className="waitingRoom heading">Everyone is here!<br></br>{hostName}, start the game.</div>):
+              {everyoneHere ? 
+                (<div className="waitingRoom heading">Everyone is here!<br></br>{hostName.slice(0,-5)}, start the game.</div>):
                 (<div className="waitingRoom heading">{numberOfPlayersInLobby} / {numberOfPlayers} players have joined,<br></br>
                 waiting for {numberOfPlayers - numberOfPlayersInLobby} more.<Spinner /></div>)
               }
@@ -304,7 +312,7 @@ const WaitingRoom = () => {
                   <Button
                     width="100%"
                     height="40px"
-                    disabled={checkIfAllPlayersHere() === false}
+                    disabled={!everyoneHere}
                     onClick={() => doStartGame()}
                   >Start Game
                   </Button>
@@ -358,8 +366,8 @@ const WaitingRoom = () => {
               Welcome to game
               </div>
               <div className= "waitingRoom highlight">{lobbyCode}</div>
-              {checkIfAllPlayersHere() ? 
-                (<div className="waitingRoom heading">Everyone is here!<br></br>{hostName}, start the game.</div>):
+              {everyoneHere ? 
+                (<div className="waitingRoom heading">Everyone is here!<br></br>{hostName.slice(0,-5)}, start the game.</div>):
                 (<div className="waitingRoom heading">{numberOfPlayersInLobby} / {numberOfPlayers} players have joined,<br></br>
                 waiting for {numberOfPlayers - numberOfPlayersInLobby} more.<Spinner /></div>)
               }
