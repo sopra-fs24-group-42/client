@@ -222,28 +222,28 @@ const PreNight = () => {
             <div className="nightReveal wait">Listen to the Narrator on the Hosts Device...</div>
             <Spinner />
           </div>
-            <div className="PreNight button-container">
-              {username === hostName &&
-              <Button
-                width="100%"
-                height="40px"
-                onClick={() => doSendReady()}
-                disabled={!playPressed}  // Disable OK button until audio is played
-              >Ok
-              </Button>
-              }
-              { username === hostName &&
-              <Button
-                width="100%"
-                height="40px"
-                onClick={DecodeAndPlay}
-              >Press to Play
-              </Button>
-              }
-              {audioUrl && (
-                <audio controls src={audioUrl} autoPlay />
-              )}
-            </div>
+          <div className="PreNight button-container">
+            {username === hostName &&
+            <Button
+              width="100%"
+              height="40px"
+              onClick={() => doSendReady()}
+              disabled={!playPressed}  // Disable OK button until audio is played
+            >Ok
+            </Button>
+            }
+            { username === hostName &&
+            <Button
+              width="100%"
+              height="40px"
+              onClick={DecodeAndPlay}
+            >Press to Play
+            </Button>
+            }
+            {audioUrl && (
+              <audio controls src={audioUrl} autoPlay />
+            )}
+          </div>
         </div>
       </div>
     </BaseContainer>
