@@ -100,6 +100,11 @@ const WaitingRoom = () => {
         setNumberOfPlayersInLobby(JSON.parse(message.body).players.length);
         setNumberOfPlayers(JSON.parse(message.body).numberOfPlayers);
         setHostName(JSON.parse(message.body).hostName);
+        setNumberOfVillagers(JSON.parse(message.body).gameSettings.numberOfVillagers);
+        setNumberOfWerewolves(JSON.parse(message.body).gameSettings.numberOfWerewolves);
+        setNumberOfSeers(JSON.parse(message.body).gameSettings.numberOfSeers);
+        setNumberOfProtectors(JSON.parse(message.body).gameSettings.numberOfProtectors);
+        setNumberOfSacrifices(JSON.parse(message.body).gameSettings.numberOfSacrifices);
         resolve(subscription);
       });
     }); 
@@ -127,6 +132,11 @@ const WaitingRoom = () => {
         setNumberOfPlayersInLobby((messageReceived.players).length);
         setNumberOfPlayers(messageReceived.numberOfPlayers);
         setHostName(messageReceived.hostName);
+        setNumberOfVillagers(messageReceived.gameSettings.numberOfVillagers);
+        setNumberOfWerewolves(messageReceived.gameSettings.numberOfWerewolves);
+        setNumberOfSeers(messageReceived.gameSettings.numberOfSeers);
+        setNumberOfProtectors(messageReceived.gameSettings.numberOfProtectors);
+        setNumberOfSacrifices(messageReceived.gameSettings.numberOfSacrifices);
       }
     }
 
@@ -156,6 +166,11 @@ const WaitingRoom = () => {
       setNumberOfPlayersInLobby((messageReceived.players).length);
       setNumberOfPlayers(messageReceived.numberOfPlayers);
       setHostName(messageReceived.hostName);
+      setNumberOfVillagers(messageReceived.gameSettings.numberOfVillagers);
+      setNumberOfWerewolves(messageReceived.gameSettings.numberOfWerewolves);
+      setNumberOfSeers(messageReceived.gameSettings.numberOfSeers);
+      setNumberOfProtectors(messageReceived.gameSettings.numberOfProtectors);
+      setNumberOfSacrifices(messageReceived.gameSettings.numberOfSacrifices);
       console.log("number of players in lobby: " + numberOfPlayersInLobby);
     }
   }, [messageReceived]); 
@@ -309,15 +324,25 @@ const WaitingRoom = () => {
                     shadow="md"
                   >
                     <Popover.Dropdown className="waitingRoom settings-dropdown">
-                      <RoleNumberInput label="Werewolf" placeholder="1" min={1} value={numberOfWerewolves} onChange={setNumberOfWerewolves} />
-                      <RoleNumberInput label="Seer" placeholder="1" min={1} value={numberOfSeers} onChange={setNumberOfSeers} />
-                      <RoleNumberInput label="Villager" placeholder="1" min={1} value={numberOfVillagers} onChange={setNumberOfVillagers} />
-                      <RoleNumberInput label="Protector" placeholder="1" min={1} value={numberOfProtectors} onChange={setNumberOfProtectors} />
-                      <RoleNumberInput label="Sacrifice" placeholder="0" min={0} value={numberOfSacrifices} onChange={setNumberOfSacrifices} />
+                      <Button
+                        width="10%"
+                        height="40px"
+                        top= "0"
+                        right= "0"
+                        onClick={() => setPopoverOpened(false)}
+                      >X
+                      </Button>
+                      <RoleNumberInput label="Werewolves" placeholder="1" min={1} value={numberOfWerewolves} onChange={setNumberOfWerewolves} />
+                      <RoleNumberInput label="Seers" placeholder="1" min={1} value={numberOfSeers} onChange={setNumberOfSeers} />
+                      <RoleNumberInput label="Villagers" placeholder="1" min={0} value={numberOfVillagers} onChange={setNumberOfVillagers} />
+                      <RoleNumberInput label="Protectors" placeholder="1" min={0} value={numberOfProtectors} onChange={setNumberOfProtectors} />
+                      <RoleNumberInput label="Sacrifices" placeholder="0" min={0} value={numberOfSacrifices} onChange={setNumberOfSacrifices} />
                       <Button
                         width="100%"
                         height="40px"
-                        disabled={(numberOfWerewolves + numberOfSeers + numberOfVillagers + numberOfProtectors + numberOfSacrifices) < numberOfPlayersInLobby}
+                        disabled={(numberOfWerewolves + numberOfSeers + numberOfVillagers + numberOfProtectors + numberOfSacrifices) < numberOfPlayersInLobby
+                          && (numberOfWerewolves + numberOfSeers + numberOfVillagers + numberOfProtectors + numberOfSacrifices) < 4
+                        }
                         onClick={() => doSave()}
                       >Save
                       </Button>
