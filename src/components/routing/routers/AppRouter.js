@@ -46,8 +46,10 @@ const AppRouter = () => {
         <Route path="/end" element={<End />} />
         <Route path="/deadscreen" element={<DeadScreen />} />
 
-
         <Route path="/game/*" element={<GameGuard><GameRouter /></GameGuard>} />
+
+        {/* Catch-all route */}
+        <Route path="*" element={<Navigate to="/frontpage" replace />} />
 
       </Routes>
     </BrowserRouter>
