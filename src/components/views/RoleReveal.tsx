@@ -182,35 +182,35 @@ const RoleReveal = () => {
   if(role==="Werewolf") {
     popoverContent = (
       <div>
-        <div className="roleReveal header1">🐺 <br></br>The Werewolf Role:</div>
+        <div className="roleReveal header1">🐺 The Werewolf Role:</div>
         <div className="roleReveal detailed-instructions">As a werewolf, your job is to secretly kill off players who are not werewolves during the night. <br></br>During the day, you have to convince other players that you are not a werewolf, else they will vote you out. <br></br>The werewolves win when the number of non-werewolf players equals the number of werewolves, since at that point the werewolves are guaranteed to win.<br></br>The villagers win when all werewolves have been voted out. <br></br>Good luck! 🫡</div>
       </div>
     )
   } else if (role==="Seer") {
     popoverContent = (
       <div>
-        <div className="roleReveal header1">👁️ <br></br>The Seer Role:</div>
+        <div className="roleReveal header1">👁️ The Seer Role:</div>
         <div className="roleReveal detailed-instructions">As a seer, you are part of the villagers. During the night, you have the ability to &quot;see&quot; another player&apos;s role.<br></br>During the day, you can use the information you have learned to convince others who to vote out. <br></br>The villagers win when all werewolves have been voted out.<br></br>The werewolves win when the number of werewolves left in the game is equal to the number of non-werewolf players left in the game. <br></br>Good luck! 🫡</div>
       </div>
     )
   } else if (role==="Protector") {
     popoverContent = (
       <div>
-        <div className="roleReveal header1">🤲 <br></br>The Protector Role:</div>
+        <div className="roleReveal header1">🤲 The Protector Role:</div>
         <div className="roleReveal detailed-instructions">As a protector, you are part of the villagers. During the night, you have the ability to protect a player (including yourself!) from a werewolf attack.<br></br>During the day, your goal is to identify and vote out all werewolves, as the villagers win when all werewolves have been voted out! <br></br>The werewolves win when the number of werewolves left in the game is equal to the number of non-werewolf players left in the game. <br></br>Good luck! 🫡</div>
       </div>      
     )
   } else if (role==="Sacrifice") {
     popoverContent = (
       <div>
-        <div className="roleReveal header1">🪦 <br></br>The Sacrifice Role:</div>
+        <div className="roleReveal header1">🪦 The Sacrifice Role:</div>
         <div className="roleReveal detailed-instructions">As a sacrifice, you are part of the villagers. During the night, you have the choice to kill another player in exchange for your own life.<br></br>During the day, your goal is to identify and vote out all werewolves, as the villagers win when all werewolves have been voted out! <br></br>The werewolves win when the number of werewolves left in the game is equal to the number of non-werewolf players left in the game. <br></br>Good luck! 🫡</div>
       </div>     
     )
   } else {
     popoverContent = ( // Villager
       <div>
-        <div className="roleReveal header1">🧑‍🌾👩‍🌾 <br></br>The Villager Role:</div>
+        <div className="roleReveal header1">🧑‍🌾👩‍🌾 The Villager Role:</div>
         <div className="roleReveal detailed-instructions">As a villager, you have no special abilities during the night. All you can do is hope that you survive.<br></br>During the day, your goal is to identify and vote out all werewolves, as the villagers win when all werewolves have been voted out! <br></br>The werewolves win when the number of werewolves left in the game is equal to the number of non-werewolf players left in the game. <br></br>Good luck!</div>
       </div>   
     )
@@ -242,7 +242,13 @@ const RoleReveal = () => {
                 <div className="roleReveal highlight">Werewolf</div>
                 <div className="roleReveal instructions">{werewolfInstructions}</div>
                 { listOfWerewolves.length > 0 ? 
-                  <div className="roleReveal instructions">These are the other werewolves: <b>{listOfWerewolves}</b></div>:
+                  <div className="roleReveal instructions">These are the other werewolves: <b>
+                    <ul className="roleReveal ul">{listOfWerewolves.map(wolf => (
+                      <li className="roleReveal li" key={wolf}>{wolf}</li>))}
+                    </ul>
+                  </b>
+                  </div>
+                  :
                   <div className="roleReveal instructions">You are the only werewolf in this game, good luck!</div>
                 }
               </div>)
