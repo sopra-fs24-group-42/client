@@ -262,6 +262,14 @@
     margin:auto;
   }
 
+  .ul {
+    padding-left: 20px;
+  }
+  
+  .li {
+    list-style-type: none; /* Removes bullet points if desired */
+  }
+
   &.popover-container {
     @include center;
     left: 0;
