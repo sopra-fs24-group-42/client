@@ -113,7 +113,7 @@ const PreNight = () => {
         if(messageReceived.playerMap[`${currentPlayer.username}`].isReady) {
           setReady(true);
           setAlreadySent(true);
-        }      
+        }     
       }*/
       if (messageReceived.gameState === "NIGHT") {
         navigate("/nightaction");
