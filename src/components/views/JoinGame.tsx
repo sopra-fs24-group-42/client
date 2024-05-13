@@ -43,6 +43,7 @@ const JoinGame = () => {
       const response1 = await api.post("/players", JSON.stringify({username, lobbyCode}));
       const player = new Player(response1.data);
       localStorage.setItem("user", player.username);
+      localStorage.setItem("playerId", player.playerId);
       localStorage.setItem("lobbyCode", player.lobbyCode);
       localStorage.setItem("lobbyId", player.lobbyId);
       navigate("/waitingroom");            

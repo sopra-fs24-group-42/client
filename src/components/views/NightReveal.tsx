@@ -26,7 +26,7 @@ const NightReveal = () => {
   
   // variables needed for role reveal
   const [messageReceived, setMessageReceived] = useState(null);
-  var killedPlayer = null;
+  const [killedPlayers, setKilledPlayers] = useState([]);
   const username = localStorage.getItem("user"); //fetching username from localstorage
   const [ready, setReady] = useState(false);
   const [alreadySent, setAlreadySent] = useState(false);
@@ -35,19 +35,21 @@ const NightReveal = () => {
 
   const lobbyId = localStorage.getItem("lobbyId");
 
-  const findKilledPlayer = () => {
-    console.log("Inside findKilledPlayer");
-    for(let i=0; i<messageReceived.players.length; i++) { // iterating through list of players to check their isKilled field 
+  const findKilledPlayers = () => {
+    console.log("Inside findKilledPlayers");
+    let foundPlayers = [];
+    for (let i = 0; i < messageReceived.players.length; i++) { // iterating through list of players to check their isKilled field
       let currentPlayer = messageReceived.players[i];
-      if(messageReceived.playerMap[`${currentPlayer.username}`].isKilled) {
-        killedPlayer = currentPlayer;
+      if (messageReceived.playerMap[currentPlayer.username].isKilled) { // Check if the current player was marked as killed
+        foundPlayers.push(currentPlayer); // Correctly pushing currentPlayer into the foundPlayers array
       }
     }
-    if(killedPlayer) {
-      if (username === killedPlayer.username) {
-        navigate("/deadscreen", {state: killedPlayer});
+    setKilledPlayers(foundPlayers); // Update the state with the list of killed players
+    foundPlayers.forEach(player => {
+      if (username === player.username) {
+        navigate("/deadscreen", { state: player }); // Navigate to deadscreen if the current user is one of the killed players
       }
-    }
+    });
   }
 
   const connect = async () => {
@@ -99,6 +101,7 @@ const NightReveal = () => {
     console.log("I connected?");
 
     if (messageReceived) {
+      findKilledPlayers();
       setHostName(messageReceived.hostName);
       if (messageReceived.gameState === "DISCUSSION") { // happens after ready was sent by all
         navigate("/discussion");
@@ -126,6 +129,7 @@ const NightReveal = () => {
   useEffect(() => { // This useEffect tracks changes in the lobby --> do I need this for roleReveal?
     console.log("I am in Role reveal useEffect now!");
     if (messageReceived) {
+      findKilledPlayers();
       setHostName(messageReceived.hostName);
       if (messageReceived.gameState === "DISCUSSION") {
         navigate("/discussion");
@@ -141,22 +145,39 @@ const NightReveal = () => {
   }
 
   let content = <Spinner />;
-  if(messageReceived !== null) {
-    findKilledPlayer();
-    if(killedPlayer) { // killedPlayer is not null, i.e. someone was killed
+  if (messageReceived !== null) {
+    if (killedPlayers.length > 0) {
       content = (
-        <div className = "nightAction highlight">
-          {killedPlayer.username}, a {killedPlayer.roleName} was killed!
+        <div>
+          {killedPlayers.map((player, index) => ( // Ensure index is correctly used here
+            <div
+              key={player.username}
+              className="nightAction highlight"
+              style={{ marginBottom: index !== killedPlayers.length - 1 ? "20px" : "0" }}
+            >
+              {player.username}, a {player.roleName} was killed!
+            </div>
+          ))}
+        </div>
+      );
+      /*
+        <div className="nightAction highlight">
+          {killedPlayers.map(player => (
+            <div key={player.username} className="killedPlayer">
+              {player.username}, a {player.roleName} was killed!
+            </div>
+          ))}
+        </div>
+      );
+      */
+
+    } else {
+      content = (
+        <div className="nightAction highlight">
+          Everyone survived last night!
         </div>
       );
     }
-    else {
-      content = (
-        <div className = "nightAction highlight">
-        Everyone survived last night!
-        </div>)
-    }
-
   }
   //variables needed for TexttoSpeechAPI
   const [data, setData] = useState(null);

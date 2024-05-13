@@ -42,7 +42,9 @@ const CreateGame = () => {
       // creating a new Lobby object which also creates the host player object
       const response = await api.post("/lobbies", JSON.stringify({hostName, numberOfPlayers}));
       const lobby = new Lobby(response.data);
+      console.log(`Lobby: ${JSON.stringify(lobby)}`);
       localStorage.setItem("user", lobby.hostName);
+      localStorage.setItem("playerId", lobby.players[0].playerId);
       localStorage.setItem("lobbyCode", lobby.lobbyCode);
       localStorage.setItem("lobbyId", lobby.lobbyId);
       localStorage.setItem("numberOfPlayers", lobby.numberOfPlayers);

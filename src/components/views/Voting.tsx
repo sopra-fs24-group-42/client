@@ -42,6 +42,7 @@ const Voting = () => {
 
   const [ready, setReady] = useState(false);
   const [alreadySent, setAlreadySent] = useState(false);
+  const [abstained, setAbstained] = useState(false);
 
   // variables needed for UI  
   const lobbyId = localStorage.getItem("lobbyId");
@@ -194,6 +195,13 @@ const Voting = () => {
     setAlreadySent(true);
     setReady(true);
   }
+
+  const doAbstain = () => {
+    setAlreadySent(true);
+    setReady(true);
+    setAbstained(true);
+    localStorage.setItem("selected", "");
+  }
   
   useEffect(() => {
     localStorage.setItem("selected", selected);
@@ -230,32 +238,56 @@ const Voting = () => {
           <div className="voting highlight">{timer}</div>
           <BaseContainer>
             {(() => {
-              if(ready && selected !== "") {
+              if(ready && (selected !== "" || abstained)) { // selected someone & confirmed
                 return (
                   <div className ="voting container">
+                    {abstained ?
+                      <div className="voting heading">You have chosen to abstain</div> :
+                      <div className="voting heading">You have voted for {selected}</div>}
                     <div className= "voting wait">Waiting for all players to submit their vote...</div>
                     <Spinner />
                   </div>)
-              } else if (selected !== "" && !ready) {
+              } else if (selected !== "" && !ready) { // selected someone but not confirmed yet
                 return (
                   <div className="voting container">
-                    <div className= "voting heading">You have selected {selected} </div>
+                    <div className= "voting heading">You have selected<br></br> {selected} </div>
                     <div className= "voting container">{content}
-                      <div className="button-container">
+                      <div className="voting button-container">
                         <Button
                           width="100%"
                           height="40px"
                           onClick={() => doSendSelected()}
-                        >Vote for {selected}
+                        >Vote
+                        </Button>
+                        <Button
+                          width="100%"
+                          height="40px"
+                          onClick={() => doAbstain()}
+                        >Abstain
                         </Button>
                       </div>
                     </div>
                   </div>)
-              } else { 
+              } else { // not selected anyone yet
                 return (
                   <div className="voting container">
-                    <div className= "voting heading">{username}, select who you want to vote out.</div>    
-                    <div className= "voting container">{content} </div>
+                    <div className= "voting heading">{username},<br></br> select who you want to vote out.</div>    
+                    <div className= "voting container">{content}</div>
+                    <div className="voting button-container">
+                      <Button
+                        width="100%"
+                        height="40px"
+                        onClick={() => doSendSelected()}
+                        disabled={true}
+                      >Confirm
+                      </Button>
+                      <Button
+                        width="100%"
+                        height="40px"
+                        onClick={() => doAbstain()}
+                      >Abstain
+                      </Button>
+                    </div>
                   </div>
                 )
               }
