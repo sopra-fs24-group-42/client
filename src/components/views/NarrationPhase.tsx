@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import {useNavigate} from "react-router-dom";
 import { getDomain } from "../../helpers/getDomain";
-import textSamples from "helpers/TextSamples/TextSamplesold";
 import { Button } from "components/ui/Button";
 import "../../styles/views/NarrationPhase.scss";
 import Header from "./Header";
-
+import textSamples from "helpers/TextSamples/TextSamples.json";
 
 function NarrationPhase() {
   const [data, setData] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
   
   useEffect(() => {
-    const selectedText = textSamples[Math.floor(Math.random() * textSamples.length)];
+    const RevealVotingPre = textSamples.RevealVotingPre[Math.floor(Math.random() * textSamples.RevealVotingPre.length)];
+    const RevealVotingPost = textSamples.RevealVotingPost[Math.floor(Math.random() * textSamples.RevealVotingPost.length)];
+    const selectedText = RevealVotingPre + " " + RevealVotingPost;
     const fetchData = async () => {
       const baseURL = "https://texttospeech.googleapis.com/v1beta1/text:synthesize?fields=audioContent&key="
       const URLSecret = process.env.REACT_APP_API_KEY;
@@ -26,7 +27,7 @@ function NarrationPhase() {
           "speakingRate": 1
         },
         "input": {
-          "text": selectedText
+          "ssml": "<speak>" + RevealVotingPre + " " + "<break time=\"1s\"/>" + RevealVotingPost + "</speak>"
         },
         "voice": {
           "languageCode": "en-US",

@@ -248,7 +248,7 @@ const VotingReveal = () => {
           RevealVotingMid = "Noone was chosen to die.";
         }
 
-        const selectedText = RevealVotingPre + " " + RevealVotingMid + " " + RevealVotingPost;
+        const selectedText = RevealVotingPre + " " + "<break time=\"1s\"/> " + RevealVotingMid + " " + "<break time=\"2s\"/> " + RevealVotingPost;
         const fetchData = async () => {
           const baseURL = "https://texttospeech.googleapis.com/v1beta1/text:synthesize?fields=audioContent&key="
           const URLSecret = process.env.REACT_APP_API_KEY;

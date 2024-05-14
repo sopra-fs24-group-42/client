@@ -225,7 +225,7 @@ const NightReveal = () => {
           RevealNightMid = ""; // Initialize it as an empty string even in the error case
         }        
 
-        const selectedText = RevealNightPre + " " + RevealNightMid + " " + RevealNightPost;
+        const selectedText = RevealNightPre + " " + "<break time=\"1s\"/> " + RevealNightMid + " " + "<break time=\"2s\"/> " + RevealNightPost;
         const fetchData = async () => {
           const baseURL = "https://texttospeech.googleapis.com/v1beta1/text:synthesize?fields=audioContent&key="
           const URLSecret = process.env.REACT_APP_API_KEY;
