@@ -34,6 +34,13 @@ const NightReveal = () => {
 
   const lobbyId = localStorage.getItem("lobbyId");
 
+  //variables needed for TexttoSpeechAPI
+  const [data, setData] = useState(null);
+  const [audioUrl, setAudioUrl] = useState(null);
+  const [playPressed, setPlayPressed] = useState(false);  // State to track if Playbutton has been pressed
+  const [dataNotFetched, setDataNotFetched] = useState(true);
+  const [findKilledPlayersRan, setFindKilledPlayersRan] = useState(false);
+
   const findKilledPlayers = () => {
     console.log("Inside findKilledPlayers");
     let foundPlayers = [];
@@ -49,6 +56,7 @@ const NightReveal = () => {
         navigate("/deadscreen", { state: player }); // Navigate to deadscreen if the current user is one of the killed players
       }
     });
+    setFindKilledPlayersRan(true);
   }
 
   const connect = async () => {
@@ -178,23 +186,12 @@ const NightReveal = () => {
       );
     }
   }
-  //variables needed for TexttoSpeechAPI
-  const [data, setData] = useState(null);
-  const [audioUrl, setAudioUrl] = useState(null);
-  const [playPressed, setPlayPressed] = useState(false);  // State to track if Playbutton has been pressed
+  //Text to Speech API call
 
-  
   useEffect(() => {
-    if(hostName) {
-      if (username === hostName) { 
-        console.log(`Entered the API Useffect, here are the found players ${killedPlayers}`) 
-        //const PartOneText = TextSamplesRevealNightpre[Math.floor(Math.random() * textSamples.length)];  
-        //const PartTwoText = TextSamplesRevealNightpost[Math.floor(Math.random() * textSamples.length)];  
-        //if(killedPlayer) {
-        //  const individualText = concat(killedPlayer.username," has been killed during the Night");
-        //}
-        //else {
-        //  const individual = "nobody has been killed during the night"}
+    if(hostName && findKilledPlayersRan) {
+      if (username === hostName && dataNotFetched) { 
+        console.log("Entered the API Useffect") 
         const RevealNightPre = textSamples.RevealNightPre[Math.floor(Math.random() * textSamples.RevealNightPre.length)];
         const RevealNightPost = textSamples.RevealNightPost[Math.floor(Math.random() * textSamples.RevealNightPost.length)];
 
@@ -209,26 +206,24 @@ const NightReveal = () => {
         if (killedPlayers.length === 0) {
           console.log("inside 0 Players killed")
           RevealNightMid = textSamples.RevealVotingSurvival[Math.floor(Math.random() * textSamples.RevealVotingSurvival.length)];
-
-        } else if (foundPlayers.length === 1) {
+        } else if (killedPlayers.length === 1) {
           console.log("inside 1 Players killed")
-          const player = foundPlayers[0];
+          const player = killedPlayers[0];
           RevealNightMid = `${player.username} a ${player.roleName} has been killed last night.`;
           console.log(RevealNightMid); 
-        } else if (foundPlayers.length > 1) {
+        } else if (killedPlayers.length > 1) {
           console.log("inside more than 1 Players killed")
           RevealNightMid = ""; // Initialize it as an empty string
-          for (let i = 0; i < foundPlayers.length -1; i++) {
-            const player = foundPlayers[i];
+          for (let i = 0; i < killedPlayers.length -1; i++) {
+            const player = killedPlayers[i];
             RevealNightMid += `${player.username} a ${player.roleName}, `;
           } 
-          const player = foundPlayers[foundPlayers.length - 1];
+          const player = killedPlayers[killedPlayers.length - 1];
           RevealNightMid += `and ${player.username} a ${player.roleName} have been killed.`
         } else { //An Empty String will be returned for the middle Part of the TTS-APi Call
           console.log("something went wrong, differentiating between the Number of killed Players. An Empty String will be returned for the middle Part of the TTS-APi Call");
           RevealNightMid = ""; // Initialize it as an empty string even in the error case
-        }
-           
+        }        
 
         const selectedText = RevealNightPre + " " + RevealNightMid + " " + RevealNightPost;
         const fetchData = async () => {
@@ -275,9 +270,10 @@ const NightReveal = () => {
           }
         }
         fetchData();
+        setDataNotFetched(false);
       } 
     } 
-  }, [hostName])
+  }, [hostName, findKilledPlayersRan])
   
   const DecodeAndPlay = () => {
     // Assuming the base64 string is in the proper format with the data URL prefix

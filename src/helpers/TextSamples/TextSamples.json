@@ -36,7 +36,7 @@
     "The night passed without any loss of life.",
     "All residents made it through the night safely."
   ],
-    "RevealVotingPre": [],
-    "RevealVotingPost": []
+    "RevealVotingPre": ["After intense debate the Villagers each have casted their vote."],
+    "RevealVotingPost": ["The Villagers return to their daily Business."]
   
   }

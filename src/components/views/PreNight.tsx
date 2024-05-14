@@ -131,11 +131,12 @@ const PreNight = () => {
   const [data, setData] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
   const [playPressed, setPlayPressed] = useState(false);  // State to track if Playbutton has been pressed
+  const [dataNotFetched, setDataNotFetched] = useState(true);
 
   
   useEffect(() => {
     if(hostName) {
-      if (username === hostName) {  
+      if (username === hostName && dataNotFetched) {  
         //const PartOneText = TextSamplesRevealNightpre[Math.floor(Math.random() * textSamples.length)];  
         //const PartTwoText = TextSamplesRevealNightpost[Math.floor(Math.random() * textSamples.length)];  
         //if(killedPlayer) {
@@ -189,6 +190,7 @@ const PreNight = () => {
           }
         }
         fetchData();
+        setDataNotFetched(false);
       } 
     } 
   }, [hostName])
