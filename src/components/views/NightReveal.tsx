@@ -10,8 +10,7 @@ import "styles/views/NightReveal.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { User } from "types";
-import TextSamplesRevealNightpre from "helpers/TextSamples/TextSamplesRevealNightpre";
-import TextSamplesRevealNightpost from "helpers/TextSamples/TextSamplesRevealNightpost";
+import textSamples from "helpers/TextSamples/TextSamples.json";
 
 const NightReveal = () => {
   // variables needed for establishing websocket connection
@@ -187,7 +186,8 @@ const NightReveal = () => {
   
   useEffect(() => {
     if(hostName) {
-      if (username === hostName) {  
+      if (username === hostName) { 
+        console.log(`Entered the API Useffect, here are the found players ${killedPlayers}`) 
         //const PartOneText = TextSamplesRevealNightpre[Math.floor(Math.random() * textSamples.length)];  
         //const PartTwoText = TextSamplesRevealNightpost[Math.floor(Math.random() * textSamples.length)];  
         //if(killedPlayer) {
@@ -195,8 +195,8 @@ const NightReveal = () => {
         //}
         //else {
         //  const individual = "nobody has been killed during the night"}
-        const RevealNightPre = textSamples.RevealNightPre;
-        const RevealNightPost = textSamples.RevealNightPost;
+        const RevealNightPre = textSamples.RevealNightPre[Math.floor(Math.random() * textSamples.RevealNightPre.length)];
+        const RevealNightPost = textSamples.RevealNightPost[Math.floor(Math.random() * textSamples.RevealNightPost.length)];
 
         /*logic to differentiat between the number of killed players and making the text for the 
         API dynamical and integrating username aswell as Role into the API Call. The maximum amount
@@ -204,26 +204,33 @@ const NightReveal = () => {
         chooses to have more than 1 sacrifice potentially unlimited number of players could die in 
         one night. therefore the logic supports unlimited killed players
         */
-
+        let RevealNightMid;
+        console.log("RevealNightMid init")
         if (killedPlayers.length === 0) {
-          const RevealNightMid = textSamples.RevealVotingSurvival;
+          console.log("inside 0 Players killed")
+          RevealNightMid = textSamples.RevealVotingSurvival[Math.floor(Math.random() * textSamples.RevealVotingSurvival.length)];
 
         } else if (foundPlayers.length === 1) {
+          console.log("inside 1 Players killed")
           const player = foundPlayers[0];
-          const RevealNightMid = `${player.username} a ${player.roleName} has been killed last night.`;
+          RevealNightMid = `${player.username} a ${player.roleName} has been killed last night.`;
           console.log(RevealNightMid); 
-        } else {
-          const RevealNightMid = "";
+        } else if (foundPlayers.length > 1) {
+          console.log("inside more than 1 Players killed")
+          RevealNightMid = ""; // Initialize it as an empty string
           for (let i = 0; i < foundPlayers.length -1; i++) {
             const player = foundPlayers[i];
             RevealNightMid += `${player.username} a ${player.roleName}, `;
           } 
-          player = foundPlayers[foundPlayers.length - 1];
-          RevealNightMid += `$and {player.username} a ${player.roleName} have been killed.`
+          const player = foundPlayers[foundPlayers.length - 1];
+          RevealNightMid += `and ${player.username} a ${player.roleName} have been killed.`
+        } else { //An Empty String will be returned for the middle Part of the TTS-APi Call
+          console.log("something went wrong, differentiating between the Number of killed Players. An Empty String will be returned for the middle Part of the TTS-APi Call");
+          RevealNightMid = ""; // Initialize it as an empty string even in the error case
         }
            
 
-        const selectedText = RevealNightPre + " " + RevealNightPost + " " + RevealNightMid;
+        const selectedText = RevealNightPre + " " + RevealNightMid + " " + RevealNightPost;
         const fetchData = async () => {
           const baseURL = "https://texttospeech.googleapis.com/v1beta1/text:synthesize?fields=audioContent&key="
           const URLSecret = process.env.REACT_APP_API_KEY;
@@ -253,13 +260,13 @@ const NightReveal = () => {
             }
             const jsonData = await response.json();
             let modifiedString = JSON.stringify(jsonData);
-            console.log(modifiedString);
+            console.log("Recieved Respnse");
             let newstring = modifiedString.substring(17);
-            console.log("firts 17 Elements deleted",newstring);
+            console.log("firts 17 Elements deleted");
             newstring = newstring.slice(0, -2);
-            console.log("last 2 Elements deleted",newstring);
+            console.log("last 2 Elements deleted");
             newstring = "data:audio/mp3;base64,".concat(newstring)   
-            console.log("concatenated",newstring);
+            console.log("concatenated");
         
             setData(newstring);  // Save the JSON response in state
             console.log("Data saved in state:", newstring);
