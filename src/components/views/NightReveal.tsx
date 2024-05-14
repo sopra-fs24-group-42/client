@@ -209,23 +209,23 @@ const NightReveal = () => {
         } else if (killedPlayers.length === 1) {
           console.log("inside 1 Players killed")
           const player = killedPlayers[0];
-          RevealNightMid = `${player.username} a ${player.roleName} has been killed last night.`;
+          RevealNightMid = `${player.username} <break time=\"500mss\"/> a ${player.roleName} has been killed last night.`;
           console.log(RevealNightMid); 
         } else if (killedPlayers.length > 1) {
           console.log("inside more than 1 Players killed")
           RevealNightMid = ""; // Initialize it as an empty string
           for (let i = 0; i < killedPlayers.length -1; i++) {
             const player = killedPlayers[i];
-            RevealNightMid += `${player.username} a ${player.roleName}, `;
+            RevealNightMid += `${player.username} <break time=\"500mss\"/> a ${player.roleName}, `;
           } 
           const player = killedPlayers[killedPlayers.length - 1];
-          RevealNightMid += `and ${player.username} a ${player.roleName} have been killed.`
+          RevealNightMid += `and ${player.username} <break time=\"500mss\"/> a ${player.roleName} have been killed.`
         } else { //An Empty String will be returned for the middle Part of the TTS-APi Call
           console.log("something went wrong, differentiating between the Number of killed Players. An Empty String will be returned for the middle Part of the TTS-APi Call");
           RevealNightMid = ""; // Initialize it as an empty string even in the error case
         }        
 
-        const selectedText = RevealNightPre + " " + "<break time=\"1s\"/> " + RevealNightMid + " " + "<break time=\"2s\"/> " + RevealNightPost;
+        const selectedText = "<speak>" +  RevealNightPre + " " + "<break time=\"1s\"/> " + RevealNightMid + " " + "<break time=\"2s\"/> " + RevealNightPost + "</speak>";
         const fetchData = async () => {
           const baseURL = "https://texttospeech.googleapis.com/v1beta1/text:synthesize?fields=audioContent&key="
           const URLSecret = process.env.REACT_APP_API_KEY;
@@ -239,7 +239,7 @@ const NightReveal = () => {
               "speakingRate": 1
             },
             "input": {
-              "text": selectedText
+              "ssml": selectedText
             },
             "voice": {
               "languageCode": "en-US",

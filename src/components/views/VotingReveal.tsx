@@ -242,13 +242,13 @@ const VotingReveal = () => {
         */
         let RevealVotingMid;
         if (votedPlayer) {
-          RevealVotingMid = `${votedPlayer.username} a ${votedPlayer.roleName}, was selected by the Village`;
+          RevealVotingMid = `${votedPlayer.username} <break time=\"500ms\"/>  a ${votedPlayer.roleName}, was selected by the Village`;
         }
         else {
           RevealVotingMid = "Noone was chosen to die.";
         }
 
-        const selectedText = RevealVotingPre + " " + "<break time=\"1s\"/> " + RevealVotingMid + " " + "<break time=\"2s\"/> " + RevealVotingPost;
+        const selectedText = "<speak>" + RevealVotingPre + " " + "<break time=\"1s\"/> " + RevealVotingMid + " " + "<break time=\"2s\"/> " + RevealVotingPost + "</speak>";
         const fetchData = async () => {
           const baseURL = "https://texttospeech.googleapis.com/v1beta1/text:synthesize?fields=audioContent&key="
           const URLSecret = process.env.REACT_APP_API_KEY;
@@ -262,7 +262,7 @@ const VotingReveal = () => {
               "speakingRate": 1
             },
             "input": {
-              "text": selectedText
+              "ssml": selectedText
             },
             "voice": {
               "languageCode": "en-US",
