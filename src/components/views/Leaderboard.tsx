@@ -14,13 +14,12 @@ const Leaderboard = () => {
   const [leaderboardTable, setLeaderboardTable] = useState(null);
   const [leaderboard, setLeaderboard] = useState(null);
   const [rows, setRows] = useState(null);
-  const [noPlayers, setNoPlayers] = useState(false);
   const maxNumberOfTopPlayers = 3;
 
   const doGetTopPlayers = async () => {
     try {
       const response = await api.get(`/leaderboards/${maxNumberOfTopPlayers}`);
-      console.log(response);
+      console.log("RESPONSE "+ response);
       setLeaderboardList(response);
       transformListToTable();
       setRowsForTable();
@@ -33,11 +32,12 @@ const Leaderboard = () => {
 
   const transformListToTable = () => {
     if (leaderboardList !== null) {
+      console.log("Why am i here");
       const elementsToTable = [{}];
       for (let i = 0; i < leaderboardList.length; i++) {
 
         const newPlayer = {
-          position: i,
+          position: i + 1,
           username: leaderboardList[i].username,
           numberOfWerewolfWins: leaderboardList[i].numberOfWerewolfWins,
           numberOfVillagerWins: leaderboardList[i].numberOfVillagerWins,
@@ -47,8 +47,6 @@ const Leaderboard = () => {
         elementsToTable.push(newPlayer);
       }
       setLeaderboardTable(elementsToTable);
-    } else {
-      setNoPlayers(true);
     }
   }
 
@@ -72,7 +70,7 @@ const Leaderboard = () => {
   }
 
   let content;
-  if (noPlayers) {
+  if (leaderboardTable === null) {
     content = <h3 className="leaderboard h3">No players have played this game so far.</h3>;
   } else {
     content = (
