@@ -77,14 +77,14 @@ const Leaderboard = () => {
   } else {
     content = (
       <Table.ScrollContainer minWidth={500}>
-        <Table>
+        <Table className="leaderboard table" verticalSpacing="sm">
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>Position</Table.Th>
-              <Table.Th>Username</Table.Th>
-              <Table.Th>Werewolves Wins</Table.Th>
-              <Table.Th>Villagers Wins</Table.Th>
-              <Table.Th>Total Wins</Table.Th>
+              <Table.Th className="leaderboard table-header-position">#</Table.Th>
+              <Table.Th className="leaderboard table-header-player">Player</Table.Th>
+              <Table.Th className="leaderboard table-header-werewolves-wins">Werewolves Wins</Table.Th>
+              <Table.Th className="leaderboard table-header-villagers-wins">Villagers Wins</Table.Th>
+              <Table.Th className="leaderboard table-header-total-wins">Total Wins</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>{rows}</Table.Tbody>
