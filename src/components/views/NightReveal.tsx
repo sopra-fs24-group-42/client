@@ -195,8 +195,35 @@ const NightReveal = () => {
         //}
         //else {
         //  const individual = "nobody has been killed during the night"}
+        const RevealNightPre = textSamples.RevealNightPre;
+        const RevealNightPost = textSamples.RevealNightPost;
 
-        const selectedText = "Test"; // PartOneText.concat(individualText, PartTwoText); NEEDS TO BE CHANGE FOR FINAL PRODUCT: ATM SHORT TO CONSERVE USED CHARACTERS
+        /*logic to differentiat between the number of killed players and making the text for the 
+        API dynamical and integrating username aswell as Role into the API Call. The maximum amount
+        of players that can die during a night is with standard gamerules 3. However, if the host 
+        chooses to have more than 1 sacrifice potentially unlimited number of players could die in 
+        one night. therefore the logic supports unlimited killed players
+        */
+
+        if (killedPlayers.length === 0) {
+          const RevealNightMid = textSamples.RevealVotingSurvival;
+
+        } else if (foundPlayers.length === 1) {
+          const player = foundPlayers[0];
+          const RevealNightMid = `${player.username} a ${player.roleName} has been killed last night.`;
+          console.log(RevealNightMid); 
+        } else {
+          const RevealNightMid = "";
+          for (let i = 0; i < foundPlayers.length -1; i++) {
+            const player = foundPlayers[i];
+            RevealNightMid += `${player.username} a ${player.roleName}, `;
+          } 
+          player = foundPlayers[foundPlayers.length - 1];
+          RevealNightMid += `$and {player.username} a ${player.roleName} have been killed.`
+        }
+           
+
+        const selectedText = RevealNightPre + " " + RevealNightPost + " " + RevealNightMid;
         const fetchData = async () => {
           const baseURL = "https://texttospeech.googleapis.com/v1beta1/text:synthesize?fields=audioContent&key="
           const URLSecret = process.env.REACT_APP_API_KEY;

@@ -7,8 +7,7 @@ import {useNavigate, useLocation} from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/NightReveal.scss";
 import BaseContainer from "components/ui/BaseContainer";
-import TextSamplesRevealNightpre from "helpers/TextSamples/TextSamplesRevealNightpre";
-import TextSamplesRevealNightpost from "helpers/TextSamples/TextSamplesRevealNightpost";
+import textSamples from "helpers/TextSamples/TextSamples.json";
 
 const PreNight = () => {
   // variables needed for establishing websocket connection
@@ -144,8 +143,8 @@ const PreNight = () => {
         //}
         //else {
         //  const individual = "nobody has been killed during the night"}
-
-        const selectedText = "Test"; // PartOneText.concat(individualText, PartTwoText); NEEDS TO BE CHANGE FOR FINAL PRODUCT: ATM SHORT TO CONSERVE USED CHARACTERS
+        const preNightNarrations = textSamples.PreNightNarration;
+        const selectedText = textSamples.PreNightNarration[Math.floor(Math.random() * textSamples.PreNightNarration.length)]
         const fetchData = async () => {
           const baseURL = "https://texttospeech.googleapis.com/v1beta1/text:synthesize?fields=audioContent&key="
           const URLSecret = process.env.REACT_APP_API_KEY;
