@@ -73,7 +73,7 @@ const Leaderboard = () => {
 
   let content;
   if (noPlayers) {
-    content = <h1>No players have played this game so far.</h1>;
+    content = <h3 className="leaderboard h3">No players have played this game so far.</h3>;
   } else {
     content = (
       <Table.ScrollContainer minWidth={500}>

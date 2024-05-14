@@ -37,7 +37,8 @@ const FrontPage = () => {
           </Button>
         </div>
         <div className="frontpage trophy-container">
-          <Trophy
+          <Trophy className="frontpage trophy-icon"
+            size={36}
             onClick={() => navigate("/leaderboard")}
           >Leaderboard
           </Trophy>
