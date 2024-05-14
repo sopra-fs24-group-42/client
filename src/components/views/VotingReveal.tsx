@@ -296,7 +296,7 @@ const VotingReveal = () => {
         setDataNotFetched(false);
       } 
     } 
-  }, [hostName])
+  }, [hostName, votedPlayer])
 
   const DecodeAndPlay = () => {
     // Assuming the base64 string is in the proper format with the data URL prefix
