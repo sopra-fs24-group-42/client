@@ -69,11 +69,6 @@ const NightAction = () => {
       );
     } else {
       // Timer expires, navigate to another page
-      //try { 
-      //  let selection = localStorage.getItem("selected");} // checking if selected has been made
-      //catch (e) {
-      //  localStorage.setItem("selected","");} // if not, put it in localStorage
-      //console.log(`Time ran out. Selection is ${selection}, selected is {selected}`);
       setReady(true);
       setAlreadySent(true);
       clearInterval(Ref.current);
@@ -121,7 +116,6 @@ const NightAction = () => {
         //connection = true;
         setTimeout(function() {// "function" will be executed after the delay (i.e. subscribe is called because we call connect with a function as argument e.g. see createGame.tsx)
           //const response = await callback();
-          console.log("I waited: I received  MESSAGE frame back based on subscribing!!");
           resolve(stompClient);
         }, 500);
       });
@@ -134,7 +128,6 @@ const NightAction = () => {
 
   const subscribe = async (destination) => { 
     return new Promise( (resolve, reject) => {
-      //stompClient.subscribe(destination, async function(message) {
       subscription = stompClient.subscribe(destination, async function(message) { 
         console.log("Subscription: " + JSON.stringify(subscription));
         // all of this only gets executed when message is received
@@ -161,6 +154,8 @@ const NightAction = () => {
     if (messageReceived) {
       if (messageReceived.gameState === "REVEALNIGHT") {
         navigate("/nightreveal");
+      } else if (messageReceived.gameState === "ENDGAME") {
+        navigate("/end");
       }
       setPlayersInLobby(messageReceived.players);
     }
@@ -170,14 +165,9 @@ const NightAction = () => {
         "Content-type": "application/json"
       };
       let selection = localStorage.getItem("selected");
-      console.log("THIS IS THE SELECTION: " + localStorage.getItem("selection"));
-      console.log("THIS IS SELECTION" + selection);
       const body = JSON.stringify({username, selection});
       try {
-        console.log(`ALREADY SENT? ${alreadySent}`)
         if(!alreadySent) { // to avoid SEND frames being sent doubled 
-          //alreadySent = true;
-          //setAlreadySent(true);
           stompClient.send(`/app/${role}/nightaction`, headers, body);
           setTimeout(() => {
             stompClient.send("/app/ready", headers, JSON.stringify({username, gameState}));
@@ -194,6 +184,8 @@ const NightAction = () => {
     if (messageReceived) {
       if (messageReceived.gameState === "REVEALNIGHT") {
         navigate("/nightreveal");
+      } else if (messageReceived.gameState === "ENDGAME") {
+        navigate("/end");
       }
       setPlayersInLobby(messageReceived.players);
     }
@@ -226,7 +218,6 @@ const NightAction = () => {
   let content = <Spinner />;
   let werewolfContent = <Spinner />;
   let protectorContent = <Spinner />;
-  //let sacrificeContent = <Spinner />;
 
   if (messageReceived !== null) {
     content = (
@@ -265,40 +256,7 @@ const NightAction = () => {
         </ul>
       </div>
     );
-    // sacrificeContent = (
-    //   <div className ="nightAction game-container">
-    //     <ul className= "nightAction game-user-list">
-    //       {playersInLobby.map((user: User) => {
-    //         if(user.username !== username && user.isAlive) {
-    //           return (
-    //             <li key={user.username}
-    //               onClick={() => setSelected(user.username)}
-    //               className={`nightAction player-container ${"isNotWerewolf"} ${selected === user.username ? "selected" : ""}`}
-    //             >
-    //               < LobbyMember user={user} />
-    //             </li>
-    //           );
-    //         }      
-    //       })}
-    //       <li
-    //         key="noSelection"
-    //         onClick={() => setSelected("")}
-    //         className={`nightAction player-container ${"isNotWerewolf"} ${selected === null ? "selected" : ""}`}
-    //         style={{ backgroundColor: "red" }}
-    //       >
-    //         remove selection
-    //       </li>
-    //     </ul>
-    //     <div className="nightAction button-container">
-    //       <Button
-    //         width="100%"
-    //         height="40px"
-    //         onClick={() => {doSendSelected(); setSelected("Easter Egg!");}}
-    //       >don&apos;t sacrifice
-    //       </Button>
-    //     </div>
-    //   </div>
-    // );
+
     werewolfContent = (
       <div className ="nightAction game-container">
         <ul className= "nightAction game-user-list">
