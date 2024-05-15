@@ -35,6 +35,7 @@ const WaitingRoom = () => {
   const [leftGame, setLeftGame] = useState(false);
   const baseURL = getDomain();
   var subscription = null;
+  localStorage.removeItem("role");
 
   const navigate = useNavigate();
 
