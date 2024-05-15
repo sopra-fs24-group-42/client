@@ -8,6 +8,7 @@ import { Button } from "components/ui/Button";
 import "styles/views/VotingReveal.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import { Table, TableData } from "@mantine/core"; // TODO: implement detailed 
+import textSamples from "helpers/TextSamples/TextSamples.json";
 
 const VotingReveal = () => {
   localStorage.removeItem("selected");
@@ -39,6 +40,7 @@ const VotingReveal = () => {
   const [audioUrl, setAudioUrl] = useState(null);
   const [playPressed, setPlayPressed] = useState(false);  // State to track if Playbutton has been pressed
   const [hostName, setHostName] = useState(null); //required so that the APIcall gets only made by the host and only the host can play the sound
+  const [dataNotFetched, setDataNotFetched] = useState(true);
 
   const findVotedPlayer = () => {
     for(let i=0; i<messageReceived.players.length; i++) { // iterating through list of players to check their isKilled field
@@ -230,16 +232,23 @@ const VotingReveal = () => {
 
   useEffect(() => {
     if(hostName) {
-      if (username === hostName) {  
-        //const PartOneText = TextSamplesRevealNightpre[Math.floor(Math.random() * textSamples.length)];  
-        //const PartTwoText = TextSamplesRevealNightpost[Math.floor(Math.random() * textSamples.length)];  
-        //if(killedPlayer) {
-        //  const individualText = concat(killedPlayer.username," has been killed during the Night");
-        //}
-        //else {
-        //  const individual = "nobody has been killed during the night"}
+      if (username === hostName && dataNotFetched) {
+        console.log("Entered the API Useffect")   
+        const RevealVotingPre = textSamples.RevealVotingPre[Math.floor(Math.random() * textSamples.RevealVotingPre.length)];
+        const RevealVotingPost = textSamples.RevealVotingPost[Math.floor(Math.random() * textSamples.RevealVotingPost.length)];
+        /*logic to differentiat between the cases if one or no players have been voted out so that 
+        the username aswell as Role can be integrated into the API Call. The maximum amount
+        of players that can be voted out is 1. 
+        */
+        let RevealVotingMid;
+        if (votedPlayer) {
+          RevealVotingMid = `${votedPlayer.username} <break time=\"500ms\"/>  a ${votedPlayer.roleName}, was selected by the Village`;
+        }
+        else {
+          RevealVotingMid = "Noone was chosen to die.";
+        }
 
-        const selectedText = "Test"; // PartOneText.concat(individualText, PartTwoText); NEEDS TO BE CHANGE FOR FINAL PRODUCT: ATM SHORT TO CONSERVE USED CHARACTERS
+        const selectedText = "<speak>" + RevealVotingPre + " " + "<break time=\"1s\"/> " + RevealVotingMid + " " + "<break time=\"2s\"/> " + RevealVotingPost + "</speak>";
         const fetchData = async () => {
           const baseURL = "https://texttospeech.googleapis.com/v1beta1/text:synthesize?fields=audioContent&key="
           const URLSecret = process.env.REACT_APP_API_KEY;
@@ -253,7 +262,7 @@ const VotingReveal = () => {
               "speakingRate": 1
             },
             "input": {
-              "text": selectedText
+              "ssml": selectedText
             },
             "voice": {
               "languageCode": "en-US",
@@ -284,9 +293,10 @@ const VotingReveal = () => {
           }
         }
         fetchData();
+        setDataNotFetched(false);
       } 
     } 
-  }, [hostName])
+  }, [hostName, votedPlayer])
 
   const DecodeAndPlay = () => {
     // Assuming the base64 string is in the proper format with the data URL prefix
