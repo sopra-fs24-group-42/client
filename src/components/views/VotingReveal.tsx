@@ -60,28 +60,18 @@ const VotingReveal = () => {
         navigate("/deadscreen", {state: votedPlayer});
       }
     }
-    //making table
+    // making table
     // sorting players by most voted & extracting top 3
     let playersCopy = messageReceived.players
-    playersCopy.sort((a,b) => b.numberOfvotes - a.numberOfVotes); //sorting players according to number of votes in desc order
-    firstVotedPlayer = playersCopy[0];
-    secondVotedPlayer = playersCopy[1];
-    thirdVotedPlayer = playersCopy[2];
-    const data = [firstVotedPlayer,secondVotedPlayer,thirdVotedPlayer];
-    console.log(`ORDERED LIST??? ${JSON.stringify(data)}`);
-
-    //   const rows = data.map((player) => {
-    //     const playerUsername = player.username.slice(0,-5);
-    //     const votes = player.numberOfVotes;
-
-    //     details = (
-    //       <Table.Tr key={player.username}></Table.Tr>
-    //     )
-
-    // });
+    playersCopy.sort((a,b) => b.numberOfVotes - a.numberOfVotes); //sorting players according to number of votes in desc order
+    let data = [];
+    for (let i  = 0; i < playersCopy.length; i++) {
+      if (playersCopy[i].numberOfVotes === 0) {break;}
+      data.push(playersCopy[i]);
+    }
     const rows = data.map((player) => (
       <Table.Tr key={player.username}>
-        <Table.Td table-horizontal-spacing="xl">{player.username.slice(0,-5)}</Table.Td>
+        <Table.Td className="votingReveal table-entries">{player.username.slice(0,-5)}</Table.Td>
         <Table.Td>{player.numberOfVotes}</Table.Td>
       </Table.Tr>
     ));
@@ -90,19 +80,14 @@ const VotingReveal = () => {
         <Table table-horizontal-spacing="xl">
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>Username</Table.Th>
-              <Table.Th>Number of votes</Table.Th>
+              <Table.Th className="votingReveal table-header">Username</Table.Th>
+              <Table.Th >Number of votes</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>{rows}</Table.Tbody>
         </Table>
       </div>
     )
-    // let playersCopy = messageReceived.players
-    // playersCopy.sort((a,b) => a.numberOfvotes - b.numberOfVotes); //sorting players according to number of votes in desc order
-    // firstVotedPlayer = playersCopy[0];
-    // secondVotedPlayer = playersCopy[1];
-    // thirdVotedPlayer = playersCopy[2];
   }
 
   const connect = async () => {
@@ -188,27 +173,12 @@ const VotingReveal = () => {
   let content = <Spinner />; // fetching data
   if(messageReceived !== null) {
     findVotedPlayer();
-    // let details = (
-    //   <div className="votingReveal container">
-    //     <div className="votingReveal details-container">
-    //       <div className="votingReveal details-heading">Detailed results:</div>
-    //       <div className="votingReveal heading">
-    //         <div className="votingReveal heading">{firstVotedPlayer.username.slice(0,-5)} received {firstVotedPlayer.numberOfVotes} votes<br></br></div>
-    //       </div>
-    //       <div className="votingReveal heading">
-    //         <div className="votingReveal heading">{secondVotedPlayer.username.slice(0,-5)} received {secondVotedPlayer.numberOfVotes} votes<br></br></div>
-    //       </div>
-    //       <div className="votingReveal heading">
-    //         <div className="votingReveal heading">{thirdVotedPlayer.username.slice(0,-5)} received {thirdVotedPlayer.numberOfVotes} votes<br></br></div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // )
     if(!votedPlayer) { // i.e. there was at least one tie (no one gets voted out)
       content = (
         <div className="votingReveal container">
           <div className="votingReveal header"> There was a tie...</div>
           <div className="votingReveal highlight">No one was voted out!</div>
+          <div className="votingReveal heading">Players who received votes:</div>
           {details}
         </div>
       )
@@ -217,45 +187,51 @@ const VotingReveal = () => {
         content = (
           <div className = "votingReveal container">
             <div className = "votingReveal seer"></div>
-            <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, <br></br> a
-              <div className = "votingReveal highlight">{votedPlayer.roleName}</div></div>
+            <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, a</div>
+            <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
+            <div className="votingReveal heading">Players who received votes:</div>
             {details}
           </div>)
       } else if (votedPlayer.roleName === "Villager") {
         content = (
           <div className = "votingReveal container">
             <div className = "votingReveal villager"></div>
-            <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, <br></br> a</div>
+            <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, a</div>
+            <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
+            <div className="votingReveal heading">Players who received votes:</div>
             {details}
           </div>)
       } else if (votedPlayer.roleName === "Werewolf") {
         content = (
           <div className = "votingReveal container">
             <div className = "votingReveal werewolf"></div>
-            <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, <br></br> a</div>
+            <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, a</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
+            <div className="votingReveal heading">Players who received votes:</div>
             {details}
           </div>)
       } else if (votedPlayer.roleName === "Protector") {
         content = (
           <div className = "votingReveal container">
             <div className = "votingReveal protector"></div>
-            <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, <br></br> a</div>
+            <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, a</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
+            <div className="votingReveal heading">Players who received votes:</div>
             {details}
           </div>)
       } else if (votedPlayer.roleName === "Sacrifice") {
         content = (
           <div className = "votingReveal container">
             <div className = "votingReveal sacrifice"></div>
-            <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, <br></br> a</div>
+            <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, a</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
+            <div className="votingReveal heading">Players who received votes:</div>
             {details}
           </div>)
       }
@@ -274,7 +250,7 @@ const VotingReveal = () => {
         */
         let RevealVotingMid;
         if (votedPlayer) {
-          RevealVotingMid = `${votedPlayer.username} <break time=\"500ms\"/>  a ${votedPlayer.roleName}, was selected by the Village`;
+          RevealVotingMid = `${votedPlayer.username.slice(0,-5)} <break time=\"500ms\"/>  a ${votedPlayer.roleName}, was selected by the Village`;
         }
         else {
           RevealVotingMid = "Noone was chosen to die.";
@@ -298,7 +274,7 @@ const VotingReveal = () => {
             },
             "voice": {
               "languageCode": "en-US",
-              "name": "en-US-Standard-A"
+              "name": "en-US-Studio-Q"
             }
             })
           };

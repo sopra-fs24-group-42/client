@@ -40,12 +40,20 @@ const NightReveal = () => {
   const [playPressed, setPlayPressed] = useState(false);  // State to track if Playbutton has been pressed
   const [dataNotFetched, setDataNotFetched] = useState(true);
   const [findKilledPlayersRan, setFindKilledPlayersRan] = useState(false);
+  let NumberOfWerewolfsAlive = 0;
+  let NumberOfVillagersAlive = 0;
 
   const findKilledPlayers = () => {
     console.log("Inside findKilledPlayers");
     let foundPlayers = [];
     for (let i = 0; i < messageReceived.players.length; i++) { // iterating through list of players to check their isKilled field
       let currentPlayer = messageReceived.players[i];
+      if (messageReceived.playerMap[currentPlayer.username].isAlive && messageReceived.playerMap[currentPlayer.username].roleName === "Werewolf") {
+        NumberOfWerewolfsAlive += 1;
+      } else if (messageReceived.playerMap[currentPlayer.username].isAlive && messageReceived.playerMap[currentPlayer.username].roleName !== "Werewolf"){
+        NumberOfVillagersAlive += 1;
+      }
+
       if (messageReceived.playerMap[currentPlayer.username].isKilled) { // Check if the current player was marked as killed
         foundPlayers.push(currentPlayer); // Correctly pushing currentPlayer into the foundPlayers array
       }
@@ -193,7 +201,12 @@ const NightReveal = () => {
       if (username === hostName && dataNotFetched) { 
         console.log("Entered the API Useffect") 
         const RevealNightPre = textSamples.RevealNightPre[Math.floor(Math.random() * textSamples.RevealNightPre.length)];
-        const RevealNightPost = textSamples.RevealNightPost[Math.floor(Math.random() * textSamples.RevealNightPost.length)];
+        let RevealNightPost;
+        if (NumberOfWerewolfsAlive === 0 || NumberOfWerewolfsAlive >= NumberOfVillagersAlive){
+          RevealNightPost = "";
+        } else {
+          const RevealNightPost = textSamples.RevealNightPost[Math.floor(Math.random() * textSamples.RevealNightPost.length)];
+        }
 
         /*logic to differentiat between the number of killed players and making the text for the 
         API dynamical and integrating username aswell as Role into the API Call. The maximum amount
@@ -209,17 +222,17 @@ const NightReveal = () => {
         } else if (killedPlayers.length === 1) {
           console.log("inside 1 Players killed")
           const player = killedPlayers[0];
-          RevealNightMid = `${player.username} <break time=\"500mss\"/> a ${player.roleName} has been killed last night.`;
+          RevealNightMid = `${player.username.slice(0,-5)} <break time=\"500mss\"/> a ${player.roleName} has been killed last night.`;
           console.log(RevealNightMid); 
         } else if (killedPlayers.length > 1) {
           console.log("inside more than 1 Players killed")
           RevealNightMid = ""; // Initialize it as an empty string
           for (let i = 0; i < killedPlayers.length -1; i++) {
             const player = killedPlayers[i];
-            RevealNightMid += `${player.username} <break time=\"500mss\"/> a ${player.roleName}, `;
+            RevealNightMid += `${player.username.slice(0,-5)} <break time=\"500mss\"/> a ${player.roleName}, `;
           } 
           const player = killedPlayers[killedPlayers.length - 1];
-          RevealNightMid += `and ${player.username} <break time=\"500mss\"/> a ${player.roleName} have been killed.`
+          RevealNightMid += `and ${player.username.slice(0,-5)} <break time=\"500mss\"/> a ${player.roleName} have been killed.`
         } else { //An Empty String will be returned for the middle Part of the TTS-APi Call
           console.log("something went wrong, differentiating between the Number of killed Players. An Empty String will be returned for the middle Part of the TTS-APi Call");
           RevealNightMid = ""; // Initialize it as an empty string even in the error case
@@ -243,7 +256,7 @@ const NightReveal = () => {
             },
             "voice": {
               "languageCode": "en-US",
-              "name": "en-US-Standard-A"
+              "name": "en-US-Wavenet-D"
             }
             })
           };
@@ -257,7 +270,7 @@ const NightReveal = () => {
             let modifiedString = JSON.stringify(jsonData);
             console.log("Recieved Respnse");
             let newstring = modifiedString.substring(17);
-            console.log("firts 17 Elements deleted");
+            console.log("first 17 Elements deleted");
             newstring = newstring.slice(0, -2);
             console.log("last 2 Elements deleted");
             newstring = "data:audio/mp3;base64,".concat(newstring)   

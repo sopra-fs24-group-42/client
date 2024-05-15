@@ -35,6 +35,7 @@ const WaitingRoom = () => {
   const [leftGame, setLeftGame] = useState(false);
   const baseURL = getDomain();
   var subscription = null;
+  localStorage.removeItem("role");
 
   const navigate = useNavigate();
 
@@ -174,20 +175,15 @@ const WaitingRoom = () => {
       setNumberOfProtectors(messageReceived.gameSettings.numberOfProtectors);
       setNumberOfSacrifices(messageReceived.gameSettings.numberOfSacrifices);
       if(numberOfPlayers === numberOfPlayersInLobby) {
-        setEveryoneHere(true);}
+        setEveryoneHere(true);
+      } else {
+        setEveryoneHere(false);
+      }
       //checkIfAllPlayersHere();
       console.log("number of players in lobby: " + numberOfPlayersInLobby);
     }
   }, [messageReceived]); 
 
-  // const checkIfAllPlayersHere = () => {
-  //   if(numberOfPlayers === numberOfPlayersInLobby) {
-  //     setEveryoneHere(true);
-  //     return true;
-  //   }
-    
-  //   return false;
-  // }
 
   const doStartGame = () => {
     setAlreadySent(true);
