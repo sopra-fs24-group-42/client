@@ -60,25 +60,24 @@ const VotingReveal = () => {
         navigate("/deadscreen", {state: votedPlayer});
       }
     }
-    //making table
+    // making table
     // sorting players by most voted & extracting top 3
     let playersCopy = messageReceived.players
     playersCopy.sort((a,b) => b.numberOfVotes - a.numberOfVotes); //sorting players according to number of votes in desc order
-    firstVotedPlayer = playersCopy[0];
-    secondVotedPlayer = playersCopy[1];
-    thirdVotedPlayer = playersCopy[2];
-    const data = [firstVotedPlayer,secondVotedPlayer,thirdVotedPlayer];
-    console.log(`ORDERED LIST??? ${JSON.stringify(data)}`);
-
+    let data = [];
+    for (let i  = 0; i < playersCopy.length; i++) {
+      if (playersCopy[i].numberOfVotes === 0) {break;}
+      data.push(playersCopy[i]);
+    }
     const rows = data.map((player) => (
       <Table.Tr key={player.username}>
-        <Table.Td className="votingReveal table-header">{player.username.slice(0,-5)}</Table.Td>
+        <Table.Td className="votingReveal table-entries">{player.username.slice(0,-5)}</Table.Td>
         <Table.Td>{player.numberOfVotes}</Table.Td>
       </Table.Tr>
     ));
     details = (
       <div className="votingReveal table-style">
-        <Table table-horizontal-spacing="lg">
+        <Table table-horizontal-spacing="xl">
           <Table.Thead>
             <Table.Tr>
               <Table.Th className="votingReveal table-header">Username</Table.Th>
@@ -89,11 +88,6 @@ const VotingReveal = () => {
         </Table>
       </div>
     )
-    // let playersCopy = messageReceived.players
-    // playersCopy.sort((a,b) => a.numberOfvotes - b.numberOfVotes); //sorting players according to number of votes in desc order
-    // firstVotedPlayer = playersCopy[0];
-    // secondVotedPlayer = playersCopy[1];
-    // thirdVotedPlayer = playersCopy[2];
   }
 
   const connect = async () => {
@@ -184,7 +178,7 @@ const VotingReveal = () => {
         <div className="votingReveal container">
           <div className="votingReveal header"> There was a tie...</div>
           <div className="votingReveal highlight">No one was voted out!</div>
-          <div className="votingReveal heading">Top 3 Most Voted Players:</div>
+          <div className="votingReveal heading">Players who received votes:</div>
           {details}
         </div>
       )
@@ -196,7 +190,7 @@ const VotingReveal = () => {
             <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, a</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
-            <div className="votingReveal heading">Top 3 Most Voted Players:</div>
+            <div className="votingReveal heading">Players who received votes:</div>
             {details}
           </div>)
       } else if (votedPlayer.roleName === "Villager") {
@@ -207,7 +201,7 @@ const VotingReveal = () => {
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
-            <div className="votingReveal heading">Top 3 Most Voted Players:</div>
+            <div className="votingReveal heading">Players who received votes:</div>
             {details}
           </div>)
       } else if (votedPlayer.roleName === "Werewolf") {
@@ -217,7 +211,7 @@ const VotingReveal = () => {
             <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, a</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
-            <div className="votingReveal heading">Top 3 Most Voted Players:</div>
+            <div className="votingReveal heading">Players who received votes:</div>
             {details}
           </div>)
       } else if (votedPlayer.roleName === "Protector") {
@@ -227,7 +221,7 @@ const VotingReveal = () => {
             <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, a</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
-            <div className="votingReveal heading">Top 3 Most Voted Players:</div>
+            <div className="votingReveal heading">Players who received votes:</div>
             {details}
           </div>)
       } else if (votedPlayer.roleName === "Sacrifice") {
@@ -237,7 +231,7 @@ const VotingReveal = () => {
             <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, a</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
-            <div className="votingReveal heading">Top 3 Most Voted Players:</div>
+            <div className="votingReveal heading">Players who received votes:</div>
             {details}
           </div>)
       }
