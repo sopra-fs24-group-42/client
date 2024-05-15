@@ -44,8 +44,20 @@
     margin-top: 10px;
     }
 
+    &.table-header {
+      @include center;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 18px;
+      margin-right: 35px;
+      padding: 5px;
+      }
+
     &.table-style {
-      margin-top:10px;
+      margin-top:5px;
       padding: 5px;
       //border: 1px solid #ccc;
       border-radius: 8px;
@@ -54,6 +66,10 @@
       font-weight: normal;
       padding: 5px;
       background-color: white;
+      display: flex-start;
+      width: 330px;
+      align-items: flex-start;
+
     }
 
     &.details-container {
@@ -126,6 +142,7 @@
       font-weight: normal;
       font-size: 18px;
       color: black;
+      margin-top:30px;
     }
 
     &.container {
@@ -177,8 +194,8 @@
   }
 
   &.werewolf {
-    height: 200px;
-    width: 200px;
+    height: 150px;
+    width: 150px;
     background: url('../../../resources/wolfBody.png');
     background-position: center;
     background-size: cover;
@@ -187,8 +204,8 @@
   }
 
   &.villager {
-    height: 200px;
-    width: 200px;
+    height: 150px;
+    width: 150px;
     background: url('../../../resources/villageHouse.png');
     background-position: center;
     background-size: cover;
@@ -197,8 +214,8 @@
   }
 
   &.seer {
-    height: 200px;
-    width: 200px;
+    height: 150px;
+    width: 150px;
     background: url('../../../resources/eye.png');
     background-position: center;
     background-size: cover;
@@ -207,8 +224,8 @@
   }
 
   &.protector {
-    height: 200px;
-    width: 200px;
+    height: 150px;
+    width: 150px;
     background: url('../../../resources/flowersProtect.svg');//TODO: picture for protector
     background-position: center;
     background-size: cover;
@@ -217,8 +234,8 @@
   }
 
   &.sacrifice {
-    height: 200px;
-    width: 200px;
+    height: 150px;
+    width: 150px;
     background: url('../../../resources/candle.png');//TODO: picture for sacrifice
     background-position: center;
     background-size: cover;

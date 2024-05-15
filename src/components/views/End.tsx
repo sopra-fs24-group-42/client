@@ -121,7 +121,7 @@ const End = () => {
           <div className="end container"> 
             <div className="end crown"></div>
             <div className="end header">Congratulations</div>
-            <div className="end highlight">The werewolves have won</div>
+            <div className="end highlight">the werewolves have won</div>
             <div className="end heading">You have managed kill enough villagers to gain control of the village.</div>
           </div>);
       } else { // player is not a werewolf and werewolves won
@@ -138,7 +138,7 @@ const End = () => {
           <div className="end container"> 
             <div className="end crown"></div>
             <div className="end header">Congratulations</div>
-            <div className="end highlight">The villagers have won</div>
+            <div className="end highlight">the villagers have won</div>
             <div className="end heading">You have successfully eradicated all werewolves, and your village lives on peacefully.</div>
           </div> );
       } else { // player is a werewolf and villagers won
