@@ -243,7 +243,7 @@ const NightReveal = () => {
             },
             "voice": {
               "languageCode": "en-US",
-              "name": "en-US-Standard-A"
+              "name": "en-US-Wavenet-D"
             }
             })
           };
