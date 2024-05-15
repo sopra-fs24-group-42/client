@@ -274,7 +274,7 @@ const VotingReveal = () => {
             },
             "voice": {
               "languageCode": "en-US",
-              "name": "en-US-Standard-A"
+              "name": "en-US-Studio-Q"
             }
             })
           };
