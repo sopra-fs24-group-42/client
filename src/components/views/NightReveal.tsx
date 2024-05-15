@@ -209,17 +209,17 @@ const NightReveal = () => {
         } else if (killedPlayers.length === 1) {
           console.log("inside 1 Players killed")
           const player = killedPlayers[0];
-          RevealNightMid = `${player.username} <break time=\"500mss\"/> a ${player.roleName} has been killed last night.`;
+          RevealNightMid = `${player.username.slice(0,-5)} <break time=\"500mss\"/> a ${player.roleName} has been killed last night.`;
           console.log(RevealNightMid); 
         } else if (killedPlayers.length > 1) {
           console.log("inside more than 1 Players killed")
           RevealNightMid = ""; // Initialize it as an empty string
           for (let i = 0; i < killedPlayers.length -1; i++) {
             const player = killedPlayers[i];
-            RevealNightMid += `${player.username} <break time=\"500mss\"/> a ${player.roleName}, `;
+            RevealNightMid += `${player.username.slice(0,-5)} <break time=\"500mss\"/> a ${player.roleName}, `;
           } 
           const player = killedPlayers[killedPlayers.length - 1];
-          RevealNightMid += `and ${player.username} <break time=\"500mss\"/> a ${player.roleName} have been killed.`
+          RevealNightMid += `and ${player.username.slice(0,-5)} <break time=\"500mss\"/> a ${player.roleName} have been killed.`
         } else { //An Empty String will be returned for the middle Part of the TTS-APi Call
           console.log("something went wrong, differentiating between the Number of killed Players. An Empty String will be returned for the middle Part of the TTS-APi Call");
           RevealNightMid = ""; // Initialize it as an empty string even in the error case
@@ -257,7 +257,7 @@ const NightReveal = () => {
             let modifiedString = JSON.stringify(jsonData);
             console.log("Recieved Respnse");
             let newstring = modifiedString.substring(17);
-            console.log("firts 17 Elements deleted");
+            console.log("first 17 Elements deleted");
             newstring = newstring.slice(0, -2);
             console.log("last 2 Elements deleted");
             newstring = "data:audio/mp3;base64,".concat(newstring)   

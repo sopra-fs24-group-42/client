@@ -274,7 +274,7 @@ const VotingReveal = () => {
         */
         let RevealVotingMid;
         if (votedPlayer) {
-          RevealVotingMid = `${votedPlayer.username} <break time=\"500ms\"/>  a ${votedPlayer.roleName}, was selected by the Village`;
+          RevealVotingMid = `${votedPlayer.username.slice(0,-5)} <break time=\"500ms\"/>  a ${votedPlayer.roleName}, was selected by the Village`;
         }
         else {
           RevealVotingMid = "Noone was chosen to die.";
