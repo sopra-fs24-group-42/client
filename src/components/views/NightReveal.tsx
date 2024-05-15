@@ -40,8 +40,8 @@ const NightReveal = () => {
   const [playPressed, setPlayPressed] = useState(false);  // State to track if Playbutton has been pressed
   const [dataNotFetched, setDataNotFetched] = useState(true);
   const [findKilledPlayersRan, setFindKilledPlayersRan] = useState(false);
-  const NumberOfWerewolfsAlive = 0;
-  const NumberOfVillagersAlive = 0;
+  let NumberOfWerewolfsAlive = 0;
+  let NumberOfVillagersAlive = 0;
 
   const findKilledPlayers = () => {
     console.log("Inside findKilledPlayers");
