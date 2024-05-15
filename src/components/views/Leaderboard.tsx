@@ -38,7 +38,7 @@ const Leaderboard = () => {
       const rows = leaderboardTable.map((player) => (
         <Table.Tr key={player.username}>
           <Table.Td>{player.position}</Table.Td>
-          <Table.Td>{player.username}</Table.Td>
+          <Table.Td>{player.username.slice(0,-5)}</Table.Td>
           <Table.Td>{player.numberOfWerewolfWins}</Table.Td>
           <Table.Td>{player.numberOfVillagerWins}</Table.Td>
           <Table.Td>{player.numberOfWins}</Table.Td>
