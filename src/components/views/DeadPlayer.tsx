@@ -21,7 +21,6 @@ const DeadScreen = () => {
   // variables needed for role reveal
   const [messageReceived, setMessageReceived] = useState(null);
   var deadPlayer = useLocation().state;
-  console.log("dead player: " + deadPlayer.username);
   const username = localStorage.getItem("user"); //fetching username from localstorage
   const [ready, setReady] = useState(false);
   const [alreadySent, setAlreadySent] = useState(false);
@@ -111,7 +110,7 @@ const DeadScreen = () => {
   return (
     <BaseContainer>
       <div className="deadPlayer background-container">
-        <div className="deadPlayer header">{deadPlayer.username}, <br></br> the game ends here for you...</div>
+        <div className="deadPlayer header">{deadPlayer.username.slice(0,-5)}, <br></br> the game ends here for you...</div>
         {(() => {
           if (deadPlayer.numberOfVotes !== 0) { // you were voted out
             return (
