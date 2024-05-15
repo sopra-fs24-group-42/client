@@ -36,13 +36,13 @@ const Leaderboard = () => {
     doGetTopPlayers();
   }, []);
 
- let content = <Spinner />;
+  let content = <Spinner />;
 
- if(leaderboardTable) {
+  if (leaderboardTable) {
 
-  if (noPlayers) {
-    content = <h3 className="leaderboard h3">No players have played this game so far.</h3>;
-  } else {
+    if (noPlayers) {
+      content = <h3 className="leaderboard h3">No players have played this game so far.</h3>;
+    } else {
       const rows = leaderboardTable.map((player) => (
         <Table.Tr key={player.username}>
           <Table.Td className="leaderboard table-header-position">{player.position}</Table.Td>
@@ -68,8 +68,9 @@ const Leaderboard = () => {
           </Table>
         </Table.ScrollContainer>
       )
+    }
   }
-}
+  
   return (
     <BaseContainer>
       <div className="leaderboard background-container">
