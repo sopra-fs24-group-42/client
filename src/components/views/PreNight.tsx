@@ -5,7 +5,7 @@ import { getDomain } from "../../helpers/getDomain";
 import { Spinner } from "components/ui/Spinner";
 import {useNavigate, useLocation} from "react-router-dom";
 import { Button } from "components/ui/Button";
-import "styles/views/NightReveal.scss";
+import "styles/views/PreNight.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import textSamples from "helpers/TextSamples/TextSamples.json";
 
