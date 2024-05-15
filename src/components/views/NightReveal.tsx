@@ -40,12 +40,20 @@ const NightReveal = () => {
   const [playPressed, setPlayPressed] = useState(false);  // State to track if Playbutton has been pressed
   const [dataNotFetched, setDataNotFetched] = useState(true);
   const [findKilledPlayersRan, setFindKilledPlayersRan] = useState(false);
+  let NumberOfWerewolfsAlive = 0;
+  let NumberOfVillagersAlive = 0;
 
   const findKilledPlayers = () => {
     console.log("Inside findKilledPlayers");
     let foundPlayers = [];
     for (let i = 0; i < messageReceived.players.length; i++) { // iterating through list of players to check their isKilled field
       let currentPlayer = messageReceived.players[i];
+      if (messageReceived.playerMap[currentPlayer.username].isAlive && messageReceived.playerMap[currentPlayer.username].roleName === "Werewolf") {
+        NumberOfWerewolfsAlive += 1;
+      } else if (messageReceived.playerMap[currentPlayer.username].isAlive && messageReceived.playerMap[currentPlayer.username].roleName !== "Werewolf"){
+        NumberOfVillagersAlive += 1;
+      }
+
       if (messageReceived.playerMap[currentPlayer.username].isKilled) { // Check if the current player was marked as killed
         foundPlayers.push(currentPlayer); // Correctly pushing currentPlayer into the foundPlayers array
       }
@@ -193,7 +201,12 @@ const NightReveal = () => {
       if (username === hostName && dataNotFetched) { 
         console.log("Entered the API Useffect") 
         const RevealNightPre = textSamples.RevealNightPre[Math.floor(Math.random() * textSamples.RevealNightPre.length)];
-        const RevealNightPost = textSamples.RevealNightPost[Math.floor(Math.random() * textSamples.RevealNightPost.length)];
+        let RevealNightPost;
+        if (NumberOfWerewolfsAlive === 0 || NumberOfWerewolfsAlive >= NumberOfVillagersAlive){
+          RevealNightPost = "";
+        } else {
+          const RevealNightPost = textSamples.RevealNightPost[Math.floor(Math.random() * textSamples.RevealNightPost.length)];
+        }
 
         /*logic to differentiat between the number of killed players and making the text for the 
         API dynamical and integrating username aswell as Role into the API Call. The maximum amount
