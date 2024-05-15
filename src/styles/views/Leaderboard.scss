@@ -78,13 +78,17 @@
   }
 
   &.h3 {
-    color: #FB6D48;
+    color: #000000;
+  }
+
+  &.h4 {
+    color: #000000;
   }
 
   &.table {
     @include center;
     background-color: #FFFFFF;
-    width: 300px;
+    width: 330px;
     left: 0;
     right: 0;
     margin-left: auto;
@@ -134,5 +138,6 @@
    color: #000000;
    text-align: center;
    width:10%;
+   font-weight: bold;
   }
 }
