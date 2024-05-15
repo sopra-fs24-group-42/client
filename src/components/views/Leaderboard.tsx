@@ -57,7 +57,7 @@ const Leaderboard = () => {
     ));
     content = (
       <div>
-        <h4 className="leaderboard h4">Players with most wins</h4>
+        <h4 className="leaderboard h4">Players with most wins:</h4>
         <Table.ScrollContainer minWidth={500}>
           <Table className="leaderboard table" horizontalSpacing="xl">
             <Table.Thead>
