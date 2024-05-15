@@ -6,7 +6,7 @@ import { Button } from "components/ui/Button";
 import "styles/views/FrontPage.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import { Trophy } from 'tabler-icons-react';
+import { Trophy } from "tabler-icons-react";
 
 /*
 It is possible to add multiple components inside a single file,
