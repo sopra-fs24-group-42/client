@@ -1,8 +1,8 @@
 import React from "react";
-import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
-import {GameGuard} from "../routeProtectors/GameGuard";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { GameGuard } from "../routeProtectors/GameGuard";
 import GameRouter from "./GameRouter";
-import {LoginGuard} from "../routeProtectors/LoginGuard";
+import { LoginGuard } from "../routeProtectors/LoginGuard";
 import FrontPage from "../../views/FrontPage";
 import CreateGame from "../../views/CreateGame";
 import JoinGame from "../../views/JoinGame";
@@ -17,7 +17,7 @@ import NarrationPhase from "../../views/NarrationPhase";
 import End from "../../views/End";
 import DeadScreen from "../../views/DeadPlayer";
 import PreNight from "../../views/PreNight";
-
+import Leaderboard from "../../views/Leaderboard";
 
 /**
  * Main router of your application.
@@ -47,6 +47,7 @@ const AppRouter = () => {
         <Route path="/end" element={<End />} />
         <Route path="/deadscreen" element={<DeadScreen />} />
         <Route path="/prenight" element={<PreNight />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
 
         <Route path="/game/*" element={<GameGuard><GameRouter /></GameGuard>} />
 
