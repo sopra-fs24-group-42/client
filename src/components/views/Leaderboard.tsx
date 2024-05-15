@@ -6,56 +6,35 @@ import { Button } from "components/ui/Button";
 import "styles/views/Leaderboard.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import { Table } from '@mantine/core';
+import { Table } from "@mantine/core";
 
 const Leaderboard = () => {
   const navigate = useNavigate();
-  const [leaderboardList, setLeaderboardList] = useState(null);
   const [leaderboardTable, setLeaderboardTable] = useState(null);
   const [leaderboard, setLeaderboard] = useState(null);
   const [rows, setRows] = useState(null);
+  const [noPlayers, setNoPlayers] = useState(false);
   const maxNumberOfTopPlayers = 3;
 
   const doGetTopPlayers = async () => {
     try {
       const response = await api.get(`/leaderboards/${maxNumberOfTopPlayers}`);
-      console.log("RESPONSE "+ response);
-      setLeaderboardList(response);
-      transformListToTable();
+      setLeaderboardTable(response.data);
       setRowsForTable();
     } catch (error) {
+      setNoPlayers(true);
       alert(
         `Something went wrong during opening the leaderboard: \n${handleError(error)}`
       );
     }
   };
 
-  const transformListToTable = () => {
-    if (leaderboardList !== null) {
-      console.log("Why am i here");
-      const elementsToTable = [{}];
-      for (let i = 0; i < leaderboardList.length; i++) {
-
-        const newPlayer = {
-          position: i + 1,
-          username: leaderboardList[i].username,
-          numberOfWerewolfWins: leaderboardList[i].numberOfWerewolfWins,
-          numberOfVillagerWins: leaderboardList[i].numberOfVillagerWins,
-          numberOfWins: leaderboardList[i].numberOfWins
-        };
-
-        elementsToTable.push(newPlayer);
-      }
-      setLeaderboardTable(elementsToTable);
-    }
-  }
-
   useEffect(() => {
     doGetTopPlayers();
   }, []);
 
   const setRowsForTable = () => {
-    if (leaderboardTable !== null) {
+    if (leaderboardTable && leaderboardTable.length > 0) {
       const rows = leaderboardTable.map((player) => (
         <Table.Tr key={player.username}>
           <Table.Td>{player.position}</Table.Td>
@@ -70,7 +49,7 @@ const Leaderboard = () => {
   }
 
   let content;
-  if (leaderboardTable === null) {
+  if (noPlayers === true) {
     content = <h3 className="leaderboard h3">No players have played this game so far.</h3>;
   } else {
     content = (
@@ -96,16 +75,16 @@ const Leaderboard = () => {
       <div className="leaderboard background-container">
         <div className="leaderboard header">Game Leaderboard</div>
         <div className="leaderboard container">
-         {content}
-            <div className="leaderboard button-container">
-                <Button
-                  width="100%"
-                  height="40px"
-                  onClick={() => navigate("/frontpage")}
-                >
-                  Back
-                </Button>
-            </div>
+          {content}
+          <div className="leaderboard button-container">
+            <Button
+              width="100%"
+              height="40px"
+              onClick={() => navigate("/frontpage")}
+            >
+              Back
+            </Button>
+          </div>
         </div>
       </div>
     </BaseContainer>
