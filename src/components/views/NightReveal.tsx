@@ -162,7 +162,7 @@ const NightReveal = () => {
               className="nightAction highlight"
               style={{ marginBottom: index !== killedPlayers.length - 1 ? "20px" : "0" }}
             >
-              {player.username}, a {player.roleName} was killed!
+              {player.username.slice(0,-5)}, a {player.roleName} was killed!
             </div>
           ))}
         </div>

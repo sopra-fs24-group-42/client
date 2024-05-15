@@ -10,6 +10,12 @@ import BaseContainer from "components/ui/BaseContainer";
 import { Table, TableData } from "@mantine/core"; // TODO: implement detailed 
 import textSamples from "helpers/TextSamples/TextSamples.json";
 
+
+type Person = {
+  username: string; 
+  numberOfVotes: string;
+};
+
 const VotingReveal = () => {
   localStorage.removeItem("selected");
 
@@ -31,8 +37,8 @@ const VotingReveal = () => {
   const username = localStorage.getItem("user"); //fetching username from localstorage
   const [ready, setReady] = useState(false);
   let gameState = "REVEALVOTING";
+  let details = "eyo";
   const [alreadySent, setAlreadySent] = useState(false);
-
   const lobbyId = localStorage.getItem("lobbyId");
 
   //variables needed for TexttoSpeechAPI
@@ -54,11 +60,49 @@ const VotingReveal = () => {
         navigate("/deadscreen", {state: votedPlayer});
       }
     }
+    //making table
+    // sorting players by most voted & extracting top 3
     let playersCopy = messageReceived.players
-    playersCopy.sort((a,b) => a.numberOfvotes - b.numberOfVotes); //sorting players according to number of votes in desc order
+    playersCopy.sort((a,b) => b.numberOfvotes - a.numberOfVotes); //sorting players according to number of votes in desc order
     firstVotedPlayer = playersCopy[0];
     secondVotedPlayer = playersCopy[1];
     thirdVotedPlayer = playersCopy[2];
+    const data = [firstVotedPlayer,secondVotedPlayer,thirdVotedPlayer];
+    console.log(`ORDERED LIST??? ${JSON.stringify(data)}`);
+
+    //   const rows = data.map((player) => {
+    //     const playerUsername = player.username.slice(0,-5);
+    //     const votes = player.numberOfVotes;
+
+    //     details = (
+    //       <Table.Tr key={player.username}></Table.Tr>
+    //     )
+
+    // });
+    const rows = data.map((player) => (
+      <Table.Tr key={player.username}>
+        <Table.Td table-horizontal-spacing="xl">{player.username.slice(0,-5)}</Table.Td>
+        <Table.Td>{player.numberOfVotes}</Table.Td>
+      </Table.Tr>
+    ));
+    details = (
+      <div className="votingReveal table-style">
+        <Table table-horizontal-spacing="xl">
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th>Username</Table.Th>
+              <Table.Th>Number of votes</Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>{rows}</Table.Tbody>
+        </Table>
+      </div>
+    )
+    // let playersCopy = messageReceived.players
+    // playersCopy.sort((a,b) => a.numberOfvotes - b.numberOfVotes); //sorting players according to number of votes in desc order
+    // firstVotedPlayer = playersCopy[0];
+    // secondVotedPlayer = playersCopy[1];
+    // thirdVotedPlayer = playersCopy[2];
   }
 
   const connect = async () => {
@@ -144,34 +188,22 @@ const VotingReveal = () => {
   let content = <Spinner />; // fetching data
   if(messageReceived !== null) {
     findVotedPlayer();
-    // attempt to use table from Mantine....
-    // const tableData: TableData = {
-    //   head: ['Player', 'Number of Votes'],
-    //   body: [
-    //     [firstVotedPlayer.username, firstVotedPlayer.numberOfVotes],
-    //     [secondVotedPlayer.username, secondVotedPlayer.numberOfVotes],
-    //     [thirdVotedPlayer.username, thirdVotedPlayer.numberOfVotes],
-    //   ],
-    // };
-    let details = (
-      // <div>
-      // <Table data={tableData} />
-      // </div>
-      <div className="votingReveal container">
-        <div className="votingReveal details-container">
-          <div className="votingReveal details-heading">Detailed results:</div>
-          <div className="votingReveal heading">
-            <div className="votingReveal heading">{firstVotedPlayer.username} received {firstVotedPlayer.numberOfVotes} votes<br></br></div>
-          </div>
-          <div className="votingReveal heading">
-            <div className="votingReveal heading">{secondVotedPlayer.username} received {secondVotedPlayer.numberOfVotes} votes<br></br></div>
-          </div>
-          <div className="votingReveal heading">
-            <div className="votingReveal heading">{thirdVotedPlayer.username} received {thirdVotedPlayer.numberOfVotes} votes<br></br></div>
-          </div>
-        </div>
-      </div>
-    )
+    // let details = (
+    //   <div className="votingReveal container">
+    //     <div className="votingReveal details-container">
+    //       <div className="votingReveal details-heading">Detailed results:</div>
+    //       <div className="votingReveal heading">
+    //         <div className="votingReveal heading">{firstVotedPlayer.username.slice(0,-5)} received {firstVotedPlayer.numberOfVotes} votes<br></br></div>
+    //       </div>
+    //       <div className="votingReveal heading">
+    //         <div className="votingReveal heading">{secondVotedPlayer.username.slice(0,-5)} received {secondVotedPlayer.numberOfVotes} votes<br></br></div>
+    //       </div>
+    //       <div className="votingReveal heading">
+    //         <div className="votingReveal heading">{thirdVotedPlayer.username.slice(0,-5)} received {thirdVotedPlayer.numberOfVotes} votes<br></br></div>
+    //       </div>
+    //     </div>
+    //   </div>
+    // )
     if(!votedPlayer) { // i.e. there was at least one tie (no one gets voted out)
       content = (
         <div className="votingReveal container">
@@ -185,7 +217,7 @@ const VotingReveal = () => {
         content = (
           <div className = "votingReveal container">
             <div className = "votingReveal seer"></div>
-            <div className = "votingReveal header">{votedPlayer.username}, <br></br> a
+            <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, <br></br> a
               <div className = "votingReveal highlight">{votedPlayer.roleName}</div></div>
             <div className = "votingReveal header">was voted out!</div>
             {details}
@@ -194,7 +226,7 @@ const VotingReveal = () => {
         content = (
           <div className = "votingReveal container">
             <div className = "votingReveal villager"></div>
-            <div className = "votingReveal header">{votedPlayer.username}, <br></br> a</div>
+            <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, <br></br> a</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
             {details}
@@ -203,7 +235,7 @@ const VotingReveal = () => {
         content = (
           <div className = "votingReveal container">
             <div className = "votingReveal werewolf"></div>
-            <div className = "votingReveal header">{votedPlayer.username}, <br></br> a</div>
+            <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, <br></br> a</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
             {details}
@@ -212,7 +244,7 @@ const VotingReveal = () => {
         content = (
           <div className = "votingReveal container">
             <div className = "votingReveal protector"></div>
-            <div className = "votingReveal header">{votedPlayer.username}, <br></br> a</div>
+            <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, <br></br> a</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
             {details}
@@ -221,7 +253,7 @@ const VotingReveal = () => {
         content = (
           <div className = "votingReveal container">
             <div className = "votingReveal sacrifice"></div>
-            <div className = "votingReveal header">{votedPlayer.username}, <br></br> a</div>
+            <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, <br></br> a</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
             {details}

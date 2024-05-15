@@ -13,7 +13,7 @@ import { User } from "types";
 
 const LobbyMember = ({ user }: { user: User }) => (
   <div className="voting player-container">
-    <div className="voting player-username">{user.username}</div>
+    <div className="voting player-username">{user.username.slice(0,-5)}</div>
   </div>
 );
 
@@ -243,14 +243,14 @@ const Voting = () => {
                   <div className ="voting container">
                     {abstained ?
                       <div className="voting heading">You have chosen to abstain</div> :
-                      <div className="voting heading">You have voted for {selected}</div>}
+                      <div className="voting heading">You have voted for {selected.slice(0,-5)}</div>}
                     <div className= "voting wait">Waiting for all players to submit their vote...</div>
                     <Spinner />
                   </div>)
               } else if (selected !== "" && !ready) { // selected someone but not confirmed yet
                 return (
                   <div className="voting container">
-                    <div className= "voting heading">You have selected<br></br> {selected} </div>
+                    <div className= "voting heading">You have selected<br></br> {selected.slice(0,-5)} </div>
                     <div className= "voting container">{content}
                       <div className="voting button-container">
                         <Button
@@ -271,7 +271,7 @@ const Voting = () => {
               } else { // not selected anyone yet
                 return (
                   <div className="voting container">
-                    <div className= "voting heading">{username},<br></br> select who you want to vote out.</div>    
+                    <div className= "voting heading">{username.slice(0,-5)},<br></br> select who you want to vote out.</div>    
                     <div className= "voting container">{content}</div>
                     <div className="voting button-container">
                       <Button
