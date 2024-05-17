@@ -6,6 +6,7 @@ import { Button } from "components/ui/Button";
 import "styles/views/FrontPage.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
+import { ActionIcon } from "@mantine/core";
 import { Trophy } from "tabler-icons-react";
 
 /*
@@ -25,8 +26,18 @@ const FrontPage = () => {
   return (
     <BaseContainer>
       <div className="frontpage background-container">
+
+        <div className="frontpage trophy-container">
+          <ActionIcon className="frontpage trophy-button"
+            aria-label="Trophy"
+            withArrow
+            onClick={() => navigate("/leaderboard")}
+          >
+            <Trophy size={48}/>
+          </ActionIcon>
+        </div>
+        <Header height="100" />
         <div className="frontpage button-container">
-          <Header height="100" />
           <Button
             onClick={() => navigate("/joingame")}>
             Join an existing game
@@ -35,13 +46,6 @@ const FrontPage = () => {
             onClick={() => navigate("/creategame")}
           >Create a new game
           </Button>
-        </div>
-        <div className="frontpage trophy-container">
-          <Trophy className="frontpage trophy-icon"
-            size={36}
-            onClick={() => navigate("/leaderboard")}
-          >Leaderboard
-          </Trophy>
         </div>
       </div>
     </BaseContainer>

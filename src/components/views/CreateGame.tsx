@@ -6,6 +6,7 @@ import { Button } from "components/ui/Button";
 import "styles/views/CreateGame.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
+import RoleNumberInput from "components/ui/RoleNumberInput";
 
 const FormField = (props) => {
 
@@ -62,7 +63,9 @@ const CreateGame = () => {
         <div className="createGame header">Create a new game</div>
         <div className="createGame container">
           <div className="createGame form">
-            <FormField
+            <RoleNumberInput hideControls
+              placeholder="4"
+              min={4}
               label="How many people are playing?"
               value={numberOfPlayers}
               onChange={(e: string) => setNumberOfPlayers(e)}
