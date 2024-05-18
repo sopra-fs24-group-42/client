@@ -226,7 +226,7 @@ const NightAction = () => {
 
   useEffect(() => {
     if(selected !== "") {
-    localStorage.setItem("selected", selected);}
+      localStorage.setItem("selected", selected);}
   },[selected])
 
 
