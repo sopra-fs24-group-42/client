@@ -244,7 +244,7 @@ const RoleReveal = () => {
                 { listOfWerewolves.length > 0 ? 
                   <div className="roleReveal instructions">These are the other werewolves: <b>
                     <ul className="roleReveal ul">{listOfWerewolves.map(wolf => (
-                      <li className="roleReveal li" key={wolf}>{wolf}</li>))}
+                      <li className="roleReveal li" key={wolf}>{wolf.slice(0,-5)}</li>))}
                     </ul>
                   </b>
                   </div>
