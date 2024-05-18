@@ -43,6 +43,7 @@ const Voting = () => {
   const [ready, setReady] = useState(false);
   const [alreadySent, setAlreadySent] = useState(false);
   const [abstained, setAbstained] = useState(false);
+  const [nightActionDone, setNightActionDone] = useState(false);
 
   // variables needed for UI  
   const lobbyId = localStorage.getItem("lobbyId");
@@ -70,10 +71,6 @@ const Voting = () => {
       );
     } else {
       // Timer expires, navigate to another page
-      //try {
-      //  let selection = localStorage.getItem("selected");}
-      //catch (e) {
-      //  localStorage.setItem("selected", null);}
       setReady(true);
       setAlreadySent(true);
       clearInterval(Ref.current);
@@ -138,6 +135,7 @@ const Voting = () => {
         //localStorage.setItem("lobby", message.body);
         setMessageReceived(JSON.parse(message.body));
         setPlayersInLobby(JSON.parse(message.body).players);
+        setNightActionDone(JSON.parse(message.body).playerMap[username].isReady);
         resolve(subscription);
       });
     }); 
@@ -160,6 +158,7 @@ const Voting = () => {
         navigate("/revealvoting");
       }
       setPlayersInLobby(messageReceived.players);
+      setNightActionDone(messageReceived.playerMap[username].isReady);
     }
 
     return () => {
@@ -188,6 +187,7 @@ const Voting = () => {
         navigate("/revealvoting");
       }
       setPlayersInLobby(messageReceived.players);
+      setNightActionDone(messageReceived.playerMap[username].isReady);
     }
   }, [messageReceived]); 
 
@@ -201,10 +201,12 @@ const Voting = () => {
     setReady(true);
     setAbstained(true);
     localStorage.setItem("selected", "");
+    localStorage.setItem("abstainedPersist", "t");
   }
   
   useEffect(() => {
-    localStorage.setItem("selected", selected);
+    if(selected !== "") {
+      localStorage.setItem("selected", selected);}
   },[selected])
 
   let content = <Spinner />;
@@ -238,16 +240,16 @@ const Voting = () => {
           <div className="voting highlight">{timer}</div>
           <BaseContainer>
             {(() => {
-              if(ready && (selected !== "" || abstained)) { // selected someone & confirmed
+              if((ready && (selected !== "" || abstained)) || nightActionDone) { // selected someone & confirmed
                 return (
                   <div className ="voting container">
-                    {abstained ?
+                    {localStorage.getItem("abstainedPersist") === "t" ?
                       <div className="voting heading">You have chosen to abstain</div> :
-                      <div className="voting heading">You have voted for {selected.slice(0,-5)}</div>}
+                      <div className="voting heading">You have voted for {localStorage.getItem("selected").slice(0,-5)}</div>}
                     <div className= "voting wait">Waiting for all players to submit their vote...</div>
                     <Spinner />
                   </div>)
-              } else if (selected !== "" && !ready) { // selected someone but not confirmed yet
+              } else if (selected !== "" && !ready && !nightActionDone) { // selected someone but not confirmed yet
                 return (
                   <div className="voting container">
                     <div className= "voting heading">You have selected<br></br> {selected.slice(0,-5)} </div>
@@ -268,7 +270,7 @@ const Voting = () => {
                       </div>
                     </div>
                   </div>)
-              } else { // not selected anyone yet
+              } else if(!nightActionDone) { // not selected anyone yet
                 return (
                   <div className="voting container">
                     <div className= "voting heading">{username.slice(0,-5)},<br></br> select who you want to vote out.</div>    
