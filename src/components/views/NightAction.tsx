@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import SockJS from "sockjs-client";
 import { over } from "stompjs";
 import { getDomain } from "../../helpers/getDomain";
-import { api, handleError } from "helpers/api";
 import { Spinner } from "components/ui/Spinner";
 import {useNavigate, useLocation} from "react-router-dom";
 import { Button } from "components/ui/Button";
@@ -41,6 +40,8 @@ const NightAction = () => {
   const [alreadySent, setAlreadySent] = useState(false);
   const [abstained, setAbstained] = useState(false);
   const [selected, setSelected] = useState("");
+  const [nightActionDone, setNightActionDone] = useState(false);
+  const [seerBlock, setSeerBlock] = useState(false);
 
   // for seer role
   var sentReady = false;
@@ -150,6 +151,9 @@ const NightAction = () => {
     };
 
     connectAndSubscribe();
+    if(localStorage.getItem("seerPersist") === "t") {
+      setSeerBlock(true);
+    }
 
     if (messageReceived) {
       if (messageReceived.gameState === "REVEALNIGHT") {
@@ -158,6 +162,7 @@ const NightAction = () => {
         navigate("/end");
       }
       setPlayersInLobby(messageReceived.players);
+      setNightActionDone(messageReceived.playerMap[username].isReady);
     }
 
     return () => {
@@ -178,7 +183,7 @@ const NightAction = () => {
         console.log("Something went wrong sending selection information: " + e);
       }
     }
-  }, [ready]);
+  }, [ready]); 
 
   useEffect(() => { // This useEffect tracks changes in the lobby
     if (messageReceived) {
@@ -188,12 +193,19 @@ const NightAction = () => {
         navigate("/end");
       }
       setPlayersInLobby(messageReceived.players);
+      setNightActionDone(messageReceived.playerMap[username].isReady);
+      console.log(`USER IS READY? ${nightActionDone}`);
     }
   }, [messageReceived]); 
+
+  useEffect(() => { 
+    console.log(`USER IS READY? ${nightActionDone}`);
+  }, [nightActionDone]); 
 
   const doReveal = () => {
     try{
       setRevealRole(messageReceived.playerMap[`${selected}`].roleName);
+      localStorage.setItem("seerPersist", "t");
     } catch (e) {
       console.log("Could not fetch role: " + e);
     }
@@ -208,12 +220,15 @@ const NightAction = () => {
     setReady(true);
     setAlreadySent(true);
     setAbstained(true);
+    localStorage.setItem("abstainedPersist", "t");
     localStorage.setItem("selected", "");
   }
 
   useEffect(() => {
-    localStorage.setItem("selected", selected);
+    if(selected !== "") {
+      localStorage.setItem("selected", selected);}
   },[selected])
+
 
   let content = <Spinner />;
   let werewolfContent = <Spinner />;
@@ -288,17 +303,17 @@ const NightAction = () => {
             return (
               <div className = "nightAction container">
                 {(() => {
-                  if(ready && (selected !== "" || abstained)) { // selected someone and confirmed
+                  if((ready && (selected !== "" || abstained)) || nightActionDone) { // selected someone and confirmed
                     return (
                       <div className="nightAction container">
-                        {abstained ? 
+                        {localStorage.getItem("abstainedPersist") === "t" ? 
                           <div className= "nightAction heading">You have chosen to abstain</div>:
-                          <div className= "nightAction heading">You have attempted to kill {selected.slice(0,-5)}</div>
+                          <div className= "nightAction heading">You have attempted to kill {localStorage.getItem("selected").slice(0,-5)}</div>
                         }
                         <div className= "nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
                         <Spinner />
                       </div>)}
-                  else if (selected !== "" && !ready) { // selected someone but not confirmed
+                  else if (selected !== "" && !ready && !nightActionDone) { // selected someone but not confirmed
                     return (
                       <div className = "nightAction container">
                         <div className= "nightAction heading">You have selected {selected.slice(0,-5)} 
@@ -320,7 +335,7 @@ const NightAction = () => {
                           </div>
                         </div>
                       </div>)
-                  } else { // not selected anyone yet
+                  } else if(!nightActionDone){ // not selected anyone yet
                     return (
                       <div className = "nightAction container">
                         <div className= "nightAction heading">{username.slice(0,-5)},<br></br> select someone to kill.    
@@ -349,7 +364,7 @@ const NightAction = () => {
             return (
               <div className = "nightAction container">
                 {(() => {
-                  if (selected !== "" && !revealRole && !abstained) { // selected someone but not seen the role yet 
+                  if (selected !== "" && !revealRole && !abstained && !nightActionDone && !seerBlock) { // selected someone but not seen the role yet 
                     return (
                       <div className="nightAction heading">You have selected <br></br> {selected.slice(0,-5)}
                         <div className="nightAction container">{content}
@@ -370,7 +385,7 @@ const NightAction = () => {
                         </div>
                       </div>
                     );
-                  } else if (selected !== "" && revealRole && !ready) { // selected someone and looking at role
+                  } else if (selected !== "" && revealRole && !ready && !nightActionDone && !seerBlock) { // selected someone and looking at role
                     return (
                       <div className="nightAction container">
                         {(() => {
@@ -418,19 +433,19 @@ const NightAction = () => {
                         </div>
                       </div>
                     );
-                  } else if ((selected !== "" && revealRole && ready) || (abstained)) { // selected someone, seen their role and confirmed
+                  } else if (((selected !== "" && revealRole && ready) || (abstained)) || nightActionDone || seerBlock) { // selected someone, seen their role and confirmed
                     return (
                       <div className="nightAction container">
-                        {abstained ? 
+                        {localStorage.getItem("abstainedPersist") === "t" ? 
                           <div className="nightAction heading">You have chosen to abstain</div> :
-                          <div className="nightAction heading">You chose to look at <br></br>{selected.slice(0,-5)}</div>
+                          <div className="nightAction heading">You chose to look at <br></br>{localStorage.getItem("selected").slice(0,-5)}</div>
                         }
                         <div className="nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
                         <Spinner />
                       </div>
                     );
                   }
-                  else { // not selected anyone yet (seer)
+                  else if(!nightActionDone){ // not selected anyone yet (seer)
                     return (
                       <div className = "nightAction container">
                         <div className="nightAction heading">{username.slice(0,-5)},<br></br> whose role do you want to see?
@@ -460,17 +475,17 @@ const NightAction = () => {
             return (
               <div className = "nightAction container">
                 {(() => {
-                  if(ready && (selected !== "" || abstained)) { // selected someone and confirmed or abstained
+                  if((ready && (selected !== "" || abstained)) || nightActionDone) { // selected someone and confirmed or abstained
                     return (
                       <div className= "nightAction container">
-                        {abstained ? 
+                        {localStorage.getItem("abstainedPersist") === "t" ? 
                           <div className="nightAction heading">You have chosen to abstain</div> :
-                          <div className="nightAction heading">You have chosen to die with <br></br>{selected.slice(0,-5)}</div>
+                          <div className="nightAction heading">You have chosen to die with <br></br>{localStorage.getItem("selected").slice(0,-5)}</div>
                         }
                         <div className= "nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
                         <Spinner />
                       </div>)
-                  } else if (selected !== "" && !ready) { // selected someone but not confirmed
+                  } else if (selected !== "" && !ready && !nightActionDone) { // selected someone but not confirmed
                     return(
                       <div className = "nightAction container">
                         <div className= "nightAction heading">You have selected <br></br> {selected.slice(0,-5)}
@@ -493,7 +508,7 @@ const NightAction = () => {
                         </div>
                       </div>
                     )
-                  } else { // not selected anyone yet (sacrifice)
+                  } else if(!nightActionDone){ // not selected anyone yet (sacrifice)
                     return (
                       <div className = "nightAction container">
                         <div className="nightAction heading">{username.slice(0,-5)},<br></br> choose someone to die with you
@@ -523,17 +538,17 @@ const NightAction = () => {
             return (
               <div className = "nightAction container">
                 {(() => {
-                  if(ready && (selected !== "" || abstained)) { // selected someone and confirmed or abstained (protector)
+                  if((ready && (selected !== "" || abstained)) || nightActionDone) { // selected someone and confirmed or abstained (protector)
                     return (
                       <div className= "nightAction container">
-                        {abstained ? 
+                        {localStorage.getItem("abstainedPersist") === "t" ? 
                           <div className="nightAction heading">You have chosen to abstain</div> :
-                          <div className="nightAction heading">You have chosen to protect <br></br>{selected.slice(0,-5)}</div>
+                          <div className="nightAction heading">You have chosen to protect <br></br>{localStorage.getItem("selected").slice(0,-5)}</div>
                         }
                         <div className= "nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
                         <Spinner />
                       </div>)
-                  } else if (selected !== "" && !ready) { // selected someone but not confirmed (protector)
+                  } else if (selected !== "" && !ready && !nightActionDone) { // selected someone but not confirmed (protector)
                     return(
                       <div className = "nightAction container">
                         <div className= "nightAction heading">You have selected <br></br> {selected.slice(0,-5)}
@@ -556,7 +571,7 @@ const NightAction = () => {
                         </div>
                       </div>
                     )
-                  } else { // not selected anyone yet (protector)
+                  } else if(!nightActionDone) { // not selected anyone yet (protector)
                     return (
                       <div className = "nightAction container">
                         <div className="nightAction heading">{username.slice(0,-5)},<br></br> choose someone to protect
@@ -586,17 +601,17 @@ const NightAction = () => {
             return (
               <div className = "nightAction container">
                 {(() => {
-                  if(ready && (selected !== "" || abstained)) { // selected someone and confirmed or abstained (villager)
+                  if((ready && (selected !== "" || abstained)) || nightActionDone) { // selected someone and confirmed or abstained (villager)
                     return (
                       <div className= "nightAction container">
-                        {abstained ? 
+                        {localStorage.getItem("abstainedPersist") === "t" ? 
                           <div className="nightAction heading">You have chosen to abstain</div> :
                           <div className="nightAction heading"></div>
                         }
                         <div className= "nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
                         <Spinner />
                       </div>)}
-                  else if (selected !== "" && !ready) { // selected someone but not confirmed yet (villager)
+                  else if (selected !== "" && !ready && !nightActionDone) { // selected someone but not confirmed yet (villager)
                     return(
                       <div className = "nightAction container">
                         <div className= "nightAction heading">You have selected {selected.slice(0,-5)}
@@ -618,7 +633,7 @@ const NightAction = () => {
                           </div>
                         </div>
                       </div>)
-                  } else {
+                  } else if(!nightActionDone) { // not selected anyone yet (villager)
                     return (
                       <div className = "nightAction container">
                         <div className= "nightAction heading">{username.slice(0,-5)},<br></br> as a villager, you can only hope to survive the night
