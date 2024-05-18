@@ -194,13 +194,8 @@ const NightAction = () => {
       }
       setPlayersInLobby(messageReceived.players);
       setNightActionDone(messageReceived.playerMap[username].isReady);
-      console.log(`USER IS READY? ${nightActionDone}`);
     }
   }, [messageReceived]); 
-
-  useEffect(() => { 
-    console.log(`USER IS READY? ${nightActionDone}`);
-  }, [nightActionDone]); 
 
   const doReveal = () => {
     try{

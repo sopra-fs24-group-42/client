@@ -18,6 +18,7 @@ type Person = {
 
 const VotingReveal = () => {
   localStorage.removeItem("selected");
+  localStorage.removeItem("abstainedPersist");
 
   // variables needed for establishing websocket connection
   const baseURL = getDomain();
@@ -61,7 +62,6 @@ const VotingReveal = () => {
       }
     }
     // making table
-    // sorting players by most voted & extracting top 3
     let playersCopy = messageReceived.players
     playersCopy.sort((a,b) => b.numberOfVotes - a.numberOfVotes); //sorting players according to number of votes in desc order
     let data = [];
@@ -75,17 +75,23 @@ const VotingReveal = () => {
         <Table.Td>{player.numberOfVotes}</Table.Td>
       </Table.Tr>
     ));
+
     details = (
-      <div className="votingReveal table-style">
-        <Table table-horizontal-spacing="xl">
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th className="votingReveal table-header">Username</Table.Th>
-              <Table.Th >Number of votes</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
-        </Table>
+      <div>
+        <div className="votingReveal table-style">
+          <Table table-horizontal-spacing="xl">
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th className="votingReveal table-header">Username</Table.Th>
+                <Table.Th >Number of votes</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>{rows}</Table.Tbody>
+          </Table>
+        </div>
+        {data.length === 0 ? 
+          <div className= "votingReveal heading">No players received any votes!</div>
+          : ""}
       </div>
     )
   }
@@ -241,7 +247,6 @@ const VotingReveal = () => {
   useEffect(() => {
     if(hostName) {
       if (username === hostName && dataNotFetched) {
-        console.log("Entered the API Useffect")   
         const RevealVotingPre = textSamples.RevealVotingPre[Math.floor(Math.random() * textSamples.RevealVotingPre.length)];
         const RevealVotingPost = textSamples.RevealVotingPost[Math.floor(Math.random() * textSamples.RevealVotingPost.length)];
         /*logic to differentiat between the cases if one or no players have been voted out so that 
@@ -286,16 +291,16 @@ const VotingReveal = () => {
             }
             const jsonData = await response.json();
             let modifiedString = JSON.stringify(jsonData);
-            console.log(modifiedString);
+            //console.log(modifiedString);
             let newstring = modifiedString.substring(17);
-            console.log("firts 17 Elements deleted",newstring);
+            //console.log("firts 17 Elements deleted",newstring);
             newstring = newstring.slice(0, -2);
-            console.log("last 2 Elements deleted",newstring);
+            //console.log("last 2 Elements deleted",newstring);
             newstring = "data:audio/mp3;base64,".concat(newstring)   
-            console.log("concatenated",newstring);
+            //console.log("concatenated",newstring);
         
             setData(newstring);  // Save the JSON response in state
-            console.log("Data saved in state:", newstring);
+            //console.log("Data saved in state:", newstring);
           } catch (error) {
             console.error("Error during fetching the audio file:", error);
           }
@@ -321,7 +326,7 @@ const VotingReveal = () => {
     const newAudioUrl = URL.createObjectURL(blob);
     setAudioUrl(newAudioUrl); 
     setPlayPressed(true);  // Marks that the play button has been pressed
-    console.log("File has been decoded and AudioURL has been set")
+    //console.log("File has been decoded and AudioURL has been set")
     
   };
 
