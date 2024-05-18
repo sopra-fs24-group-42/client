@@ -18,6 +18,8 @@ const NightReveal = () => {
   const navigate = useNavigate();
 
   localStorage.removeItem("selected");
+  localStorage.removeItem("abstainedPersist");
+  localStorage.removeItem("seerPersist");
 
   var connection = false;
   var stompClient = null;
