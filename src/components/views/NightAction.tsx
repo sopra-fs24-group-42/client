@@ -225,7 +225,8 @@ const NightAction = () => {
   }
 
   useEffect(() => {
-    localStorage.setItem("selected", selected);
+    if(selected !== "") {
+    localStorage.setItem("selected", selected);}
   },[selected])
 
 
@@ -437,7 +438,7 @@ const NightAction = () => {
                       <div className="nightAction container">
                         {localStorage.getItem("abstainedPersist") === "t" ? 
                           <div className="nightAction heading">You have chosen to abstain</div> :
-                          <div className="nightAction heading">You chose to look at <br></br>{selected.slice(0,-5)}</div>
+                          <div className="nightAction heading">You chose to look at <br></br>{localStorage.getItem("selected").slice(0,-5)}</div>
                         }
                         <div className="nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
                         <Spinner />
@@ -479,7 +480,7 @@ const NightAction = () => {
                       <div className= "nightAction container">
                         {localStorage.getItem("abstainedPersist") === "t" ? 
                           <div className="nightAction heading">You have chosen to abstain</div> :
-                          <div className="nightAction heading">You have chosen to die with <br></br>{selected.slice(0,-5)}</div>
+                          <div className="nightAction heading">You have chosen to die with <br></br>{localStorage.getItem("selected").slice(0,-5)}</div>
                         }
                         <div className= "nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
                         <Spinner />
@@ -542,7 +543,7 @@ const NightAction = () => {
                       <div className= "nightAction container">
                         {localStorage.getItem("abstainedPersist") === "t" ? 
                           <div className="nightAction heading">You have chosen to abstain</div> :
-                          <div className="nightAction heading">You have chosen to protect <br></br>{selected.slice(0,-5)}</div>
+                          <div className="nightAction heading">You have chosen to protect <br></br>{localStorage.getItem("selected").slice(0,-5)}</div>
                         }
                         <div className= "nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
                         <Spinner />
