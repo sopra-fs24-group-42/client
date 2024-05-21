@@ -86,7 +86,7 @@ const CreateGame = () => {
           <div className="createGame form">
             <div className="createGame label">How many people are playing?</div>
             {invalidNumberOfPlayers ?
-              <div className="createGame warning">You must be at least 4 players</div>: ""}
+              <div className="createGame warning">You must be at least 4 players!</div>: ""}
             <RoleNumberInput hideControls
               placeholder="4"
               min={4}
@@ -98,7 +98,7 @@ const CreateGame = () => {
               <FormField
                 label="Choose your username:"
                 value={hostName}
-                warning="Username must be fewer than 15 characters!"
+                warning="Max. username length is 15 characters!"
                 onChange={(e: string) => doSetHostName(e)}
               /> :
               <FormField
