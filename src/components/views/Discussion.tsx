@@ -170,39 +170,40 @@ const Discussion = () => {
   }, []);
 
   return (
-    <BaseContainer>
-      <div className="discussion background-container">
-        <div className="discussion container">
-          <div className="discussion timer"></div>
-          <div className="discussion header">Who was it?</div>
-          <div className="discussion header">Discuss!</div>
-          <div className="discussion highlight">{timer}</div>
-          {(() => {
-            if(!ready){
-              return(
-                <div className="discussion button-container">
-                  <Button
-                    width="100%"
-                    height="50px"
-                    onClick={()=> doSendReady()}>
-                    Skip            
-                  </Button>
-                </div>
-              )
-            }
-            else {
-              return(
-                <div className="discussion container">
-                  <div className="discussion wait">Waiting for other players...</div>
-                  <Spinner />
-                </div>
-              )
-            }
-          })()}
+    <div className="discussion total-background">
+      <BaseContainer>
+        <div className="discussion background-container">
+          <div className="discussion container">
+            <div className="discussion timer"></div>
+            <div className="discussion header">Who was it?</div>
+            <div className="discussion header">Discuss!</div>
+            <div className="discussion highlight">{timer}</div>
+            {(() => {
+              if (!ready) {
+                return (
+                  <div className="discussion button-container">
+                    <Button
+                      width="100%"
+                      height="50px"
+                      onClick={() => doSendReady()}>
+                      Skip
+                    </Button>
+                  </div>
+                )
+              }
+              else {
+                return (
+                  <div className="discussion container">
+                    <div className="discussion wait">Waiting for other players...</div>
+                    <Spinner />
+                  </div>
+                )
+              }
+            })()}
+          </div>
         </div>
-      </div>
-    </BaseContainer>
-    //</div>
+      </BaseContainer>
+    </div>
   );
 };
 

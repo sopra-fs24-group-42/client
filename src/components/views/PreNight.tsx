@@ -215,39 +215,41 @@ const PreNight = () => {
   };
 
   return (
-    <BaseContainer>
-      <div className ="PreNight background-container">
-        <div className="PreNight container">
-          <div className="PreNight header">Night has Fallen...</div>
-          <div className="nightReveal container">
-            <div className="nightReveal wait">Listen to the Narrator on the Hosts Device...</div>
-            <Spinner />
-          </div>
-          <div className="PreNight button-container">
-            {username === hostName &&
-            <Button
-              width="100%"
-              height="40px"
-              onClick={() => doSendReady()}
-              disabled={!playPressed}  // Disable OK button until audio is played
-            >Ok
-            </Button>
-            }
-            { username === hostName &&
-            <Button
-              width="100%"
-              height="40px"
-              onClick={DecodeAndPlay}
-            >Press to Play
-            </Button>
-            }
-            {audioUrl && (
-              <audio controls src={audioUrl} autoPlay />
-            )}
+    <div className="PreNight total-background">
+      <BaseContainer>
+        <div className="PreNight background-container">
+          <div className="PreNight container">
+            <div className="PreNight header">Night has Fallen...</div>
+            <div className="nightReveal container">
+              <div className="nightReveal wait">Listen to the Narrator on the Hosts Device...</div>
+              <Spinner />
+            </div>
+            <div className="PreNight button-container">
+              {username === hostName &&
+                <Button
+                  width="100%"
+                  height="40px"
+                  onClick={() => doSendReady()}
+                  disabled={!playPressed}  // Disable OK button until audio is played
+                >Ok
+                </Button>
+              }
+              {username === hostName &&
+                <Button
+                  width="100%"
+                  height="40px"
+                  onClick={DecodeAndPlay}
+                >Press to Play
+                </Button>
+              }
+              {audioUrl && (
+                <audio controls src={audioUrl} autoPlay />
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    </BaseContainer>
+      </BaseContainer>
+    </div>
   );
 };
 

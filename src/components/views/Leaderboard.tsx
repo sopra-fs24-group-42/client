@@ -77,23 +77,25 @@ const Leaderboard = () => {
   }
 
   return (
-    <BaseContainer>
-      <div className="leaderboard background-container">
-        <div className="leaderboard header">Game Leaderboard</div>
-        <div className="leaderboard container">
-          {content}
-          <div className="leaderboard button-container">
-            <Button
-              width="100%"
-              height="40px"
-              onClick={() => navigate("/frontpage")}
-            >
-              Back
-            </Button>
+    <div className="leaderboard total-background">
+      <BaseContainer>
+        <div className="leaderboard background-container">
+          <div className="leaderboard header">Game Leaderboard</div>
+          <div className="leaderboard container">
+            {content}
+            <div className="leaderboard button-container">
+              <Button
+                width="100%"
+                height="40px"
+                onClick={() => navigate("/frontpage")}
+              >
+                Back
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
-    </BaseContainer>
+      </BaseContainer>
+    </div>
   );
 };
 

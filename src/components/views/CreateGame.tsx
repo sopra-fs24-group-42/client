@@ -79,52 +79,54 @@ const CreateGame = () => {
   }
 
   return (
-    <BaseContainer>
-      <div className="createGame background-container">
-        <div className="createGame header">Create a new game</div>
-        <div className="createGame container">
-          <div className="createGame form">
-            <div className="createGame label">How many people are playing?</div>
-            {invalidNumberOfPlayers ?
-              <div className="createGame warning">You must be at least 4 players!</div>: ""}
-            <RoleNumberInput hideControls
-              placeholder="4"
-              min={4}
-              value={numberOfPlayers}
-              onChange={(e: string) => doSetNumberOfPlayers(e)}
-            />
-            <br></br>
-            {invalidUsername ?
-              <FormField
-                label="Choose your username:"
-                value={hostName}
-                warning="Max. username length is 15 characters!"
-                onChange={(e: string) => doSetHostName(e)}
-              /> :
-              <FormField
-                label="Choose your username:"
-                value={hostName}
-                onChange={(e: string) => doSetHostName(e)}
-              />}
-            <div className="createGame button-container">
-              <Button
-                width="100%"
-                height="80px"
-                disabled={!hostName || !numberOfPlayers || invalidNumberOfPlayers || invalidUsername}
-                onClick={() => doCreateGame()}
-              >Create Game                
-              </Button>
-              <Button
-                width="100%"
-                height="30px"
-                onClick={() => navigate("/frontpage")}
-              >Back
-              </Button>
+    <div className="createGame total-background">
+      <BaseContainer>
+        <div className="createGame background-container">
+          <div className="createGame header">Create a new game</div>
+          <div className="createGame container">
+            <div className="createGame form">
+              <div className="createGame label">How many people are playing?</div>
+              {invalidNumberOfPlayers ?
+                <div className="createGame warning">You must be at least 4 players!</div> : ""}
+              <RoleNumberInput hideControls
+                placeholder="4"
+                min={4}
+                value={numberOfPlayers}
+                onChange={(e: string) => doSetNumberOfPlayers(e)}
+              />
+              <br></br>
+              {invalidUsername ?
+                <FormField
+                  label="Choose your username:"
+                  value={hostName}
+                  warning="Max. username length is 15 characters!"
+                  onChange={(e: string) => doSetHostName(e)}
+                /> :
+                <FormField
+                  label="Choose your username:"
+                  value={hostName}
+                  onChange={(e: string) => doSetHostName(e)}
+                />}
+              <div className="createGame button-container">
+                <Button
+                  width="100%"
+                  height="80px"
+                  disabled={!hostName || !numberOfPlayers || invalidNumberOfPlayers || invalidUsername}
+                  onClick={() => doCreateGame()}
+                >Create Game
+                </Button>
+                <Button
+                  width="100%"
+                  height="30px"
+                  onClick={() => navigate("/frontpage")}
+                >Back
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </BaseContainer>
+      </BaseContainer>
+    </div>
   );
 };
 

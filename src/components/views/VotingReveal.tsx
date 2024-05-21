@@ -331,56 +331,58 @@ const VotingReveal = () => {
   };
 
   return (
-    <BaseContainer>
-      <div className="votingReveal background-container">
-        <div className="votingReveal header">The votes have been counted!</div>
-        {content}
-        {(() => {
-          if (!ready) {
-            return (
-              <div className="votingReveal button-container">
-                {username !== hostName &&
-                <Button
-                  width="100%"
-                  height="40px"
-                  onClick={() => doSendReady()}
-                >
-                  Ok, got it!
-                </Button>
-                }
-                {username === hostName &&
-                  <Button
-                    width="100%"
-                    height="40px"
-                    onClick={() => doSendReady()}
-                    disabled={!playPressed}  // Disable OK button until audio is played
-                  >Ok
-                  </Button>
-                }
-                { username === hostName &&
-                <Button
-                  width="100%"
-                  height="40px"
-                  onClick={DecodeAndPlay}
-                >Press to Play
-                </Button>
-                }
-                {audioUrl && (
-                  <audio controls src={audioUrl} autoPlay />
-                )}
-              </div>
-            );
-          } else {
-            return (
-              <div className="votingReveal container">
-                <div className="votingReveal wait">Waiting for other players...</div>
-                <Spinner />
-              </div>
-            );
-          }
-        })()}
-      </div>
-    </BaseContainer>
+    <div className="votingReveal total-background">
+      <BaseContainer>
+        <div className="votingReveal background-container">
+          <div className="votingReveal header">The votes have been counted!</div>
+          {content}
+          {(() => {
+            if (!ready) {
+              return (
+                <div className="votingReveal button-container">
+                  {username !== hostName &&
+                    <Button
+                      width="100%"
+                      height="40px"
+                      onClick={() => doSendReady()}
+                    >
+                      Ok, got it!
+                    </Button>
+                  }
+                  {username === hostName &&
+                    <Button
+                      width="100%"
+                      height="40px"
+                      onClick={() => doSendReady()}
+                      disabled={!playPressed}  // Disable OK button until audio is played
+                    >Ok
+                    </Button>
+                  }
+                  {username === hostName &&
+                    <Button
+                      width="100%"
+                      height="40px"
+                      onClick={DecodeAndPlay}
+                    >Press to Play
+                    </Button>
+                  }
+                  {audioUrl && (
+                    <audio controls src={audioUrl} autoPlay />
+                  )}
+                </div>
+              );
+            } else {
+              return (
+                <div className="votingReveal container">
+                  <div className="votingReveal wait">Waiting for other players...</div>
+                  <Spinner />
+                </div>
+              );
+            }
+          })()}
+        </div>
+      </BaseContainer>
+    </div>
   );
 };
 

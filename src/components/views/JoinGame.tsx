@@ -67,48 +67,50 @@ const JoinGame = () => {
   };
 
   return (
-    <BaseContainer>
-      <div className="joinGame background-container">
-        <div className= "joinGame  header">Join an existing game</div>
-        <div className="joinGame  container">
-          <div className="joinGame  form">
-            {invalidUsername ?
+    <div className="joinGame background-container">
+      <BaseContainer>
+        <div className="joinGame background-container">
+          <div className="joinGame  header">Join an existing game</div>
+          <div className="joinGame  container">
+            <div className="joinGame  form">
+              {invalidUsername ?
+                <FormField
+                  label="Choose your username:"
+                  value={username}
+                  warning="Max. username length is 15 characters!"
+                  onChange={(e: string) => doSetUsername(e)}
+                /> :
+                <FormField
+                  label="Choose your username:"
+                  value={username}
+                  onChange={(e: string) => doSetUsername(e)}
+                />}
+              <br></br>
               <FormField
-                label="Choose your username:"
-                value={username}
-                warning="Max. username length is 15 characters!"
-                onChange={(e: string) => doSetUsername(e)}
-              /> :
-              <FormField
-                label="Choose your username:"
-                value={username}
-                onChange={(e: string) => doSetUsername(e)}
-              />}
-            <br></br>
-            <FormField
-              label="Enter a game code:"
-              value={lobbyCode}
-              onChange={(e: string) => setLobbyCode(e)}
-            />
-            <div className="joinGame button-container">
-              <Button
-                width="100%"
-                height="80px"
-                disabled={!username || !lobbyCode || invalidUsername}
-                onClick={() => doJoinGame()}
-              >Join Game
-              </Button>
-              <Button
-                width="100%"
-                height="30px"
-                onClick={() => navigate("/frontpage")}
-              >Back
-              </Button>
+                label="Enter a game code:"
+                value={lobbyCode}
+                onChange={(e: string) => setLobbyCode(e)}
+              />
+              <div className="joinGame button-container">
+                <Button
+                  width="100%"
+                  height="80px"
+                  disabled={!username || !lobbyCode || invalidUsername}
+                  onClick={() => doJoinGame()}
+                >Join Game
+                </Button>
+                <Button
+                  width="100%"
+                  height="30px"
+                  onClick={() => navigate("/frontpage")}
+                >Back
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </BaseContainer>
+      </BaseContainer>
+    </div>
   );
 };
 
