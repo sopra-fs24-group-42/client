@@ -67,7 +67,7 @@ const JoinGame = () => {
   };
 
   return (
-    <div className="joinGame background-container">
+    <div className="joinGame total-background">
       <BaseContainer>
         <div className="joinGame background-container">
           <div className="joinGame  header">Join an existing game</div>

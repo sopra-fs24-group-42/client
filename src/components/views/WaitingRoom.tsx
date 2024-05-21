@@ -12,8 +12,8 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { User } from "types";
 import { ActionIcon, Popover, NumberInput } from "@mantine/core";
-import { Settings } from "tabler-icons-react";
-import { IconAdjustments } from "@tabler/icons-react";
+import { Settings, InfoCircle } from "tabler-icons-react";
+//import { IconAdjustments } from "@tabler/icons-react";
 
 const LobbyMember = ({ user }: { user: User }) => (
   <div className="waitingRoom player-container">
@@ -47,6 +47,7 @@ const WaitingRoom = () => {
   const [hostName, setHostName] = useState(null);
   const [role, setRole] = useState(null);
   // game settings update
+  const [popoverInstruction, setPopoverInstructions] = useState(false);
   const [popoverLeaveGame, setPopoverLeaveGame] = useState(false);
   const [popoverOpened, setPopoverOpened] = useState(false);
   const [numberOfWerewolves, setNumberOfWerewolves] = useState(null);
@@ -209,8 +210,12 @@ const WaitingRoom = () => {
     
   }
 
+  const doShowInstructions = () => {
+    setPopoverInstructions((open) => !open);
+  }
+
   const doUpdateGameSettings = () => {
-    console.log("Settings!");
+    //console.log("Settings!");
     setPopoverOpened((open) => !open);
   }
 
@@ -245,10 +250,17 @@ const WaitingRoom = () => {
     }
   };
 
+  let popoverContentInstructions = (
+    <div>
+      <div className="frontpage header1">🧑‍🌾👩‍🌾Surive the Night 🐺</div>
+      <div className="frontpage header1">Game Rules:</div>
+      <div className="frontpage detailed-instructions">TODO: Enter game instructions here
+      </div>
+    </div>
+  )
+
   let content = "";
   let hostContent = "";
-  //let content = <Spinner />;
-  //let hostContent = <Spinner />;
   let headerMessage = "";
 
   if (messageReceived !== null) {
@@ -284,6 +296,15 @@ const WaitingRoom = () => {
             return (
               <div className="waitingRoom background-container">
                 <div className="waitingRoom settings-container">
+                  <ActionIcon className="waitingRoom setting-button"
+                    aria-label="InfoCircle"
+                    onClick={doShowInstructions}
+                  >
+                    <InfoCircle
+                      size={42}
+                      strokeWidth={1.8}
+                      color={"#262632"} />
+                  </ActionIcon>
                   <ActionIcon className="waitingRoom setting-button"
                     aria-label="Settings"
                     onClick={doUpdateGameSettings}
@@ -359,6 +380,17 @@ const WaitingRoom = () => {
           } else { // non-host view
             return (
               <div className="waitingRoom background-container">
+                <div className="waitingRoom settings-container">
+                  <ActionIcon className="waitingRoom setting-button"
+                    aria-label="InfoCircle"
+                    onClick={doShowInstructions}
+                  >
+                    <InfoCircle
+                      size={42}
+                      strokeWidth={1.8}
+                      color={"#262632"} />
+                  </ActionIcon>
+                </div>
                 <div className="waitingRoom header">
                   Welcome to game
                 </div>
@@ -379,6 +411,7 @@ const WaitingRoom = () => {
                   >Leave Game
                   </Button>
                 </div>
+
               </div>
             )
           }
@@ -403,6 +436,25 @@ const WaitingRoom = () => {
                   height="40px"
                   onClick={() => setPopoverLeaveGame(false)}
                 >Nevermind
+                </Button>
+              </div>
+            </Popover.Dropdown>
+          </Popover>
+        )}
+        {popoverInstruction && (
+          <Popover
+            opened={popoverInstruction}
+            onClose={() => setPopoverInstructions(false)}
+            withArrow
+            shadow="md">
+            <Popover.Dropdown className="frontpage dropdown">
+              <div className="frontpage popover-container">
+                {popoverContentInstructions}
+                <Button
+                  width="100%"
+                  height="40px"
+                  onClick={() => setPopoverInstructions(false)}
+                >Ok
                 </Button>
               </div>
             </Popover.Dropdown>
