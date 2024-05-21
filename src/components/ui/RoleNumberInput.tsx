@@ -20,7 +20,7 @@ const RoleNumberInput: React.FC<NumberInputProps> = (props) => {
       color: "black",
       marginBottom: "10px",
       fontWeight: "bold",
-      textAlign: "center",
+      textAlign: "center", //center
       fontSize: "20px",
       fontWeight: "300",
       fontWeight: "bold",

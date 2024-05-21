@@ -1,6 +1,7 @@
 @import "../theme";
 
 .joinGame     {
+
   &.background-container {
     //background: url('../../../resources/kingCard.jpg');
     background-color: rgba(225, 225, 225, 1);
@@ -8,6 +9,7 @@
     background-size: cover;
     max-height: 2340px;
     max-width: 100vw;
+    //max-width: fit-content;
     width: 375px;
     left: 0;
     right: 0;
@@ -36,6 +38,7 @@
     font-size: 25px;
     color: black;
     }
+
     &.container {
       @include center;
       left: 0;
@@ -47,7 +50,9 @@
       font-size: 22px;
       align-items: center;
       padding: 2px;
+      width: 375px;
   }
+
   &.form {
     margin-top: 10px;
     display: flex;
@@ -62,8 +67,7 @@
     padding-right: 37px;
     border-radius: 0.75em;
     background-color: E72929;
-    transition: opacity 0.5s ease, transform 0.5s ease;
-    
+    transition: opacity 0.5s ease, transform 0.5s ease;    
   }
   &.field {
     display: flex;
@@ -81,27 +85,21 @@
     color: black;
   }
   &.label {
-    color: black;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     font-weight: 300;
-    text-align: center; 
+    text-align: left; 
     font-size: 20px;
     font-weight: bold;
-    &.highlight {
-        @include center;
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        font-weight: bold;
-        font-size: 20px;
-        max-width: 30em;
-        padding-left: 37px;
-        padding-right: 37px;
-        border-radius: 0.75em;
-        background-color: #c62121;
-        margin-top: 10px;
-        color: white;
-    }
+    color: black;
+  }
+
+  &.warning {
+    margin-bottom: 2px;
+    font-weight: 300;
+    text-align: left;
+    font-size: 14px;
+    font-weight: normal;
+    color: red;
   }
   &.button-container {
     @include center;
@@ -119,6 +117,7 @@
     padding-left: 10px;
     padding-right: 10px;
     min-width: 200px;
+    max-width:100vw;
     width: 300px;
   }
 }
