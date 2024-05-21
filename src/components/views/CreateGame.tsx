@@ -76,7 +76,7 @@ const CreateGame = () => {
       setHostName(e);}
     else {
       setInvalidUsername(true);}
-    }
+  }
 
   return (
     <BaseContainer>
@@ -95,24 +95,24 @@ const CreateGame = () => {
             />
             <br></br>
             {invalidUsername ?
-            <FormField
-              label="Choose your username:"
-              value={hostName}
-              warning="Username must be fewer than 15 characters!"
-              onChange={(e: string) => doSetHostName(e)}
-            /> :
-            <FormField
-              label="Choose your username:"
-              value={hostName}
-              onChange={(e: string) => doSetHostName(e)}
-            />}
+              <FormField
+                label="Choose your username:"
+                value={hostName}
+                warning="Username must be fewer than 15 characters!"
+                onChange={(e: string) => doSetHostName(e)}
+              /> :
+              <FormField
+                label="Choose your username:"
+                value={hostName}
+                onChange={(e: string) => doSetHostName(e)}
+              />}
             <div className="createGame button-container">
               <Button
                 width="100%"
                 height="80px"
                 disabled={!hostName || !numberOfPlayers || invalidNumberOfPlayers || invalidUsername}
                 onClick={() => doCreateGame()}
-              >Create Game
+              >Create Game                
               </Button>
               <Button
                 width="100%"
