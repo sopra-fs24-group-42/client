@@ -248,7 +248,14 @@ const VotingReveal = () => {
     if(hostName) {
       if (username === hostName && dataNotFetched) {
         const RevealVotingPre = textSamples.RevealVotingPre[Math.floor(Math.random() * textSamples.RevealVotingPre.length)];
-        const RevealVotingPost = textSamples.RevealVotingPost[Math.floor(Math.random() * textSamples.RevealVotingPost.length)];
+        /*
+        let RevealVotingPost;
+        if (NumberOfWerewolfsAlive === 0 || NumberOfWerewolfsAlive >= NumberOfVillagersAlive){
+          RevealVotingPost = "";
+        } else {
+          RevealVotingPost = textSamples.RevealVotingPost[Math.floor(Math.random() * textSamples.RevealVotingPost.length)];
+        }
+        */
         /*logic to differentiat between the cases if one or no players have been voted out so that 
         the username aswell as Role can be integrated into the API Call. The maximum amount
         of players that can be voted out is 1. 
@@ -261,7 +268,8 @@ const VotingReveal = () => {
           RevealVotingMid = "Noone was chosen to die.";
         }
 
-        const selectedText = "<speak>" + RevealVotingPre + " " + "<break time=\"1s\"/> " + RevealVotingMid + " " + "<break time=\"2s\"/> " + RevealVotingPost + "</speak>";
+        //const selectedText = "<speak>" + RevealVotingPre + " " + "<break time=\"1s\"/> " + RevealVotingMid + " " + "<break time=\"2s\"/> " + RevealVotingPost + "</speak>";
+        const selectedText = "<speak>" + "<break time=\"500ms\"/> " + RevealVotingPre + " " + "<break time=\"1s\"/> " + RevealVotingMid + "</speak>";
         const fetchData = async () => {
           const baseURL = "https://texttospeech.googleapis.com/v1beta1/text:synthesize?fields=audioContent&key="
           const URLSecret = process.env.REACT_APP_API_KEY;

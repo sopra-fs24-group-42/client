@@ -14,21 +14,31 @@
   ],
 
   "RevealNightPre": [
-    "The village awakens to a new day, with the sun rising and casting a gentle light on the homes and streets. It's a time for the villagers to discover the secrets that the night has left behind. Eyes open, conversations begin, and the day's mysteries start to unfold.",
-    "As morning breaks over the village, the inhabitants emerge from their homes, rubbing their eyes, greeted by the fresh scent of dew on the grass. The night's events are a whisper in the wind, and now it's time to reveal what has transpired under the cover of darkness.",
-    "Dawn arrives, painting the sky with colors of orange and pink. The village stirs to life, with every person ready to face the revelations of the night. The streets are filled with whispers and looks of concern as the villagers gather to uncover the truth.",
-    "The first rays of sunlight spread over the village, chasing away the shadows of the night. The villagers wake, filled with anticipation and worry about what the dawn will reveal. It's a moment of truth, where secrets are uncovered and the stories of the night come to light.",
-    "Morning light washes over the village, casting long shadows and unveiling the night's mysteries. The villagers step outside, their faces etched with curiosity and concern, eager to learn what happened while they slept and to understand the implications for the day ahead.",
-    "The village wakes to the harmonious chirping of birds and a gentle breeze carrying the scent of blooming flowers. The calm of the morning will soon give way to the storm of revelations from the night. Villagers meet, share their fears, and prepare to face the unknown.",
-    "As the sun peeks through the curtains, the village awakens to a day filled with promise and peril. The night's silent stories are ready to be told, and the villagers gather, bracing themselves for the impact of the hidden truths that will come to light.",
-    "The day begins with the sun casting a soft golden glow across the village. It's a moment of quiet before the storm, as the night's dramas are about to be revealed. Villagers step out of their homes, ready to piece together the puzzles left by the dark.",
-    "With the morning sun, the village comes to life, buzzing with anticipation. The night's cloak is lifted, revealing the deeds done in darkness. Eyes widen and hearts race as the villagers prepare to face the consequences of the night's actions and to uncover the mysteries left behind.",
-    "The village slowly awakens, with dawn breaking and bringing clarity to the night's shadows. The air is filled with the quiet murmurs of villagers piecing together the story of the night. Today, they confront the reality of what happened, ready to react and respond to the night's silent whispers."
+    "The village wakes up to a new day. It's time to find out what happened during the night. Let's see who survived and who didn't.",
+    "Morning arrives, and villagers come out of their homes. Now we reveal what happened last night.",
+    "Dawn breaks, and the village comes to life. The night’s events will now be revealed. Who is still with us?",
+    "The sun rises, and the villagers wake up. It’s time to uncover the secrets of the night and see what happened.",
+    "Morning light shines on the village. Villagers step outside to learn what happened during the night.",
+    "The village wakes to a new day. The calm morning will soon reveal the night’s events. Who survived?",
+    "As the sun rises, the village wakes up. It’s time to reveal what happened during the night.",
+    "The day begins, and the village is quiet. The events of the night will now be revealed. Who made it through?",
+    "The village comes to life with the morning sun. The night’s deeds are about to be revealed. Who is still here?",
+    "The village wakes up, and dawn brings clarity. It’s time to find out what happened during the night."
+  ],
+
+    "RevealNightPost": [
+      "Gather in the marketplace to discuss who you suspect. Cast your votes to decide who will be killed.",
+      "It's time to meet in the marketplace. Discuss your suspicions and vote on who to execute.",
+      "Head to the marketplace. Share your thoughts and vote on who you think is a werewolf.",
+      "Everyone, gather in the marketplace. Discuss, suspect, and vote on who should be executed.",
+      "Meet in the marketplace to discuss your suspicions and vote on who to kill.",
+      "Assemble in the marketplace. Talk about your suspicions and vote on who will be executed.",
+      "Join the marketplace discussion. Share your thoughts and vote on who to kill.",
+      "Gather in the marketplace to decide who you think is a werewolf. Vote to execute.",
+      "It's time to discuss in the marketplace. Vote on who you believe is the hidden monster.",
+      "Meet in the marketplace. Discuss suspicions and cast your votes to decide who to execute."
     ],
 
-    "RevealNightPost": ["It's time for the inhabitants of the tiny Village to gather on the Marketplace to discuss who they suspect to be the Monsters hidden among them. Everyone will cast a vote to decided on who to kill.",
-    "Under the rising sun, the marketplace becomes the heart of the village's quest for survival. The inhabitants, united by fear and suspicion, will discuss and reveal whom they believe to be the hidden monsters. In a crucial vote that seals fate with every count, they will decide who is to be executed in their midst."
-  ],
     "RevealVotingSurvival": [
     "All villagers survived the night unharmed.",
     "The village is quiet; no one was harmed last night.",
@@ -36,7 +46,30 @@
     "The night passed without any loss of life.",
     "All residents made it through the night safely."
   ],
-    "RevealVotingPre": ["After intense debate the Villagers each have casted their vote."],
-    "RevealVotingPost": ["The Villagers return to their daily Business."]
-  
+    "RevealVotingPre": [
+    "After intense debate, the villagers have cast their votes. The decision is made.",
+    "Following heated discussions, the votes are now in. The villagers have decided.",
+    "The debate is over, and the villagers have voted. The results are ready.",
+    "With the discussion concluded, the villagers' votes are cast. The outcome awaits.",
+    "After much argument, the villagers have made their choices. The votes are tallied.",
+    "The villagers have spoken. After intense debate, the votes are in.",
+    "The votes are in after a lively debate. The villagers have decided.",
+    "Following a spirited discussion, the villagers' votes are cast. The result is imminent.",
+    "The villagers' votes are now in after a heated debate. The decision will be revealed.",
+    "After the discussion, the villagers have made their choices. The votes are ready to be revealed.",
+    "The villagers' votes are cast after much debate. The outcome will be known soon.",
+    "After heated discussions, the villagers have voted. The results will now be revealed.",
+    "With the debate over, the votes are cast. The villagers' decision is final.",
+    "Following a lively discussion, the villagers have voted. The outcome is ready.",
+    "The villagers have cast their votes after intense debate. The decision will be shown."
+  ],
+    "RevealVotingPost": [
+      "The villagers return to their daily routines.",
+      "Life resumes as the villagers go back to their duties.",
+      "The Villagers return to their everyday activities.",
+      "Daily life continues for the villagers.",
+      "The villagers go back to their normal lives.",
+      "Life goes on as villagers resume their duties.",
+      "Daily business resumes for the villagers."
+    ]
   }
