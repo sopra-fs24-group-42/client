@@ -114,6 +114,10 @@
     border-collapse: collapse;
   }
 
+  &.table::-webkit-scrollbar {
+    display: none;
+  }
+
   &.table-header-position {
    font-size: 18px;
    color: #000000;
