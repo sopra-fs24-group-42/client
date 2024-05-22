@@ -258,7 +258,7 @@ const NightReveal = () => {
             },
             "voice": {
               "languageCode": "en-US",
-              "name": "en-US-Wavenet-D"
+              "name": "en-US-Studio-Q"
             }
             })
           };
