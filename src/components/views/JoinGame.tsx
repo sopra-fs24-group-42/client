@@ -7,9 +7,9 @@ import "styles/views/JoinGame.scss";
 import "styles/views/CreateGame.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
+import { Popover } from "@mantine/core";
 
 const FormField = (props) => {
-
   return (
     <div className="joinGame field">
       <label className="joinGame label">{props.label}</label>
@@ -37,9 +37,23 @@ const JoinGame = () => {
   const [username, setUsername] = useState<string>(null);
   const [invalidUsername, setInvalidUsername] = useState(false);
 
+  //variable for Errorhandling
+  const [popoverNonUniqueUsername, setPopoverNonUniqueUsername] = useState(false);
+  const [popoverLobbyFull, setPopoverLobbyFull] = useState(false);
+  const [popoverWrongLobbyCode, setPopoverWrongLobbyCode] = useState(false);
+
   useEffect(() => {
     localStorage.clear();
-  }, []); 
+  }, []);
+
+  const doSetUsername = (e) => {
+    if (e.length <= 15) {
+      setInvalidUsername(false);
+      setUsername(e);
+    } else {
+      setInvalidUsername(true);
+    }
+  };
 
   const doSetUsername = (e) => {
     if(e.length <= 15) {
@@ -51,18 +65,31 @@ const JoinGame = () => {
 
   const doJoinGame = async () => {
     try {
-      // creating a new Player object out of the joining player
-      const response1 = await api.post("/players", JSON.stringify({username, lobbyCode}));
+      const response1 = await api.post("/players", JSON.stringify({ username, lobbyCode }));
       const player = new Player(response1.data);
       localStorage.setItem("user", player.username);
       localStorage.setItem("playerId", player.playerId);
       localStorage.setItem("lobbyCode", player.lobbyCode);
       localStorage.setItem("lobbyId", player.lobbyId);
-      navigate("/waitingroom");            
+      navigate("/waitingroom");
     } catch (error) {
-      alert(
-        `Something went wrong during the creation of the game: \n${handleError(error)}`
-      );
+      if (error.response && error.response.status === 409) {
+        setPopoverNonUniqueUsername(true);
+      } 
+      
+      else if (error.response && error.response.status === 416){
+        setPopoverLobbyFull(true);
+      }
+
+      else if (error.response && error.response.status === 404){
+        setPopoverWrongLobbyCode(true);
+      }
+      
+      else {
+        alert(
+          `Something went wrong during the creation of the game: \n${handleError(error)}`
+        );
+      }
     }
   };
 
@@ -109,6 +136,70 @@ const JoinGame = () => {
             </div>
           </div>
         </div>
+        {popoverNonUniqueUsername && (
+          <Popover
+            opened={popoverNonUniqueUsername}
+            onClose={() => setPopoverNonUniqueUsername(false)}
+            withArrow
+            shadow="md"
+          >
+            <Popover.Dropdown className="joinGame dropdown">
+              <div className="joinGame popover-container">
+                <div className="joinGame heading">Username already taken. Try a different one</div>
+                <Button
+                  width="100%"
+                  height="40px"
+                  onClick={() => setPopoverNonUniqueUsername(false)}
+                >
+                  ok
+                </Button>
+              </div>
+            </Popover.Dropdown>
+          </Popover>
+        )}
+        {popoverLobbyFull && (
+          <Popover
+            opened={popoverLobbyFull}
+            onClose={() => setPopoverLobbyFull(false)}
+            withArrow
+            shadow="md"
+          >
+            <Popover.Dropdown className="joinGame dropdown">
+              <div className="joinGame popover-container">
+                <div className="joinGame heading">The Lobby is full. Join another Lobby or create your own.</div>
+                <Button
+                  width="100%"
+                  height="40px"
+                  onClick={() => setPopoverLobbyFull(false)}
+                >
+                  ok
+                </Button>
+              </div>
+            </Popover.Dropdown>
+          </Popover>
+        )}
+        {popoverWrongLobbyCode && (
+          <Popover
+            opened={popoverWrongLobbyCode}
+            onClose={() => setPopoverWrongLobbyCode(false)}
+            withArrow
+            shadow="md"
+          >
+            <Popover.Dropdown className="joinGame dropdown">
+              <div className="joinGame popover-container">
+                <div className="joinGame heading">Game code does not exist. Make sure you entered the correct code in capital letters</div>
+                <Button
+                  width="100%"
+                  height="40px"
+                  onClick={() => setPopoverWrongLobbyCode(false)}
+                >
+                  ok
+                </Button>
+              </div>
+            </Popover.Dropdown>
+          </Popover>
+        )}
+
       </BaseContainer>
     </div>
   );
