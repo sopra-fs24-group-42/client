@@ -388,9 +388,9 @@ const WaitingRoom = () => {
           withArrow
           shadow="md"
         >
-          <Popover.Dropdown className="waitingRoom dropdown">
-            <div className="waitingRoom popover-container">
-              <div className="waitingRoom heading">Are you sure you want to leave the game?</div>
+          <Popover.Dropdown className="joinGame  dropdown">
+            <div className="joinGame  popover-container">
+              <div className="joinGame  heading">Are you sure you want to leave the game?</div>
               <Button
                 width="100%"
                 height="40px"
