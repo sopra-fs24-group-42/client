@@ -63,6 +63,8 @@
     border-radius: 15px;
     font-size: 22px;
     align-items: center;
+    overflow:scroll;
+    max-height:calc(100vh - 250px);
     padding: 2px;
   }
 
