@@ -6,8 +6,8 @@ import { Button } from "components/ui/Button";
 import "styles/views/FrontPage.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
-import { ActionIcon } from "@mantine/core";
-import { Trophy } from "tabler-icons-react";
+import { ActionIcon, Popover } from "@mantine/core";
+import { Trophy, InfoCircle } from "tabler-icons-react";
 
 /*
 It is possible to add multiple components inside a single file,
@@ -18,37 +18,81 @@ specific components that belong to the main one in the same file.
 
 const FrontPage = () => {
   const navigate = useNavigate();
+  const [instructionsPopover, setInstructionsPopover] = useState(false);
 
   useEffect(() => { // This useEffect tracks changes in the lobby
     localStorage.clear();
   }, []);
 
-  return (
-    <BaseContainer>
-      <div className="frontpage background-container">
-
-        <div className="frontpage trophy-container">
-          <ActionIcon className="frontpage trophy-button"
-            aria-label="Trophy"
-            withArrow
-            onClick={() => navigate("/leaderboard")}
-          >
-            <Trophy size={48}/>
-          </ActionIcon>
-        </div>
-        <Header height="100" />
-        <div className="frontpage button-container">
-          <Button
-            onClick={() => navigate("/joingame")}>
-            Join an existing game
-          </Button>
-          <Button
-            onClick={() => navigate("/creategame")}
-          >Create a new game
-          </Button>
-        </div>
+  let popoverContent = (
+    <div>
+      <div className="frontpage header1">🧑‍🌾👩‍🌾Surive the Night 🐺</div>
+      <div className="frontpage header1">Game Rules:</div>
+      <div className="frontpage detailed-instructions">Survive the night is a party game which requires at least 4 people to play. A designated player creates a new game, allowing others to join via a unique game code.<br></br>Once everyone has joined, every player will receive a role, which must be kept a secret. Usually, there must be at least 1 protector, 1 seer, 1 sacrifice and 1 werewolf in a game (depending on the number of players), with the remaining players being villagers, but these settings can be changed by the host while waiting for all players to join.<br></br>Villagers, seers, protectors and sacrifices are on the same team. Villagers win when they have identified and voted out all werewolf players. The werewolves win when the number of players left on the villagers team is less than or equal to the number of werewolves left in the game.
       </div>
-    </BaseContainer>
+    </div>
+  );
+
+
+  const doInstructions = () => {
+    setInstructionsPopover((open) => !open);
+  }
+
+  return (
+    <div className="frontpage total-background">
+      <BaseContainer>
+        <div className="frontpage background-container">
+          <div className="frontpage trophy-container">
+            <ActionIcon className="frontpage trophy-button"
+              aria-label="Trophy"
+              withArrow
+              onClick={() => navigate("/leaderboard")}
+            >
+              <Trophy size={48}/>
+            </ActionIcon>
+            <ActionIcon className="frontpage trophy-button"
+              aria-label="infoCircle"
+              withArrow
+              onClick={() => doInstructions()}
+            >
+              <InfoCircle 
+                size={48}
+                strokeWidth={1.8}/>
+            </ActionIcon>
+          </div>
+          <Header height="100" />
+          <div className="frontpage button-container">
+            <Button
+              onClick={() => navigate("/joingame")}>
+              Join an existing game
+            </Button>
+            <Button
+              onClick={() => navigate("/creategame")}
+            >Create a new game
+            </Button>
+          </div>
+          {instructionsPopover && (
+            <Popover
+              opened={instructionsPopover} 
+              onClose={() => setInstructionsPopover(false)}
+              withArrow
+              shadow="md">
+              <Popover.Dropdown className="frontpage dropdown">
+                <div className="frontpage popover-container">
+                  {popoverContent}
+                  <Button
+                    width="100%"
+                    height="40px"
+                    onClick={() => setInstructionsPopover(false)}
+                  >Ok
+                  </Button>
+                </div>
+              </Popover.Dropdown>
+            </Popover>
+          )}
+        </div>
+      </BaseContainer>
+    </div>
   );
 };
 

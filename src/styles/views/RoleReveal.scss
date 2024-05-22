@@ -2,6 +2,15 @@
 
 .roleReveal     {
 
+  &.total-background {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    //background: url('../../../resources/wolfBody.png');
+    background-position: center;
+    background-size:cover;
+  }
+
     &.highlight {
     @include center;
     display: flex;

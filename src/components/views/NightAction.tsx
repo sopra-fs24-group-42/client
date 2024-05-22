@@ -289,35 +289,59 @@ const NightAction = () => {
   }
 
   return (
-    <BaseContainer>
-      <div className="nightAction background-container">
-        <div className= "nightAction header1">Night has fallen...</div>
-        <div className="nightAction highlight">{timer}</div>
-        {(() => {
-          if(role === "Werewolf") {
-            return (
-              <div className = "nightAction container">
-                {(() => {
-                  if((ready && (selected !== "" || abstained)) || nightActionDone) { // selected someone and confirmed
-                    return (
-                      <div className="nightAction container">
-                        {localStorage.getItem("abstainedPersist") === "t" ? 
-                          <div className= "nightAction heading">You have chosen to abstain</div>:
-                          <div className= "nightAction heading">You have attempted to kill {localStorage.getItem("selected").slice(0,-5)}</div>
-                        }
-                        <div className= "nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
-                        <Spinner />
-                      </div>)}
-                  else if (selected !== "" && !ready && !nightActionDone) { // selected someone but not confirmed
-                    return (
-                      <div className = "nightAction container">
-                        <div className= "nightAction heading">You have selected {selected.slice(0,-5)} 
-                          <div className= "nightAction container">{werewolfContent}
+    <div className="nightAction total-background">
+      <BaseContainer>
+        <div className="nightAction background-container">
+          <div className= "nightAction header1">Night has fallen...</div>
+          <div className="nightAction highlight">{timer}</div>
+          {(() => {
+            if(role === "Werewolf") {
+              return (
+                <div className = "nightAction container">
+                  {(() => {
+                    if((ready && (selected !== "" || abstained)) || nightActionDone) { // selected someone and confirmed
+                      return (
+                        <div className="nightAction container">
+                          {localStorage.getItem("abstainedPersist") === "t" ? 
+                            <div className= "nightAction heading">You have chosen to abstain</div>:
+                            <div className= "nightAction heading">You have attempted to kill {localStorage.getItem("selected").slice(0,-5)}</div>
+                          }
+                          <div className= "nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
+                          <Spinner />
+                        </div>)}
+                    else if (selected !== "" && !ready && !nightActionDone) { // selected someone but not confirmed
+                      return (
+                        <div className = "nightAction container">
+                          <div className= "nightAction heading">You have selected {selected.slice(0,-5)} 
+                            <div className= "nightAction container">{werewolfContent}
+                              <div className = "nightAction button-container">
+                                <Button
+                                  width="100%"
+                                  height="40px"
+                                  onClick={() => doSendSelected()}
+                                >Kill
+                                </Button>
+                                <Button
+                                  width="100%"
+                                  height="40px"
+                                  onClick={() => doAbstain()}
+                                >Abstain
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>)
+                    } else if(!nightActionDone){ // not selected anyone yet
+                      return (
+                        <div className = "nightAction container">
+                          <div className= "nightAction heading">{username.slice(0,-5)},<br></br> select someone to kill.    
+                            <div className= "nightAction container">{werewolfContent} </div>
                             <div className = "nightAction button-container">
                               <Button
                                 width="100%"
                                 height="40px"
                                 onClick={() => doSendSelected()}
+                                disabled={true}
                               >Kill
                               </Button>
                               <Button
@@ -328,20 +352,108 @@ const NightAction = () => {
                               </Button>
                             </div>
                           </div>
+                        </div>)}
+                  })()}
+                </div>
+              )
+            } else if (role === "Seer") {
+              return (
+                <div className = "nightAction container">
+                  {(() => {
+                    if (selected !== "" && !revealRole && !abstained && !nightActionDone && !seerBlock) { // selected someone but not seen the role yet 
+                      return (
+                        <div className="nightAction heading">You have selected <br></br> {selected.slice(0,-5)}
+                          <div className="nightAction container">{content}
+                            <div className="nightAction button-container">
+                              <Button
+                                width="100%"
+                                height="40px"
+                                onClick={() => doReveal()}
+                              >See role
+                              </Button>
+                              <Button
+                                width="100%"
+                                height="40px"
+                                onClick={() => doAbstain()} // TODO: set revealRole to true ?
+                              >Abstain
+                              </Button>
+                            </div>
+                          </div>
                         </div>
-                      </div>)
-                  } else if(!nightActionDone){ // not selected anyone yet
-                    return (
-                      <div className = "nightAction container">
-                        <div className= "nightAction heading">{username.slice(0,-5)},<br></br> select someone to kill.    
-                          <div className= "nightAction container">{werewolfContent} </div>
+                      );
+                    } else if (selected !== "" && revealRole && !ready && !nightActionDone && !seerBlock) { // selected someone and looking at role
+                      return (
+                        <div className="nightAction container">
+                          {(() => {
+                            if(revealRole === "Werewolf") {
+                              return (
+                                <div className="nightAction container">
+                                  <div className="nightAction werewolf"></div>
+                                </div>
+                              );
+                            } else if(revealRole === "Seer") {
+                              return (
+                                <div className="nightAction role-container">
+                                  <div className="nightAction seer"></div>
+                                </div>
+                              );
+                            } else if (revealRole === "Villager") {
+                              return (
+                                <div className="nightAction container">
+                                  <div className="nightAction villager"></div>
+                                </div>
+                              )
+                            } else if (revealRole === "Protector") {
+                              return (
+                                <div className="nightAction container">
+                                  <div className="nightAction protector"></div>
+                                </div>
+                              )
+                            } else if (revealRole === "Sacrifice") {
+                              return (
+                                <div className="nightAction container">
+                                  <div className="nightAction sacrifice"></div>
+                                </div>
+                              )
+                            }
+                          })()}
+                          <div className="nightAction header1">{selected.slice(0,-5)} is a</div>
+                          <div className="nightAction role-highlight">{revealRole}</div>
+                          <div className="nightAction button-container">
+                            <Button
+                              width="100%"
+                              height="40px"
+                              onClick={() => doSendSelected()}
+                            >Ok, got it
+                            </Button>
+                          </div>
+                        </div>
+                      );
+                    } else if (((selected !== "" && revealRole && ready) || (abstained)) || nightActionDone || seerBlock) { // selected someone, seen their role and confirmed
+                      return (
+                        <div className="nightAction container">
+                          {localStorage.getItem("abstainedPersist") === "t" ? 
+                            <div className="nightAction heading">You have chosen to abstain</div> :
+                            <div className="nightAction heading">You chose to look at <br></br>{localStorage.getItem("selected").slice(0,-5)}</div>
+                          }
+                          <div className="nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
+                          <Spinner />
+                        </div>
+                      );
+                    }
+                    else if(!nightActionDone){ // not selected anyone yet (seer)
+                      return (
+                        <div className = "nightAction container">
+                          <div className="nightAction heading">{username.slice(0,-5)},<br></br> whose role do you want to see?
+                            <div className="nightAction container">{content} </div>
+                          </div>
                           <div className = "nightAction button-container">
                             <Button
                               width="100%"
                               height="40px"
                               onClick={() => doSendSelected()}
                               disabled={true}
-                            >Kill
+                            >See role
                             </Button>
                             <Button
                               width="100%"
@@ -351,270 +463,182 @@ const NightAction = () => {
                             </Button>
                           </div>
                         </div>
-                      </div>)}
-                })()}
-              </div>
-            )
-          } else if (role === "Seer") {
-            return (
-              <div className = "nightAction container">
-                {(() => {
-                  if (selected !== "" && !revealRole && !abstained && !nightActionDone && !seerBlock) { // selected someone but not seen the role yet 
-                    return (
-                      <div className="nightAction heading">You have selected <br></br> {selected.slice(0,-5)}
-                        <div className="nightAction container">{content}
-                          <div className="nightAction button-container">
+                      );}
+                  })()}
+                </div>
+              )
+            } else if(role === "Sacrifice") {
+              return (
+                <div className = "nightAction container">
+                  {(() => {
+                    if((ready && (selected !== "" || abstained)) || nightActionDone) { // selected someone and confirmed or abstained
+                      return (
+                        <div className= "nightAction container">
+                          {localStorage.getItem("abstainedPersist") === "t" ? 
+                            <div className="nightAction heading">You have chosen to abstain</div> :
+                            <div className="nightAction heading">You have chosen to die with <br></br>{localStorage.getItem("selected").slice(0,-5)}</div>
+                          }
+                          <div className= "nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
+                          <Spinner />
+                        </div>)
+                    } else if (selected !== "" && !ready && !nightActionDone) { // selected someone but not confirmed
+                      return(
+                        <div className = "nightAction container">
+                          <div className= "nightAction heading">You have selected <br></br> {selected.slice(0,-5)}
+                            <div className= "nightAction container">{content}
+                              <div className="nightAction button-container">
+                                <Button
+                                  width="100%"
+                                  height="40px"
+                                  onClick={() => doSendSelected()}
+                                >Sacrifice
+                                </Button>
+                                <Button
+                                  width="100%"
+                                  height="40px"
+                                  onClick={() => doAbstain()}
+                                >Abstain
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    } else if(!nightActionDone){ // not selected anyone yet (sacrifice)
+                      return (
+                        <div className = "nightAction container">
+                          <div className="nightAction heading">{username.slice(0,-5)},<br></br> choose someone to die with you
+                            <div className="nightAction container">{content} </div>
+                          </div>
+                          <div className = "nightAction button-container">
                             <Button
                               width="100%"
                               height="40px"
-                              onClick={() => doReveal()}
-                            >See role
+                              onClick={() => doSendSelected()}
+                              disabled={true}
+                            >Sacrifice
                             </Button>
                             <Button
                               width="100%"
                               height="40px"
-                              onClick={() => doAbstain()} // TODO: set revealRole to true ?
+                              onClick={() => doAbstain()}
                             >Abstain
                             </Button>
                           </div>
                         </div>
-                      </div>
-                    );
-                  } else if (selected !== "" && revealRole && !ready && !nightActionDone && !seerBlock) { // selected someone and looking at role
-                    return (
-                      <div className="nightAction container">
-                        {(() => {
-                          if(revealRole === "Werewolf") {
-                            return (
-                              <div className="nightAction container">
-                                <div className="nightAction werewolf"></div>
-                              </div>
-                            );
-                          } else if(revealRole === "Seer") {
-                            return (
-                              <div className="nightAction role-container">
-                                <div className="nightAction seer"></div>
-                              </div>
-                            );
-                          } else if (revealRole === "Villager") {
-                            return (
-                              <div className="nightAction container">
-                                <div className="nightAction villager"></div>
-                              </div>
-                            )
-                          } else if (revealRole === "Protector") {
-                            return (
-                              <div className="nightAction container">
-                                <div className="nightAction protector"></div>
-                              </div>
-                            )
-                          } else if (revealRole === "Sacrifice") {
-                            return (
-                              <div className="nightAction container">
-                                <div className="nightAction sacrifice"></div>
-                              </div>
-                            )
+                      );}
+                  })()}
+                </div>
+              )
+            } else if(role === "Protector") {
+              return (
+                <div className = "nightAction container">
+                  {(() => {
+                    if((ready && (selected !== "" || abstained)) || nightActionDone) { // selected someone and confirmed or abstained (protector)
+                      return (
+                        <div className= "nightAction container">
+                          {localStorage.getItem("abstainedPersist") === "t" ? 
+                            <div className="nightAction heading">You have chosen to abstain</div> :
+                            <div className="nightAction heading">You have chosen to protect <br></br>{localStorage.getItem("selected").slice(0,-5)}</div>
                           }
-                        })()}
-                        <div className="nightAction header1">{selected.slice(0,-5)} is a</div>
-                        <div className="nightAction role-highlight">{revealRole}</div>
-                        <div className="nightAction button-container">
-                          <Button
-                            width="100%"
-                            height="40px"
-                            onClick={() => doSendSelected()}
-                          >Ok, got it
-                          </Button>
-                        </div>
-                      </div>
-                    );
-                  } else if (((selected !== "" && revealRole && ready) || (abstained)) || nightActionDone || seerBlock) { // selected someone, seen their role and confirmed
-                    return (
-                      <div className="nightAction container">
-                        {localStorage.getItem("abstainedPersist") === "t" ? 
-                          <div className="nightAction heading">You have chosen to abstain</div> :
-                          <div className="nightAction heading">You chose to look at <br></br>{localStorage.getItem("selected").slice(0,-5)}</div>
-                        }
-                        <div className="nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
-                        <Spinner />
-                      </div>
-                    );
-                  }
-                  else if(!nightActionDone){ // not selected anyone yet (seer)
-                    return (
-                      <div className = "nightAction container">
-                        <div className="nightAction heading">{username.slice(0,-5)},<br></br> whose role do you want to see?
-                          <div className="nightAction container">{content} </div>
-                        </div>
-                        <div className = "nightAction button-container">
-                          <Button
-                            width="100%"
-                            height="40px"
-                            onClick={() => doSendSelected()}
-                            disabled={true}
-                          >See role
-                          </Button>
-                          <Button
-                            width="100%"
-                            height="40px"
-                            onClick={() => doAbstain()}
-                          >Abstain
-                          </Button>
-                        </div>
-                      </div>
-                    );}
-                })()}
-              </div>
-            )
-          } else if(role === "Sacrifice") {
-            return (
-              <div className = "nightAction container">
-                {(() => {
-                  if((ready && (selected !== "" || abstained)) || nightActionDone) { // selected someone and confirmed or abstained
-                    return (
-                      <div className= "nightAction container">
-                        {localStorage.getItem("abstainedPersist") === "t" ? 
-                          <div className="nightAction heading">You have chosen to abstain</div> :
-                          <div className="nightAction heading">You have chosen to die with <br></br>{localStorage.getItem("selected").slice(0,-5)}</div>
-                        }
-                        <div className= "nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
-                        <Spinner />
-                      </div>)
-                  } else if (selected !== "" && !ready && !nightActionDone) { // selected someone but not confirmed
-                    return(
-                      <div className = "nightAction container">
-                        <div className= "nightAction heading">You have selected <br></br> {selected.slice(0,-5)}
-                          <div className= "nightAction container">{content}
-                            <div className="nightAction button-container">
-                              <Button
-                                width="100%"
-                                height="40px"
-                                onClick={() => doSendSelected()}
-                              >Sacrifice
-                              </Button>
-                              <Button
-                                width="100%"
-                                height="40px"
-                                onClick={() => doAbstain()}
-                              >Abstain
-                              </Button>
+                          <div className= "nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
+                          <Spinner />
+                        </div>)
+                    } else if (selected !== "" && !ready && !nightActionDone) { // selected someone but not confirmed (protector)
+                      return(
+                        <div className = "nightAction container">
+                          <div className= "nightAction heading">You have selected <br></br> {selected.slice(0,-5)}
+                            <div className= "nightAction container">{protectorContent}
+                              <div className="nightAction button-container">
+                                <Button
+                                  width="100%"
+                                  height="40px"
+                                  onClick={() => doSendSelected()}
+                                >Protect
+                                </Button>
+                                <Button
+                                  width="100%"
+                                  height="40px"
+                                  onClick={() => doAbstain()}
+                                >Abstain
+                                </Button>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    )
-                  } else if(!nightActionDone){ // not selected anyone yet (sacrifice)
-                    return (
-                      <div className = "nightAction container">
-                        <div className="nightAction heading">{username.slice(0,-5)},<br></br> choose someone to die with you
-                          <div className="nightAction container">{content} </div>
-                        </div>
-                        <div className = "nightAction button-container">
-                          <Button
-                            width="100%"
-                            height="40px"
-                            onClick={() => doSendSelected()}
-                            disabled={true}
-                          >Sacrifice
-                          </Button>
-                          <Button
-                            width="100%"
-                            height="40px"
-                            onClick={() => doAbstain()}
-                          >Abstain
-                          </Button>
-                        </div>
-                      </div>
-                    );}
-                })()}
-              </div>
-            )
-          } else if(role === "Protector") {
-            return (
-              <div className = "nightAction container">
-                {(() => {
-                  if((ready && (selected !== "" || abstained)) || nightActionDone) { // selected someone and confirmed or abstained (protector)
-                    return (
-                      <div className= "nightAction container">
-                        {localStorage.getItem("abstainedPersist") === "t" ? 
-                          <div className="nightAction heading">You have chosen to abstain</div> :
-                          <div className="nightAction heading">You have chosen to protect <br></br>{localStorage.getItem("selected").slice(0,-5)}</div>
-                        }
-                        <div className= "nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
-                        <Spinner />
-                      </div>)
-                  } else if (selected !== "" && !ready && !nightActionDone) { // selected someone but not confirmed (protector)
-                    return(
-                      <div className = "nightAction container">
-                        <div className= "nightAction heading">You have selected <br></br> {selected.slice(0,-5)}
-                          <div className= "nightAction container">{protectorContent}
-                            <div className="nightAction button-container">
-                              <Button
-                                width="100%"
-                                height="40px"
-                                onClick={() => doSendSelected()}
-                              >Protect
-                              </Button>
-                              <Button
-                                width="100%"
-                                height="40px"
-                                onClick={() => doAbstain()}
-                              >Abstain
-                              </Button>
-                            </div>
+                      )
+                    } else if(!nightActionDone) { // not selected anyone yet (protector)
+                      return (
+                        <div className = "nightAction container">
+                          <div className="nightAction heading">{username.slice(0,-5)},<br></br> choose someone to protect
+                            <div className="nightAction container">{protectorContent} </div>
+                          </div>
+                          <div className = "nightAction button-container">
+                            <Button
+                              width="100%"
+                              height="40px"
+                              onClick={() => doSendSelected()}
+                              disabled={true}
+                            >Protect
+                            </Button>
+                            <Button
+                              width="100%"
+                              height="40px"
+                              onClick={() => doAbstain()}
+                            >Abstain
+                            </Button>
                           </div>
                         </div>
-                      </div>
-                    )
-                  } else if(!nightActionDone) { // not selected anyone yet (protector)
-                    return (
-                      <div className = "nightAction container">
-                        <div className="nightAction heading">{username.slice(0,-5)},<br></br> choose someone to protect
-                          <div className="nightAction container">{protectorContent} </div>
-                        </div>
-                        <div className = "nightAction button-container">
-                          <Button
-                            width="100%"
-                            height="40px"
-                            onClick={() => doSendSelected()}
-                            disabled={true}
-                          >Protect
-                          </Button>
-                          <Button
-                            width="100%"
-                            height="40px"
-                            onClick={() => doAbstain()}
-                          >Abstain
-                          </Button>
-                        </div>
-                      </div>
-                    );}
-                })()}
-              </div>
-            )
-          } else { // Villager
-            return (
-              <div className = "nightAction container">
-                {(() => {
-                  if((ready && (selected !== "" || abstained)) || nightActionDone) { // selected someone and confirmed or abstained (villager)
-                    return (
-                      <div className= "nightAction container">
-                        {localStorage.getItem("abstainedPersist") === "t" ? 
-                          <div className="nightAction heading">You have chosen to abstain</div> :
-                          <div className="nightAction heading"></div>
-                        }
-                        <div className= "nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
-                        <Spinner />
-                      </div>)}
-                  else if (selected !== "" && !ready && !nightActionDone) { // selected someone but not confirmed yet (villager)
-                    return(
-                      <div className = "nightAction container">
-                        <div className= "nightAction heading">You have selected {selected.slice(0,-5)}
-                          <div className= "nightAction container">{content}
+                      );}
+                  })()}
+                </div>
+              )
+            } else { // Villager
+              return (
+                <div className = "nightAction container">
+                  {(() => {
+                    if((ready && (selected !== "" || abstained)) || nightActionDone) { // selected someone and confirmed or abstained (villager)
+                      return (
+                        <div className= "nightAction container">
+                          {localStorage.getItem("abstainedPersist") === "t" ? 
+                            <div className="nightAction heading">You have chosen to abstain</div> :
+                            <div className="nightAction heading"></div>
+                          }
+                          <div className= "nightAction wait">Waiting for all players to finish their night actions...<br></br></div>
+                          <Spinner />
+                        </div>)}
+                    else if (selected !== "" && !ready && !nightActionDone) { // selected someone but not confirmed yet (villager)
+                      return(
+                        <div className = "nightAction container">
+                          <div className= "nightAction heading">You have selected {selected.slice(0,-5)}
+                            <div className= "nightAction container">{content}
+                              <div className="nightAction button-container">
+                                <Button
+                                  width="100%"
+                                  height="40px"
+                                  onClick={() => doSendSelected()}
+                                >Pretend to not be a villager
+                                </Button>
+                                <Button
+                                  width="100%"
+                                  height="40px"
+                                  onClick={() => doAbstain()}
+                                >Abstain
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>)
+                    } else if(!nightActionDone) { // not selected anyone yet (villager)
+                      return (
+                        <div className = "nightAction container">
+                          <div className= "nightAction heading">{username.slice(0,-5)},<br></br> as a villager, you can only hope to survive the night
+                            <div className= "nightAction container">{content} </div>
                             <div className="nightAction button-container">
                               <Button
                                 width="100%"
                                 height="40px"
+                                disabled = {true}
                                 onClick={() => doSendSelected()}
                               >Pretend to not be a villager
                               </Button>
@@ -627,38 +651,16 @@ const NightAction = () => {
                             </div>
                           </div>
                         </div>
-                      </div>)
-                  } else if(!nightActionDone) { // not selected anyone yet (villager)
-                    return (
-                      <div className = "nightAction container">
-                        <div className= "nightAction heading">{username.slice(0,-5)},<br></br> as a villager, you can only hope to survive the night
-                          <div className= "nightAction container">{content} </div>
-                          <div className="nightAction button-container">
-                            <Button
-                              width="100%"
-                              height="40px"
-                              disabled = {true}
-                              onClick={() => doSendSelected()}
-                            >Pretend to not be a villager
-                            </Button>
-                            <Button
-                              width="100%"
-                              height="40px"
-                              onClick={() => doAbstain()}
-                            >Abstain
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    )
-                  }
-                })()}
-              </div>
-            )
-          }
-        })()}
-      </div>
-    </BaseContainer>
+                      )
+                    }
+                  })()}
+                </div>
+              )
+            }
+          })()}
+        </div>
+      </BaseContainer>
+    </div>
   );
 };
 

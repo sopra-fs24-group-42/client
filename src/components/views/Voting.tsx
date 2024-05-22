@@ -234,32 +234,55 @@ const Voting = () => {
     );}
 
   return (
-    <BaseContainer>
-      <div className="voting background-container">
-        <div className= "voting header">Time to put it to a vote!
-          <div className="voting highlight">{timer}</div>
-          <BaseContainer>
-            {(() => {
-              if((ready && (selected !== "" || abstained)) || nightActionDone) { // selected someone & confirmed
-                return (
-                  <div className ="voting container">
-                    {localStorage.getItem("abstainedPersist") === "t" ?
-                      <div className="voting heading">You have chosen to abstain</div> :
-                      <div className="voting heading">You have voted for {localStorage.getItem("selected").slice(0,-5)}</div>}
-                    <div className= "voting wait">Waiting for all players to submit their vote...</div>
-                    <Spinner />
-                  </div>)
-              } else if (selected !== "" && !ready && !nightActionDone) { // selected someone but not confirmed yet
-                return (
-                  <div className="voting container">
-                    <div className= "voting heading">You have selected<br></br> {selected.slice(0,-5)} </div>
-                    <div className= "voting container">{content}
+    <div className="voting total-background">
+      <BaseContainer>
+        <div className="voting background-container">
+          <div className="voting header">Time to put it to a vote!
+            <div className="voting highlight">{timer}</div>
+            <BaseContainer>
+              {(() => {
+                if ((ready && (selected !== "" || abstained)) || nightActionDone) { // selected someone & confirmed
+                  return (
+                    <div className="voting container">
+                      {localStorage.getItem("abstainedPersist") === "t" ?
+                        <div className="voting heading">You have chosen to abstain</div> :
+                        <div className="voting heading">You have voted for {localStorage.getItem("selected").slice(0, -5)}</div>}
+                      <div className="voting wait">Waiting for all players to submit their vote...</div>
+                      <Spinner />
+                    </div>)
+                } else if (selected !== "" && !ready && !nightActionDone) { // selected someone but not confirmed yet
+                  return (
+                    <div className="voting container">
+                      <div className="voting heading">You have selected<br></br> {selected.slice(0, -5)} </div>
+                      <div className="voting container">{content}
+                        <div className="voting button-container">
+                          <Button
+                            width="100%"
+                            height="40px"
+                            onClick={() => doSendSelected()}
+                          >Vote
+                          </Button>
+                          <Button
+                            width="100%"
+                            height="40px"
+                            onClick={() => doAbstain()}
+                          >Abstain
+                          </Button>
+                        </div>
+                      </div>
+                    </div>)
+                } else if (!nightActionDone) { // not selected anyone yet
+                  return (
+                    <div className="voting container">
+                      <div className="voting heading">{username.slice(0, -5)},<br></br> select who you want to vote out.</div>
+                      <div className="voting container">{content}</div>
                       <div className="voting button-container">
                         <Button
                           width="100%"
                           height="40px"
                           onClick={() => doSendSelected()}
-                        >Vote
+                          disabled={true}
+                        >Confirm
                         </Button>
                         <Button
                           width="100%"
@@ -269,35 +292,14 @@ const Voting = () => {
                         </Button>
                       </div>
                     </div>
-                  </div>)
-              } else if(!nightActionDone) { // not selected anyone yet
-                return (
-                  <div className="voting container">
-                    <div className= "voting heading">{username.slice(0,-5)},<br></br> select who you want to vote out.</div>    
-                    <div className= "voting container">{content}</div>
-                    <div className="voting button-container">
-                      <Button
-                        width="100%"
-                        height="40px"
-                        onClick={() => doSendSelected()}
-                        disabled={true}
-                      >Confirm
-                      </Button>
-                      <Button
-                        width="100%"
-                        height="40px"
-                        onClick={() => doAbstain()}
-                      >Abstain
-                      </Button>
-                    </div>
-                  </div>
-                )
-              }
-            })()}
-          </BaseContainer>
+                  )
+                }
+              })()}
+            </BaseContainer>
+          </div>
         </div>
-      </div>
-    </BaseContainer>
+      </BaseContainer>
+    </div>
   );
 };
 

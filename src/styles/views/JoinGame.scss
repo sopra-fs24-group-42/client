@@ -2,6 +2,15 @@
 
 .joinGame     {
 
+  &.total-background {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    //background: url('../../../resources/wolfBody.png');
+    background-position: center;
+    background-size:cover;
+  }
+
   &.background-container {
     //background: url('../../../resources/kingCard.jpg');
     background-color: rgba(225, 225, 225, 1);
