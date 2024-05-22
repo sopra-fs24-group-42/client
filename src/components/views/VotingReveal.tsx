@@ -348,7 +348,7 @@ const VotingReveal = () => {
             if (!ready) {
               return (
                 <div className="votingReveal button-container">
-                  {username !== hostName &&
+                  {username === hostName && !dataNotFetched &&
                     <Button
                       width="100%"
                       height="40px"

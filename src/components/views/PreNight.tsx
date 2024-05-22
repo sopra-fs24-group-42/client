@@ -225,7 +225,7 @@ const PreNight = () => {
               <Spinner />
             </div>
             <div className="PreNight button-container">
-              {username === hostName &&
+              {username === hostName && !dataNotFetched &&
                 <Button
                   width="100%"
                   height="40px"
