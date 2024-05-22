@@ -320,7 +320,7 @@ const NightReveal = () => {
               if (!ready) {
                 return (
                   <div className="nightReveal button-container">
-                    {username === hostName && !dataNotFetched &&
+                    {username !== hostName &&
                       <Button
                         width="100%"
                         height="40px"
@@ -337,7 +337,7 @@ const NightReveal = () => {
                       >Ok
                       </Button>
                     }
-                    {username === hostName &&
+                    {username === hostName && !dataNotFetched &&
                       <Button
                         width="100%"
                         height="40px"
