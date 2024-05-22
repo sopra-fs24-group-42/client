@@ -51,6 +51,23 @@ Furthermore, you need to install the libraries used :
 
 * Depending on your existing setup, you might need to install more.
 
+To be able to run the Appliacation you require an API Key for the Google Text-to-Speech AI.<br />
+Check https://cloud.google.com/text-to-speech/docs/before-you-begin in case you require assistance activating the Cloud Text-to-Speech AI.<br />
+Once you activate the Cloud Text-to-Speech AI on your account follow the next steps to create a API Key.<br />
+1. Navigate to "APIs & Services" in the Navigation Menu
+2. Select Credentials
+3. Create a new API Key by pressing the "+ CREATE CREDENTIALS" and Selecting API Key.
+4. We recommend restricting the Access of the created API KEY to the Cloud Text-to-Speech API. You can do so by clicking on "Edit API key"
+
+To use the API locally create in the Client Repository a .env file with the following content:<br />
+
+```REACT_APP_API_KEY="YOUR_API_KEY"```<br />
+
+Substitute "YOUR_API_KEY" with the previously created API Key.<br />
+
+If you plan on Deploying the Application with github Actions on google Cloud, make sure to add the API KEY to a Github Secret and reference it in the Workflow.<br />
+If you name your Github Actions Secret "REACT_APP_API_KEY", you do not need to change the Workflow in main.yml.<br />
+
 ### Commands to build and run the project locally
 
 Start the app with: `npm run dev`
