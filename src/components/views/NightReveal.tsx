@@ -207,7 +207,7 @@ const NightReveal = () => {
         if (NumberOfWerewolfsAlive === 0 || NumberOfWerewolfsAlive >= NumberOfVillagersAlive){
           RevealNightPost = "";
         } else {
-          const RevealNightPost = textSamples.RevealNightPost[Math.floor(Math.random() * textSamples.RevealNightPost.length)];
+          RevealNightPost = textSamples.RevealNightPost[Math.floor(Math.random() * textSamples.RevealNightPost.length)];
         }
 
         /*logic to differentiat between the number of killed players and making the text for the 
@@ -240,7 +240,7 @@ const NightReveal = () => {
           RevealNightMid = ""; // Initialize it as an empty string even in the error case
         }        
 
-        const selectedText = "<speak>" +  RevealNightPre + " " + "<break time=\"1s\"/> " + RevealNightMid + " " + "<break time=\"2s\"/> " + RevealNightPost + "</speak>";
+        const selectedText = "<speak>" + "<break time=\"500ms\"/> " +  RevealNightPre + " " + "<break time=\"1s\"/> " + RevealNightMid + " " + "<break time=\"2s\"/> " + RevealNightPost + "</speak>";
         const fetchData = async () => {
           const baseURL = "https://texttospeech.googleapis.com/v1beta1/text:synthesize?fields=audioContent&key="
           const URLSecret = process.env.REACT_APP_API_KEY;
@@ -258,7 +258,7 @@ const NightReveal = () => {
             },
             "voice": {
               "languageCode": "en-US",
-              "name": "en-US-Wavenet-D"
+              "name": "en-US-Studio-Q"
             }
             })
           };
