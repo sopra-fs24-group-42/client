@@ -108,30 +108,32 @@ const DeadScreen = () => {
   }, [messageReceived]); 
 
   return (
-    <BaseContainer>
-      <div className="deadPlayer background-container">
-        <div className="deadPlayer header">{deadPlayer.username.slice(0,-5)}, <br></br> the game ends here for you...</div>
-        {(() => {
-          if (deadPlayer.numberOfVotes !== 0) { // you were voted out
-            return (
-              <div className="deadPlayer container">
-                <div className = "deadPlayer votedOut"></div>
-                <div className="deadPlayer header">You were</div>
-                <div className = "deadPlayer highlight">voted out!</div>
-              </div>
-            );
-          } else { // you were killed
-            return (
-              <div className="deadPlayer container">
-                <div className="deadPlayer rip"></div>
-                <div className="deadPlayer header">You were</div>
-                <div className = "deadPlayer highlight">killed!</div>
-              </div>
-            );
-          }
-        })()}
-      </div>
-    </BaseContainer>
+    <div className="deadPlayer total-background">
+      <BaseContainer>
+        <div className="deadPlayer background-container">
+          <div className="deadPlayer header">{deadPlayer.username.slice(0, -5)}, <br></br> the game ends here for you...</div>
+          {(() => {
+            if (deadPlayer.numberOfVotes !== 0) { // you were voted out
+              return (
+                <div className="deadPlayer container">
+                  <div className="deadPlayer votedOut"></div>
+                  <div className="deadPlayer header">You were</div>
+                  <div className="deadPlayer highlight">voted out!</div>
+                </div>
+              );
+            } else { // you were killed
+              return (
+                <div className="deadPlayer container">
+                  <div className="deadPlayer rip"></div>
+                  <div className="deadPlayer header">You were</div>
+                  <div className="deadPlayer highlight">killed!</div>
+                </div>
+              );
+            }
+          })()}
+        </div>
+      </BaseContainer>
+    </div>
   );
 };
 

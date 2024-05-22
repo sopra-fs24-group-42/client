@@ -310,57 +310,59 @@ const NightReveal = () => {
   };
 
   return (
-    <BaseContainer>
-      <div className ="nightReveal background-container">
-        <div className="nightReveal container">
-          <div className="nightReveal header">Dawn has broken...</div>
-          {content}
-          {(() => {
-            if (!ready) {
-              return (
-                <div className="nightReveal button-container">
-                  {username !== hostName &&
-                  <Button
-                    width="100%"
-                    height="40px"
-                    onClick={() => doSendReady()}
-                  >Ok
-                  </Button>
-                  }
-                  {username === hostName &&
-                  <Button
-                    width="100%"
-                    height="40px"
-                    onClick={() => doSendReady()}
-                    disabled={!playPressed}  // Disable OK button until audio is played
-                  >Ok
-                  </Button>
-                  }
-                  { username === hostName &&
-                  <Button
-                    width="100%"
-                    height="40px"
-                    onClick={DecodeAndPlay}
-                  >Press to Play
-                  </Button>
-                  }
-                  {audioUrl && (
-                    <audio controls src={audioUrl} autoPlay />
-                  )}
-                </div>
-              );
-            } else {
-              return (
-                <div className="nightReveal container">
-                  <div className="nightReveal wait">Waiting for other players...</div>
-                  <Spinner />
-                </div>
-              );
-            }
-          })()}
+    <div className="nightReveal total-background">
+      <BaseContainer>
+        <div className="nightReveal background-container">
+          <div className="nightReveal container">
+            <div className="nightReveal header">Dawn has broken...</div>
+            {content}
+            {(() => {
+              if (!ready) {
+                return (
+                  <div className="nightReveal button-container">
+                    {username !== hostName &&
+                      <Button
+                        width="100%"
+                        height="40px"
+                        onClick={() => doSendReady()}
+                      >Ok
+                      </Button>
+                    }
+                    {username === hostName &&
+                      <Button
+                        width="100%"
+                        height="40px"
+                        onClick={() => doSendReady()}
+                        disabled={!playPressed}  // Disable OK button until audio is played
+                      >Ok
+                      </Button>
+                    }
+                    {username === hostName &&
+                      <Button
+                        width="100%"
+                        height="40px"
+                        onClick={DecodeAndPlay}
+                      >Press to Play
+                      </Button>
+                    }
+                    {audioUrl && (
+                      <audio controls src={audioUrl} autoPlay />
+                    )}
+                  </div>
+                );
+              } else {
+                return (
+                  <div className="nightReveal container">
+                    <div className="nightReveal wait">Waiting for other players...</div>
+                    <Spinner />
+                  </div>
+                );
+              }
+            })()}
+          </div>
         </div>
-      </div>
-    </BaseContainer>
+      </BaseContainer>
+    </div>
   );
 };
 

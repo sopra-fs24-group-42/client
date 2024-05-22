@@ -159,30 +159,33 @@ const End = () => {
   }
 
   return (
-    <BaseContainer>
-      <div className="end background-container">
-        <div className= "end header">The game has ended!</div>
-        {content}
-        {(() => {
-          if(!ready) {
-            return (
-              <div className = "end button-container">
-                <Button
-                  width="100%"
-                  height="40px"
-                  onClick={() => doSendReady()}
-                >Ok
-                </Button>
-              </div>)
-          } else { 
-            return (
-              <div className="end container">
-                <div className="end wait">Waiting for other players...</div>
-                <Spinner />
-              </div>)}
-        })()}
-      </div>
-    </BaseContainer>
+    <div className="end total-background">
+      <BaseContainer>
+        <div className="end background-container">
+          <div className="end header">The game has ended!</div>
+          {content}
+          {(() => {
+            if (!ready) {
+              return (
+                <div className="end button-container">
+                  <Button
+                    width="100%"
+                    height="40px"
+                    onClick={() => doSendReady()}
+                  >Ok
+                  </Button>
+                </div>)
+            } else {
+              return (
+                <div className="end container">
+                  <div className="end wait">Waiting for other players...</div>
+                  <Spinner />
+                </div>)
+            }
+          })()}
+        </div>
+      </BaseContainer>
+    </div>
   );
 };
 

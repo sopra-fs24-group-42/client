@@ -55,6 +55,14 @@ const JoinGame = () => {
     }
   };
 
+  const doSetUsername = (e) => {
+    if(e.length <= 15) {
+      setInvalidUsername(false);
+      setUsername(e);}
+    else {
+      setInvalidUsername(true);}
+  }
+
   const doJoinGame = async () => {
     try {
       const response1 = await api.post("/players", JSON.stringify({ username, lobbyCode }));
@@ -191,6 +199,7 @@ const JoinGame = () => {
             </Popover.Dropdown>
           </Popover>
         )}
+
       </BaseContainer>
     </div>
   );

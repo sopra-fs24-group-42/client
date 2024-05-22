@@ -2,6 +2,15 @@
 
 .roleReveal     {
 
+  &.total-background {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    //background: url('../../../resources/wolfBody.png');
+    background-position: center;
+    background-size:cover;
+  }
+
     &.highlight {
     @include center;
     display: flex;
@@ -128,6 +137,10 @@
       color: black;
     }
 
+    &.detailed-instructions::-webkit-scrollbar {
+      display: none;
+    }
+
     &.instructions {
       @include center;
       display: flex;
@@ -144,7 +157,13 @@
       //background-color: rgba(225, 225, 225, 0.9);
       border-radius: 5px;
       color: black; 
+    
     }
+
+    &.instructions::-webkit-scrollbar {
+      display: none;
+    }
+
     &.heading {
       @include center;
       display: flex;
@@ -185,6 +204,11 @@
       overflow: auto; // ADD THIS TO MAKE USERS SCROLLABLE!!
       min-height: 100vh;
     }
+
+    &.background-container::-webkit-scrollbar {
+      display: none;
+    }
+
 
     &.container {
       @include center;

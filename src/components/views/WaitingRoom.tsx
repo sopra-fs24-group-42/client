@@ -8,12 +8,13 @@ import {useNavigate, useLocation} from "react-router-dom";
 import { Button } from "components/ui/Button";
 import RoleNumberInput from "components/ui/RoleNumberInput";
 import "styles/views/WaitingRoom.scss";
+import "styles/views/FrontPage.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { User } from "types";
 import { ActionIcon, Popover, NumberInput } from "@mantine/core";
-import { Settings } from "tabler-icons-react";
-import { IconAdjustments } from "@tabler/icons-react";
+import { Settings, InfoCircle } from "tabler-icons-react";
+//import { IconAdjustments } from "@tabler/icons-react";
 
 const LobbyMember = ({ user }: { user: User }) => (
   <div className="waitingRoom player-container">
@@ -47,6 +48,7 @@ const WaitingRoom = () => {
   const [hostName, setHostName] = useState(null);
   const [role, setRole] = useState(null);
   // game settings update
+  const [popoverInstruction, setPopoverInstructions] = useState(false);
   const [popoverLeaveGame, setPopoverLeaveGame] = useState(false);
   const [popoverOpened, setPopoverOpened] = useState(false);
   const [numberOfWerewolves, setNumberOfWerewolves] = useState(null);
@@ -209,8 +211,12 @@ const WaitingRoom = () => {
     
   }
 
+  const doShowInstructions = () => {
+    setPopoverInstructions((open) => !open);
+  }
+
   const doUpdateGameSettings = () => {
-    console.log("Settings!");
+    //console.log("Settings!");
     setPopoverOpened((open) => !open);
   }
 
@@ -245,10 +251,17 @@ const WaitingRoom = () => {
     }
   };
 
+  let popoverContentInstructions = (
+    <div>
+      <div className="frontpage header1">🧑‍🌾👩‍🌾Surive the Night 🐺</div>
+      <div className="frontpage header1">Game Rules:</div>
+      <div className="frontpage detailed-instructions">Survive the night is a party game which requires at least 4 people to play. A designated player creates a new game, allowing others to join via a unique game code.<br></br>Once everyone has joined, every player will receive a role, which must be kept a secret. Usually, there must be at least 1 protector, 1 seer, 1 sacrifice and 1 werewolf in a game (depending on the number of players), with the remaining players being villagers, but these settings can be changed by the host while waiting for all players to join.<br></br>Villagers, seers, protectors and sacrifices are on the same team. Villagers win when they have identified and voted out all werewolf players. The werewolves win when the number of players left on the villagers team is less than or equal to the number of werewolves left in the game.
+      </div>
+    </div>
+  )
+
   let content = "";
   let hostContent = "";
-  //let content = <Spinner />;
-  //let hostContent = <Spinner />;
   let headerMessage = "";
 
   if (messageReceived !== null) {
@@ -277,41 +290,121 @@ const WaitingRoom = () => {
   }
 
   return (
-    <BaseContainer>
-      {(() => {
-        if(username === hostName) { // host view
-          return (
-            <div className="waitingRoom background-container">
-              <div className="waitingRoom settings-container">
-                <ActionIcon className="waitingRoom setting-button"
-                  aria-label="Settings"
-                  onClick={doUpdateGameSettings}
-                >
-                  <Settings 
-                    size={42}
-                    strokeWidth={1.8}
-                    color={"#262632"}/>
-                </ActionIcon>
+    <div className="waitingRoom total-background">
+      <BaseContainer>
+        {(() => {
+          if (username === hostName) { // host view
+            return (
+              <div className="waitingRoom background-container">
+                <div className="waitingRoom settings-container">
+                  <ActionIcon className="waitingRoom setting-button"
+                    aria-label="InfoCircle"
+                    onClick={doShowInstructions}
+                  >
+                    <InfoCircle
+                      size={42}
+                      strokeWidth={1.8}
+                      color={"#262632"} />
+                  </ActionIcon>
+                  <ActionIcon className="waitingRoom setting-button"
+                    aria-label="Settings"
+                    onClick={doUpdateGameSettings}
+                  >
+                    <Settings
+                      size={42}
+                      strokeWidth={1.8}
+                      color={"#262632"} />
+                  </ActionIcon>
+                </div>
+                <div className="waitingRoom header">
+                  Welcome to game
+                </div>
+                <div className="waitingRoom highlight">{lobbyCode}</div>
+                {everyoneHere ?
+                  (<div className="waitingRoom heading">Everyone is here!<br></br>{hostName.slice(0, -5)}, start the game.</div>) :
+                  (<div className="waitingRoom heading">{numberOfPlayersInLobby} / {numberOfPlayers} players have joined,<br></br>
+                    waiting for {numberOfPlayers - numberOfPlayersInLobby} more.<Spinner /></div>)
+                }
+                <div className="waitingRoom container">
+                  {hostContent}
+                  <div className="waitingRoom button-container">
+                    <Button
+                      width="100%"
+                      height="40px"
+                      disabled={!everyoneHere}
+                      onClick={() => doStartGame()}
+                    >Start Game
+                    </Button>
+                    <Button
+                      width="100%"
+                      height="40px"
+                      onClick={() => tryLeaveGame()}
+                    >Leave Game
+                    </Button>
+                  </div>
+                  {popoverOpened && (
+                    <Popover
+                      opened={popoverOpened} onClose={() => setPopoverOpened(false)}
+                      trapFocus
+                      withArrow
+                      shadow="md"
+                    >
+                      <Popover.Dropdown className="waitingRoom settings-dropdown">
+                        <Button
+                          width="10%"
+                          height="40px"
+                          top="0"
+                          right="0"
+                          onClick={() => setPopoverOpened(false)}
+                        >X
+                        </Button>
+                        <RoleNumberInput label="Werewolves" placeholder="1" min={1} value={numberOfWerewolves} onChange={setNumberOfWerewolves} />
+                        <RoleNumberInput label="Seers" placeholder="1" min={1} value={numberOfSeers} onChange={setNumberOfSeers} />
+                        <RoleNumberInput label="Villagers" placeholder="1" min={0} value={numberOfVillagers} onChange={setNumberOfVillagers} />
+                        <RoleNumberInput label="Protectors" placeholder="1" min={0} value={numberOfProtectors} onChange={setNumberOfProtectors} />
+                        <RoleNumberInput label="Sacrifices" placeholder="0" min={0} value={numberOfSacrifices} onChange={setNumberOfSacrifices} />
+                        <Button
+                          width="100%"
+                          height="40px"
+                          disabled={(numberOfWerewolves + numberOfSeers + numberOfVillagers + numberOfProtectors + numberOfSacrifices) < numberOfPlayersInLobby
+                            && (numberOfWerewolves + numberOfSeers + numberOfVillagers + numberOfProtectors + numberOfSacrifices) < 4
+                          }
+                          onClick={() => doSave()}
+                        >Save
+                        </Button>
+                      </Popover.Dropdown>
+                    </Popover>
+                  )}
+                </div>
               </div>
-              <div className= "waitingRoom header">
-              Welcome to game
-              </div>
-              <div className= "waitingRoom highlight">{lobbyCode}</div>
-              {everyoneHere ? 
-                (<div className="waitingRoom heading">Everyone is here!<br></br>{hostName.slice(0,-5)}, start the game.</div>):
-                (<div className="waitingRoom heading">{numberOfPlayersInLobby} / {numberOfPlayers} players have joined,<br></br>
-                waiting for {numberOfPlayers - numberOfPlayersInLobby} more.<Spinner /></div>)
-              }
-              <div className= "waitingRoom container">
-                {hostContent}
+            )
+          } else { // non-host view
+            return (
+              <div className="waitingRoom background-container">
+                <div className="waitingRoom settings-container">
+                  <ActionIcon className="waitingRoom setting-button"
+                    aria-label="InfoCircle"
+                    onClick={doShowInstructions}
+                  >
+                    <InfoCircle
+                      size={42}
+                      strokeWidth={1.8}
+                      color={"#262632"} />
+                  </ActionIcon>
+                </div>
+                <div className="waitingRoom header">
+                  Welcome to game
+                </div>
+                <div className="waitingRoom highlight">{lobbyCode}</div>
+                {everyoneHere ?
+                  (<div className="waitingRoom heading">Everyone is here!<br></br>{hostName.slice(0, -5)}, start the game.</div>) :
+                  (<div className="waitingRoom heading">{numberOfPlayersInLobby} / {numberOfPlayers} players have joined,<br></br>
+                    waiting for {numberOfPlayers - numberOfPlayersInLobby} more.<Spinner /></div>)
+                }
+                <div className="waitingRoom container">
+                  {content}
+                </div>
                 <div className="waitingRoom button-container">
-                  <Button
-                    width="100%"
-                    height="40px"
-                    disabled={!everyoneHere}
-                    onClick={() => doStartGame()}
-                  >Start Game
-                  </Button>
                   <Button
                     width="100%"
                     height="40px"
@@ -319,95 +412,57 @@ const WaitingRoom = () => {
                   >Leave Game
                   </Button>
                 </div>
-                {popoverOpened && (
-                  <Popover
-                    opened={popoverOpened} onClose={() => setPopoverOpened(false)}
-                    trapFocus
-                    withArrow
-                    shadow="md"
-                  >
-                    <Popover.Dropdown className="waitingRoom settings-dropdown">
-                      <Button
-                        width="10%"
-                        height="40px"
-                        top= "0"
-                        right= "0"
-                        onClick={() => setPopoverOpened(false)}
-                      >X
-                      </Button>
-                      <RoleNumberInput label="Werewolves" placeholder="1" min={1} value={numberOfWerewolves} onChange={setNumberOfWerewolves} />
-                      <RoleNumberInput label="Seers" placeholder="1" min={1} value={numberOfSeers} onChange={setNumberOfSeers} />
-                      <RoleNumberInput label="Villagers" placeholder="1" min={0} value={numberOfVillagers} onChange={setNumberOfVillagers} />
-                      <RoleNumberInput label="Protectors" placeholder="1" min={0} value={numberOfProtectors} onChange={setNumberOfProtectors} />
-                      <RoleNumberInput label="Sacrifices" placeholder="0" min={0} value={numberOfSacrifices} onChange={setNumberOfSacrifices} />
-                      <Button
-                        width="100%"
-                        height="40px"
-                        disabled={(numberOfWerewolves + numberOfSeers + numberOfVillagers + numberOfProtectors + numberOfSacrifices) < numberOfPlayersInLobby
-                          && (numberOfWerewolves + numberOfSeers + numberOfVillagers + numberOfProtectors + numberOfSacrifices) < 4
-                        }
-                        onClick={() => doSave()}
-                      >Save
-                      </Button>
-                    </Popover.Dropdown>
-                  </Popover>
-                )}
+
               </div>
-            </div>
-          )
-        } else { // non-host view
-          return (
-            <div className="waitingRoom background-container">
-              <div className= "waitingRoom header">
-              Welcome to game
-              </div>
-              <div className= "waitingRoom highlight">{lobbyCode}</div>
-              {everyoneHere ? 
-                (<div className="waitingRoom heading">Everyone is here!<br></br>{hostName.slice(0,-5)}, start the game.</div>):
-                (<div className="waitingRoom heading">{numberOfPlayersInLobby} / {numberOfPlayers} players have joined,<br></br>
-                waiting for {numberOfPlayers - numberOfPlayersInLobby} more.<Spinner /></div>)
-              }
-              <div className= "waitingRoom container">
-                {content}
-              </div>
-              <div className="waitingRoom button-container">
+            )
+          }
+        })()}
+        {popoverLeaveGame && (
+          <Popover
+            opened={popoverLeaveGame} onClose={() => setPopoverLeaveGame(false)}
+            withArrow
+            shadow="md"
+          >
+            <Popover.Dropdown className="waitingRoom dropdown">
+              <div className="waitingRoom popover-container">
+                <div className="waitingRoom heading">Are you sure you want to leave the game?</div>
                 <Button
                   width="100%"
                   height="40px"
-                  onClick={() => tryLeaveGame()}
-                >Leave Game
+                  onClick={() => doLeaveGame()}
+                >Yes
+                </Button>
+                <Button
+                  width="100%"
+                  height="40px"
+                  onClick={() => setPopoverLeaveGame(false)}
+                >Nevermind
                 </Button>
               </div>
-            </div>
-          )
-        }
-      })()}          
-      {popoverLeaveGame && (
-        <Popover
-          opened={popoverLeaveGame} onClose={() => setPopoverLeaveGame(false)}
-          withArrow
-          shadow="md"
-        >
-          <Popover.Dropdown className="waitingRoom dropdown">
-            <div className="waitingRoom popover-container">
-              <div className="waitingRoom heading">Are you sure you want to leave the game?</div>
-              <Button
-                width="100%"
-                height="40px"
-                onClick={() => doLeaveGame()}
-              >Yes
-              </Button>
-              <Button
-                width="100%"
-                height="40px"
-                onClick={() => setPopoverLeaveGame(false)}
-              >Nevermind
-              </Button>
-            </div>
-          </Popover.Dropdown>
-        </Popover>
-      )}
-    </BaseContainer>
+            </Popover.Dropdown>
+          </Popover>
+        )}
+        {popoverInstruction && (
+          <Popover
+            opened={popoverInstruction}
+            onClose={() => setPopoverInstructions(false)}
+            withArrow
+            shadow="md">
+            <Popover.Dropdown className="frontpage dropdown">
+              <div className="frontpage popover-container">
+                {popoverContentInstructions}
+                <Button
+                  width="100%"
+                  height="40px"
+                  onClick={() => setPopoverInstructions(false)}
+                >Ok
+                </Button>
+              </div>
+            </Popover.Dropdown>
+          </Popover>
+        )}
+      </BaseContainer>
+    </div>
   );
 };
 

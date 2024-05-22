@@ -217,112 +217,114 @@ const RoleReveal = () => {
   }
 
   return (
-    <BaseContainer>
-      <div className= "roleReveal background-container">
-        <div className="roleReveal instructions-container">
-          <ActionIcon className="roleReveal instructions-button"
-            aria-label="Instructions"
-            withArrow
-            onClick={() => doInstructions()}
-          >
-            <InfoCircle 
-              size={42}
-              strokeWidth={1.8}
-              color={"#c62121"}/>
-          </ActionIcon>
-        </div>
-        <div className= "roleReveal header1">Shhhh! Keep this a secret.
-          <div className= "roleReveal header2" >Your role is...</div>
-        </div> 
-        {(() => {
-          if(role === "Werewolf" && (listOfWerewolves)){
-            return (
-              <div className="roleReveal container">
-                <div className="roleReveal werewolf"></div>
-                <div className="roleReveal highlight">Werewolf</div>
-                <div className="roleReveal instructions">{werewolfInstructions}</div>
-                { listOfWerewolves.length > 0 ? 
-                  <div className="roleReveal instructions">These are the other werewolves: <b>
-                    <ul className="roleReveal ul">{listOfWerewolves.map(wolf => (
-                      <li className="roleReveal li" key={wolf}>{wolf.slice(0,-5)}</li>))}
-                    </ul>
-                  </b>
-                  </div>
-                  :
-                  <div className="roleReveal instructions">You are the only werewolf in this game, good luck!</div>
-                }
-              </div>)
-          } else if (role === "Seer") {
-            return (
-              <div className="roleReveal container">
-                <div className="roleReveal seer"></div>
-                <div className="roleReveal highlight">Seer</div>
-                <div className="roleReveal instructions">{seerInstructions}</div>
-              </div>)
-          } else if (role === "Villager"){
-            return (
-              <div className="roleReveal container">
-                <div className="roleReveal villager"></div>
-                <div className="roleReveal highlight">Villager</div>
-                <div className="roleReveal instructions">{villagerInstructions}</div>
-              </div>)
-          } else if (role === "Protector"){
-            return(
-              <div className="roleReveal container">
-                <div className="roleReveal protector"></div>
-                <div className="roleReveal highlight">Protector</div>
-                <div className="roleReveal instructions">{protectorInstructions}</div>
-              </div>)
-          } else if (role === "Sacrifice"){
-            return(
-              <div className="roleReveal container">
-                <div className="roleReveal sacrifice"></div>
-                <div className="roleReveal highlight">Sacrifice</div>
-                <div className="roleReveal instructions">{sacrificeInstructions}</div>
-              </div>)
-          } else {
-            return (
-              <div className="roleReveal container">
+    <div className="roleReveal total-background">
+      <BaseContainer>
+        <div className="roleReveal background-container">
+          <div className="roleReveal instructions-container">
+            <ActionIcon className="roleReveal instructions-button"
+              aria-label="Instructions"
+              withArrow
+              onClick={() => doInstructions()}
+            >
+              <InfoCircle
+                size={42}
+                strokeWidth={1.8}
+                color={"#c62121"} />
+            </ActionIcon>
+          </div>
+          <div className="roleReveal header1">Shhhh! Keep this a secret.
+            <div className="roleReveal header2" >Your role is...</div>
+          </div>
+          {(() => {
+            if (role === "Werewolf" && (listOfWerewolves)) {
+              return (
+                <div className="roleReveal container">
+                  <div className="roleReveal werewolf"></div>
+                  <div className="roleReveal highlight">Werewolf</div>
+                  <div className="roleReveal instructions">{werewolfInstructions}</div>
+                  {listOfWerewolves.length > 0 ?
+                    <div className="roleReveal instructions">These are the other werewolves: <b>
+                      <ul className="roleReveal ul">{listOfWerewolves.map(wolf => (
+                        <li className="roleReveal li" key={wolf}>{wolf.slice(0, -5)}</li>))}
+                      </ul>
+                    </b>
+                    </div>
+                    :
+                    <div className="roleReveal instructions">You are the only werewolf in this game, good luck!</div>
+                  }
+                </div>)
+            } else if (role === "Seer") {
+              return (
+                <div className="roleReveal container">
+                  <div className="roleReveal seer"></div>
+                  <div className="roleReveal highlight">Seer</div>
+                  <div className="roleReveal instructions">{seerInstructions}</div>
+                </div>)
+            } else if (role === "Villager") {
+              return (
+                <div className="roleReveal container">
+                  <div className="roleReveal villager"></div>
+                  <div className="roleReveal highlight">Villager</div>
+                  <div className="roleReveal instructions">{villagerInstructions}</div>
+                </div>)
+            } else if (role === "Protector") {
+              return (
+                <div className="roleReveal container">
+                  <div className="roleReveal protector"></div>
+                  <div className="roleReveal highlight">Protector</div>
+                  <div className="roleReveal instructions">{protectorInstructions}</div>
+                </div>)
+            } else if (role === "Sacrifice") {
+              return (
+                <div className="roleReveal container">
+                  <div className="roleReveal sacrifice"></div>
+                  <div className="roleReveal highlight">Sacrifice</div>
+                  <div className="roleReveal instructions">{sacrificeInstructions}</div>
+                </div>)
+            } else {
+              return (
+                <div className="roleReveal container">
+                  <Spinner />
+                </div>
+              );
+            }
+          })()}
+          <div className="roleReveal button-container">
+            {ready ?
+              <div className="roleReveal wait">Waiting for other players
                 <Spinner />
               </div>
-            );
-          }
-        })()}
-        <div className="roleReveal button-container">
-          { ready ?
-            <div className= "roleReveal wait">Waiting for other players
-              <Spinner />
-            </div>
-            :
-            <Button
-              width="100%"
-              height="40px"
-              onClick={()=> doSendReady()}
-            >
-              Ok, got it!
-            </Button>} 
+              :
+              <Button
+                width="100%"
+                height="40px"
+                onClick={() => doSendReady()}
+              >
+                Ok, got it!
+              </Button>}
+          </div>
+          {instructionsPopover && (
+            <Popover
+              opened={instructionsPopover}
+              onClose={() => setInstructionsPopover(false)}
+              withArrow
+              shadow="md">
+              <Popover.Dropdown className="roleReveal dropdown">
+                <div className="roleReveal popover-container">
+                  {popoverContent}
+                  <Button
+                    width="100%"
+                    height="40px"
+                    onClick={() => setInstructionsPopover(false)}
+                  >Ok
+                  </Button>
+                </div>
+              </Popover.Dropdown>
+            </Popover>
+          )}
         </div>
-        {instructionsPopover && (
-          <Popover
-            opened={instructionsPopover} 
-            onClose={() => setInstructionsPopover(false)}
-            withArrow
-            shadow="md">
-            <Popover.Dropdown className="roleReveal dropdown">
-              <div className="roleReveal popover-container">
-                {popoverContent}
-                <Button
-                  width="100%"
-                  height="40px"
-                  onClick={() => setInstructionsPopover(false)}
-                >Ok
-                </Button>
-              </div>
-            </Popover.Dropdown>
-          </Popover>
-        )}
-      </div>
-    </BaseContainer>
+      </BaseContainer>
+    </div>
   );
 };
 
