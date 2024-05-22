@@ -26,6 +26,8 @@ During the development of the front-end, we used the following technologies:
 * [JavaScript]() - Programming language
 * [REACT](https://reactjs.org/) - Front-end JavaScript Library used mainly for Hooks
 * [Stomp](https://stomp-js.github.io/stomp-websocket/) - Used for websocket communication with the server
+* [Google Cloud Text-to-Speech API](https://cloud.google.com/text-to-speech/?utm_source=google&utm_medium=cpc&utm_campaign=emea-ch-all-de-dr-bkws-all-all-trial-%7Bmatchtype%7D-gcp-1707574&utm_content=text-ad-none-any-DEV_%7Bdevice%7D-CRE_%7Bcreative%7D-ADGP_%7B_dsadgroup%7D-KWID_%7B_dstrackerid%7D-%7Btargetid%7D-userloc_%7Bloc_physical_ms%7D&utm_term=KW_%7Bkeyword%7D-NET_%7Bnetwork%7D-PLAC_%7Bplacement%7D&%7B_dsmrktparam%7D%7Bignore%7D&%7B_dsmrktparam%7D&gclsrc=aw.ds&gad_source=1&gclid=CjwKCAjwr7ayBhAPEiwA6EIGxG33Q6L4eJWnLkzXBZ5FXbQ_lYYSrb1PmWgjV9mQaOEKemZDA6TdMhoCpJoQAvD_BwE&gclsrc=aw.ds&hl=en) - used to incorperate the automated Narration
+* [Google Cloud](https://cloud.google.com/gcp/?hl=de&utm_source=google&utm_medium=cpc&utm_campaign=emea-ch-all-de-bkws-all-all-trial-e-gcp-1707574&utm_content=text-ad-none-any-DEV_c-CRE_554508006169-ADGP_Hybrid+%7C+BKWS+-+EXA+%7C+Txt+-+GCP+-+General+-+v3-KWID_43700060389294309-kwd-6458750523-userloc_9187657&utm_term=KW_google%20cloud-NET_g-PLAC_&&gad_source=1&gclid=CjwKCAjwr7ayBhAPEiwA6EIGxCgj6yr0qBDqIbATub4ITjJg381-LR80X3dpxf-pvkhGdq4ZlO70GhoCiWcQAvD_BwE&gclsrc=aw.ds) - used for deploying the Client and hosting
 // TODO: include Mantine core library (for tables), include react icons
 
 ## High-level Components <a id="high-level-components"></a>
@@ -52,7 +54,8 @@ Furthermore, you need to install the libraries used :
 * Depending on your existing setup, you might need to install more.
 
 To be able to run the Appliacation you require an API Key for the Google Text-to-Speech AI.<br />
-Check https://cloud.google.com/text-to-speech/docs/before-you-begin in case you require assistance activating the Cloud Text-to-Speech AI.<br />
+Check [the Documentation](https://cloud.google.com/text-to-speech/docs/before-you-begin) in case you require assistance activating the Cloud Text-to-Speech AI.<br />
+
 Once you activate the Cloud Text-to-Speech AI on your account follow the next steps to create a API Key.<br />
 1. Navigate to "APIs & Services" in the Navigation Menu
 2. Select Credentials
