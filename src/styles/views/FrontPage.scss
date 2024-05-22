@@ -121,6 +121,10 @@
     color: black;
   }
 
+  &.detailed-instructions::-webkit-scrollbar {
+    display: none;
+  }
+
   &.instructions {
     @include center;
     display: flex;
