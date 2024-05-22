@@ -33,8 +33,8 @@ FormField.propTypes = {
 
 const JoinGame = () => {
   const navigate = useNavigate();
-  const [lobbyCode, setLobbyCode] = useState(null);
-  const [username, setUsername] = useState(null);
+  const [lobbyCode, setLobbyCode] = useState<string>(null);
+  const [username, setUsername] = useState<string>(null);
   const [invalidUsername, setInvalidUsername] = useState(false);
 
   //variable for Errorhandling
@@ -86,115 +86,113 @@ const JoinGame = () => {
   };
 
   return (
-    <BaseContainer>
-      <div className="joinGame background-container">
-        <div className="joinGame header">Join an existing game</div>
-        <div className="joinGame container">
-          <div className="joinGame form">
-            {invalidUsername ? (
+    <div className="joinGame total-background">
+      <BaseContainer>
+        <div className="joinGame background-container">
+          <div className="joinGame  header">Join an existing game</div>
+          <div className="joinGame  container">
+            <div className="joinGame  form">
+              {invalidUsername ?
+                <FormField
+                  label="Choose your username:"
+                  value={username}
+                  warning="Max. username length is 15 characters!"
+                  onChange={(e: string) => doSetUsername(e)}
+                /> :
+                <FormField
+                  label="Choose your username:"
+                  value={username}
+                  onChange={(e: string) => doSetUsername(e)}
+                />}
+              <br></br>
               <FormField
-                label="Choose your username:"
-                value={username}
-                warning="Max. username length is 15 characters!"
-                onChange={(e) => doSetUsername(e)}
+                label="Enter a game code:"
+                value={lobbyCode}
+                onChange={(e: string) => setLobbyCode(e)}
               />
-            ) : (
-              <FormField
-                label="Choose your username:"
-                value={username}
-                onChange={(e) => doSetUsername(e)}
-              />
-            )}
-            <br></br>
-            <FormField
-              label="Enter a game code:"
-              value={lobbyCode}
-              onChange={(e) => setLobbyCode(e)}
-            />
-            <div className="joinGame button-container">
-              <Button
-                width="100%"
-                height="80px"
-                disabled={!username || !lobbyCode || invalidUsername}
-                onClick={doJoinGame}
-              >
-                Join Game
-              </Button>
-              <Button
-                width="100%"
-                height="30px"
-                onClick={() => navigate("/frontpage")}
-              >
-                Back
-              </Button>
+              <div className="joinGame button-container">
+                <Button
+                  width="100%"
+                  height="80px"
+                  disabled={!username || !lobbyCode || invalidUsername}
+                  onClick={() => doJoinGame()}
+                >Join Game
+                </Button>
+                <Button
+                  width="100%"
+                  height="30px"
+                  onClick={() => navigate("/frontpage")}
+                >Back
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      {popoverNonUniqueUsername && (
-        <Popover
-          opened={popoverNonUniqueUsername}
-          onClose={() => setPopoverNonUniqueUsername(false)}
-          withArrow
-          shadow="md"
-        >
-          <Popover.Dropdown className="joinGame dropdown">
-            <div className="joinGame popover-container">
-              <div className="joinGame heading">Username already taken. Try a different one</div>
-              <Button
-                width="100%"
-                height="40px"
-                onClick={() => setPopoverNonUniqueUsername(false)}
-              >
-                ok
-              </Button>
-            </div>
-          </Popover.Dropdown>
-        </Popover>
-      )}
-      {popoverLobbyFull && (
-        <Popover
-          opened={popoverLobbyFull}
-          onClose={() => setPopoverLobbyFull(false)}
-          withArrow
-          shadow="md"
-        >
-          <Popover.Dropdown className="joinGame dropdown">
-            <div className="joinGame popover-container">
-              <div className="joinGame heading">The Lobby is full. Join another Lobby or create your own.</div>
-              <Button
-                width="100%"
-                height="40px"
-                onClick={() => setPopoverLobbyFull(false)}
-              >
-                ok
-              </Button>
-            </div>
-          </Popover.Dropdown>
-        </Popover>
-      )}
-      {popoverWrongLobbyCode && (
-        <Popover
-          opened={popoverWrongLobbyCode}
-          onClose={() => setPopoverWrongLobbyCode(false)}
-          withArrow
-          shadow="md"
-        >
-          <Popover.Dropdown className="joinGame dropdown">
-            <div className="joinGame popover-container">
-              <div className="joinGame heading">Game code does not exist. Make sure you entered the correct code in capital letters</div>
-              <Button
-                width="100%"
-                height="40px"
-                onClick={() => setPopoverWrongLobbyCode(false)}
-              >
-                ok
-              </Button>
-            </div>
-          </Popover.Dropdown>
-        </Popover>
-      )}
-    </BaseContainer>
+        {popoverNonUniqueUsername && (
+          <Popover
+            opened={popoverNonUniqueUsername}
+            onClose={() => setPopoverNonUniqueUsername(false)}
+            withArrow
+            shadow="md"
+          >
+            <Popover.Dropdown className="joinGame dropdown">
+              <div className="joinGame popover-container">
+                <div className="joinGame heading">Username already taken. Try a different one</div>
+                <Button
+                  width="100%"
+                  height="40px"
+                  onClick={() => setPopoverNonUniqueUsername(false)}
+                >
+                  ok
+                </Button>
+              </div>
+            </Popover.Dropdown>
+          </Popover>
+        )}
+        {popoverLobbyFull && (
+          <Popover
+            opened={popoverLobbyFull}
+            onClose={() => setPopoverLobbyFull(false)}
+            withArrow
+            shadow="md"
+          >
+            <Popover.Dropdown className="joinGame dropdown">
+              <div className="joinGame popover-container">
+                <div className="joinGame heading">The Lobby is full. Join another Lobby or create your own.</div>
+                <Button
+                  width="100%"
+                  height="40px"
+                  onClick={() => setPopoverLobbyFull(false)}
+                >
+                  ok
+                </Button>
+              </div>
+            </Popover.Dropdown>
+          </Popover>
+        )}
+        {popoverWrongLobbyCode && (
+          <Popover
+            opened={popoverWrongLobbyCode}
+            onClose={() => setPopoverWrongLobbyCode(false)}
+            withArrow
+            shadow="md"
+          >
+            <Popover.Dropdown className="joinGame dropdown">
+              <div className="joinGame popover-container">
+                <div className="joinGame heading">Game code does not exist. Make sure you entered the correct code in capital letters</div>
+                <Button
+                  width="100%"
+                  height="40px"
+                  onClick={() => setPopoverWrongLobbyCode(false)}
+                >
+                  ok
+                </Button>
+              </div>
+            </Popover.Dropdown>
+          </Popover>
+        )}
+      </BaseContainer>
+    </div>
   );
 };
 
