@@ -16,7 +16,7 @@ Check out the back-end implementation [here](https://github.com/sopra-fs24-group
 9. [License](#license)
 
 ## Introduction <a name="introduction"></a>
-// Introduction: the project’s goal and motivation.
+In the evolving world of digital interaction, traditional role-playing games like Werewolf require a modern solution to bridge the gap between virtual and physical game spaces. Our project seeks to digitize these beloved social activities, allowing users to engage in immersive narrative-driven experiences from any location. By developing a web application that supports game setup, role assignment, and real-time interaction through voice-to-text technology, we aim to replicate the communal atmosphere of these games online. Utilizing technologies such as React for the frontend and Node.js for the backend, alongside WebSocket for real-time communication and third-party APIs for voice recognition, this project stands as a testament to the innovative application of web development skills and AI integration. This initiative not only aligns with the course's focus on creating cutting-edge web applications but also offers a solution to the limitations posed by physical distance in social gaming.
 
 ## Technologies <a id="technologies"></a>
 // Technologies used (short).
