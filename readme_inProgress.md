@@ -21,7 +21,8 @@ Check out the back-end implementation [here](https://github.com/sopra-fs24-group
 6. [Roadmap](#roadmap)
 7. [Authors](#authors)
 8. [Acknowledgments](#acknowledgments)
-9. [License](#license)
+9. [Image Attributions](#image-attributions)
+10. [License](#license)
 
 ## Introduction <a name="introduction"></a>
 In the evolving world of digital interaction, traditional role-playing games like <i>Werewolf</i> require a modern solution to bridge the gap between virtual and physical game spaces. Our project seeks to digitize this beloved social game to eliminate the need for physical cards, allowing users to engage in an immersive, narration-driven game experience using only their devices at any time. Our implementation stays true to the communal, social setting of the original game by preserving the colocative aspect of the game: players of <i>Survive the Night</i> must be within the same physical space at the same time to play together. Furthermore, the addition of dynamic, realistic-sounding text-to-speech technology enhances the game with an immerisive narrator, allowing all players to enjoy the experience of fully playing the game without any additional responsibilities or duties. We hope you get a kick out of our game and wish you the best of luck to survive the night!
@@ -194,24 +195,31 @@ At this stage, the following features have not yet been implemented in the front
 ## Acknowledgments <a id="acknowledgements"></a>
 We want to thank our Teaching Assistant [Marco Leder](https://github.com/marcoleder) for guiding us through the course!
 
-## Attributions <a id="attributions"></a>
+## Image Attributions <a id="image-attributions"></a>
 We want to attribute the sources from where we got our public domain images:
 
-* Green Forest Background Image
-* Dark Forest Background Image
-* Werewolf Role Graphic
-* Seer Role Graphic
-* Protector Role Graphic
-* Sacrifice Role Graphic
-* Villager Role Graphic
-* Tombstone Graphic
-* Outstretched Arm With Fist Graphic
-* Skull Graphic
-* Walled Off Village Graphic
-* Crown Graphic
-* 
-* Birds: Images by <a href="https://www.freepik.com/free-vector/hand-drawn-cute-animal-avatars-element-set_32987087.htm">Freepik</a>
-
+* Green Forest Background Image by <a href="https://www.wallpaperflare.com/aerial-photo-of-forest-trees-fog-green-nature-clouds-aesthetic-wallpaper-zadso/download/2560x1440">Wallpaper Flare</a>
+* Dark Forest Background Image by <a href="https://www.rawpixel.com/image/3304611/free-photo-image-nature-monochrome-forest-fog?destination=%2Fimage%2F3304611%2Ffree-photo-image-nature-monochrome-forest-fog
+">rawpixel</a>
+* Werewolf Role Graphic by <a href="https://www.rawpixel.com/image/6257185/png-sticker-vintage
+">rawpixel</a>
+* Seer Role Graphic by <a href="https://www.rawpixel.com/image/6265128/png-vintage-public-domain
+">rawpixel</a>
+* Protector Role Graphic by <a href="https://www.rawpixel.com/image/6542648/image-flower-vintage-public-domain
+">rawpixel</a>
+* Sacrifice Role Graphic by <a href="https://www.rawpixel.com/image/6549194/png-light-vintage
+">rawpixel</a>
+* Villager Role Graphic by <a href="https://www.rawpixel.com/image/6440115/vector-vintage-public-domain-black">rawpixel</a>
+* Tombstone Graphic by <a href="https://www.rawpixel.com/image/6265153/png-vintage-public-domain
+">rawpixel</a>
+* Outstretched Arm With Fist Graphic by <a href="https://www.rawpixel.com/image/6304700/png-sticker-vintage
+">rawpixel</a>
+* Skull Graphic by <a href="https://www.rawpixel.com/image/6265762/png-vintage-public-domain
+">rawpixel</a>
+* Walled Off Village Graphic by <a href="https://www.rawpixel.com/image/6314023/psd-vintage-public-domain-black
+">rawpixel</a>
+* Crown on Pillow Graphic by <a href="https://www.rawpixel.com/image/6438562/image-vintage-public-domain-black
+">rawpixel</a>
 
 ## ©️ License <a id="license"></a>
 //License: Say how your project is licensed (see License guide3).
