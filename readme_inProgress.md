@@ -9,6 +9,10 @@ Check out the back-end implementation [here](https://github.com/sopra-fs24-group
 2. [Technologies](#technologies)
 3. [High-level Components](#high-level-components)
 4. [Launch & Development](#launch--development)
+    - [Getting started](#getting-started)
+    - [Prerequisites & installation](#prerequisites-installation)
+    - [Text-To-Speech API setup](#tts-setup)
+    - [Running locally](#running-locally)
 5. [Illustrations](#illustrations)
 6. [Roadmap](#roadmap)
 7. [Authors](#authors)
@@ -44,7 +48,7 @@ or a database that needs to be running? How can they do releases?
 These are the steps a new developer joining the team would
 have to take to get started with the application.
 
-### Getting Started
+### Getting Started <a id="getting-started"></a>
 We recommend reading and doing the following:
 - work through the [React Quick Start Guide](https://react.dev/learn)
 - get an understanding of [CSS basics](https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/CSS_basics), [SCSS](https://sass-lang.com/documentation/syntax), and [HTML](https://www.w3schools.com/html/html_intro.asp)
@@ -54,7 +58,7 @@ Next, you should look at these to prevalent technologies:
 * [React Router](https://reactrouter.com/en/main/start/concepts) - our application frontend features a lot of separate views, the linking and routing of which are handled by the react router.
 * [React Hooks](https://blog.logrocket.com/using-hooks-react-router/) - dynamic displays within the same view are largely handled via React Hooks.
 
-### Prerequisites and Installation
+### Prerequisites and Installation <a id="prerequisites-installation"></a>
 For the local development environment, you will need Node.js.\
 Please install the exact version **v20.11.0** which comes with the npm package manager. You can download it [here](https://nodejs.org/download/release/v20.11.0/).\
 If you are confused about which download to choose, consult these links:
@@ -75,7 +79,7 @@ Before you start your application for the first time, run this command to instal
 
 ```npm install```
 
-### Text-to-Speech API Setup
+### Text-to-Speech API Setup <a id="tts-setup"></a>
 After installing both the client and server, you need to create and include a new Google Cloud Text-to-Speech API key in the client before you can run the application in your local environment. 
 
 To activate the Google Cloud Text-to-Speech AI, please follow the [documentation](https://cloud.google.com/text-to-speech/docs/before-you-begin).
@@ -95,7 +99,7 @@ Once you have created a new API key, you must include it in your local client re
 If you plan on deploying the application with github Actions on google Cloud, make sure to add the API KEY to a Github Secret and reference it in the Workflow.<br />
 If you name your Github Actions Secret "REACT_APP_API_KEY", you do not need to change the Workflow in main.yml.<br />
 
-### Running Locally
+### Running Locally <a id="running-locally"></a>
 Now, you're ready to start the app with:
 
 ```npm run dev```
@@ -106,22 +110,22 @@ Notice that the page will reload if you make any edits. You will also see any li
 In order to interact with the application in a meaningful way, you need to install and start the [server] (https://github.com/sopra-fs24-group-42/server) as well.
 
 
-**Please note: the application was developed for Google Chrome, so please stick to Google Chrome (in full screen) whenever you are running it**
+*Please note: the application was developed for **Google Chrome**, so please stick to Google Chrome (in full screen) whenever you are running it!*
 
-### Tests
+#### Tests
 
 Run the tests with: `npm run test`
 
 > For macOS user running into a 'fsevents' error: https://github.com/jest-community/vscode-jest/issues/423
 
-### Build
+#### Build
 
 To build the app, run `npm run build` <br>
 
-### Deployment
+#### Deployment
 Deployment to the Google App Engine happens automatically when pushed to main. You can also trigger deployment manually via gitHub Actions workflows.  
 
-### External dependencies
+#### External dependencies
 
 Both the client and the server have to be running for the application to behave as expected.
 
