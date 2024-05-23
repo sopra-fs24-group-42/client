@@ -8,6 +8,8 @@ Check out the back-end implementation [here](https://github.com/sopra-fs24-group
 1. [Introduction](#introduction)
 2. [Technologies](#technologies)
 3. [High-Level Components](#high-level-components)
+    - [The Lobby Object](#the-lobby-object)
+    - [Websockets](#websockets)
 4. [Launch & Development](#launch--development)
     - [Getting started](#getting-started)
     - [Prerequisites & installation](#prerequisites-installation)
@@ -50,7 +52,7 @@ Consider the diagram below for a visual representation and interaction of these 
 
 What follows is a more detailed explanation of each high-level component individually: 
 
-#### The Lobby Object
+#### The Lobby Object <a id="the-lobby-object"></a>
 A game and its state is captured by a "lobby object". This object is created in the server upon the creation of a new game in the client, and will get continuously updated whenever anything happens that changes the state of the game. For example, when another player joins the game, the lobby object corresponding to this game is updated by the server and broadcasted to all websocket connections subscribed to this particular game endpoint. Specifically, the lobby object pertaining to a game instance contains the following information concerning the game state:
 * **lobby ID** - A unique lobby identifier. The lobby ID is required in the server to update and fetch information in the database about the correct lobby. The lobby ID of an existing lobby never changes.  
 * **host username** - The current host player's username concatenated with the lobby code of the lobby. The host views differ slightly from other players' views in certain phases. For example, the [preNight](/src/components/views/PreNight.tsx) phase is different for the host player, since the host player is the one who must play the sound of the narration. If the host player is killed or voted out, another player still alive in the game is selected to become the new host, so that the element of narration is not lost.
@@ -67,7 +69,11 @@ The lobby object therefore encodes the entire game and its state at any point in
 
 The lobby object is broadcast by the server as a JSON to all websocket connections subscribed to the corresponding lobby endpoint as a response to almost all interactions made by players.  
 
-#### Connecting and Subscribing
+#### Websockets: CONNECT, SUBSCRIBE and SEND <a id="websockets"></a>
+Spontaneous and continuous broadcasting of the lobby object from the server to the client is only possible with an ongoing connection between the client and the server. To establish and maintain such a connection, our application uses websockets to host a running TCP connection. 
+
+In each view (exept for the frontPage, joinGame and createGame views) there are two useEffect hooks that always do the same thing. The first useEffect hook handles the websocket connection setup: first, a websocket connection is established to the server. Upon successful connection, a subscription is made to the correct "topic" (i.e. the corresponding lobby). The subscription function is very important throughout the whole duration of a player being on a view, since in addition to making a subscription, the subscribe function also defines a callback function that handles incoming MESSAGE frames from the server to this subscription endpoint. These MESSAGE frames are always the lobby object (as a JSON), since this is the only data that is passed from the server to the client across all views. 
+
 
 
 #### Listening for Lobby Updates
