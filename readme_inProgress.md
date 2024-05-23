@@ -16,19 +16,20 @@ Check out the back-end implementation [here](https://github.com/sopra-fs24-group
 9. [License](#license)
 
 ## Introduction <a name="introduction"></a>
-In the evolving world of digital interaction, traditional role-playing games like Werewolf require a modern solution to bridge the gap between virtual and physical game spaces. Our project seeks to digitize these beloved social activities, allowing users to engage in immersive narrative-driven experiences from any location. By developing a web application that supports game setup, role assignment, and real-time interaction through voice-to-text technology, we aim to replicate the communal atmosphere of these games online. Utilizing technologies such as React for the frontend and Node.js for the backend, alongside WebSocket for real-time communication and third-party APIs for voice recognition, this project stands as a testament to the innovative application of web development skills and AI integration. This initiative not only aligns with the course's focus on creating cutting-edge web applications but also offers a solution to the limitations posed by physical distance in social gaming.
+In the evolving world of digital interaction, traditional role-playing games like <i>Werewolf</i> require a modern solution to bridge the gap between virtual and physical game spaces. Our project seeks to digitize this beloved social game to eliminate the need for physical cards, allowing users to engage in an immersive, narration-driven game experience using only their devices at any time. Our implementation stays true to the communal, social setting of the original game by preserving the colocative aspect of the game: players of <i>Survive the Night</i> must be within the same physical space at the same time to play together. Furthermore, the addition of dynamic, realistic-sounding text-to-speech technology enhances the game with an immerisive narrator, allowing all players to enjoy the experience of fully playing the game without any additional responsibilities or duties. We hope you get a kick out of our game and wish you the best of luck to survive the night!
 
 ## Technologies <a id="technologies"></a>
-// Technologies used (short).
+To develop the frontend, we used the following technologies:
 
-During the development of the front-end, we used the following technologies:
-
-* [JavaScript]() - Programming language
-* [REACT](https://reactjs.org/) - Front-end JavaScript Library used mainly for Hooks
-* [Stomp](https://stomp-js.github.io/stomp-websocket/) - Used for websocket communication with the server
-* [Google Cloud Text-to-Speech API](https://cloud.google.com/text-to-speech/?utm_source=google&utm_medium=cpc&utm_campaign=emea-ch-all-de-dr-bkws-all-all-trial-%7Bmatchtype%7D-gcp-1707574&utm_content=text-ad-none-any-DEV_%7Bdevice%7D-CRE_%7Bcreative%7D-ADGP_%7B_dsadgroup%7D-KWID_%7B_dstrackerid%7D-%7Btargetid%7D-userloc_%7Bloc_physical_ms%7D&utm_term=KW_%7Bkeyword%7D-NET_%7Bnetwork%7D-PLAC_%7Bplacement%7D&%7B_dsmrktparam%7D%7Bignore%7D&%7B_dsmrktparam%7D&gclsrc=aw.ds&gad_source=1&gclid=CjwKCAjwr7ayBhAPEiwA6EIGxG33Q6L4eJWnLkzXBZ5FXbQ_lYYSrb1PmWgjV9mQaOEKemZDA6TdMhoCpJoQAvD_BwE&gclsrc=aw.ds&hl=en) - used to incorperate the automated Narration
-* [Google Cloud](https://cloud.google.com/gcp/?hl=de&utm_source=google&utm_medium=cpc&utm_campaign=emea-ch-all-de-bkws-all-all-trial-e-gcp-1707574&utm_content=text-ad-none-any-DEV_c-CRE_554508006169-ADGP_Hybrid+%7C+BKWS+-+EXA+%7C+Txt+-+GCP+-+General+-+v3-KWID_43700060389294309-kwd-6458750523-userloc_9187657&utm_term=KW_google%20cloud-NET_g-PLAC_&&gad_source=1&gclid=CjwKCAjwr7ayBhAPEiwA6EIGxCgj6yr0qBDqIbATub4ITjJg381-LR80X3dpxf-pvkhGdq4ZlO70GhoCiWcQAvD_BwE&gclsrc=aw.ds) - used for deploying the Client and hosting
-// TODO: include Mantine core library (for tables), include react icons
+* [Typescript](https://www.typescriptlang.org/) - Programming language
+* [JavaScript](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/What_is_JavaScript) - Programming language
+* [REACT](https://react.dev/) - Frontend library for web and native user interfaces: mainly used for React Hooks
+* [SockJS](https://github.com/sockjs/sockjs-client/blob/main/README.md) - JavaScript Library that provides a Websocket-like object: used for websocket communication with the server
+* [STOMP JS](https://stomp-js.github.io/stomp-websocket/codo/extra/docs-src/Usage.md.html) - JavaScript/Typescript client for STOMP protocol: used for websocket communication with the server via SockJS
+* [Mantine](https://mantine.dev/) - Component library for React: used for the Popover, ActionIcon, NumberInput and Table components
+* [Tabler Icons](https://tablericons.com/) - Open source free SVG icons: used for the settings and infocircle icons
+* [Google Cloud Text-to-Speech API](https://cloud.google.com/text-to-speech/?utm_source=google&utm_medium=cpc&utm_campaign=emea-ch-all-de-dr-bkws-all-all-trial-%7Bmatchtype%7D-gcp-1707574&utm_content=text-ad-none-any-DEV_%7Bdevice%7D-CRE_%7Bcreative%7D-ADGP_%7B_dsadgroup%7D-KWID_%7B_dstrackerid%7D-%7Btargetid%7D-userloc_%7Bloc_physical_ms%7D&utm_term=KW_%7Bkeyword%7D-NET_%7Bnetwork%7D-PLAC_%7Bplacement%7D&%7B_dsmrktparam%7D%7Bignore%7D&%7B_dsmrktparam%7D&gclsrc=aw.ds&gad_source=1&gclid=CjwKCAjwr7ayBhAPEiwA6EIGxG33Q6L4eJWnLkzXBZ5FXbQ_lYYSrb1PmWgjV9mQaOEKemZDA6TdMhoCpJoQAvD_BwE&gclsrc=aw.ds&hl=en) - Lifelike speech synthesis: used for dynamic, realistic-sounding narration
+* [Google Cloud](https://cloud.google.com/gcp/?hl=de&utm_source=google&utm_medium=cpc&utm_campaign=emea-ch-all-de-bkws-all-all-trial-e-gcp-1707574&utm_content=text-ad-none-any-DEV_c-CRE_554508006169-ADGP_Hybrid+%7C+BKWS+-+EXA+%7C+Txt+-+GCP+-+General+-+v3-KWID_43700060389294309-kwd-6458750523-userloc_9187657&utm_term=KW_google%20cloud-NET_g-PLAC_&&gad_source=1&gclid=CjwKCAjwr7ayBhAPEiwA6EIGxCgj6yr0qBDqIbATub4ITjJg381-LR80X3dpxf-pvkhGdq4ZlO70GhoCiWcQAvD_BwE&gclsrc=aw.ds) - Suite of cloud computing serves: used for deployment and hosting
 
 ## High-level Components <a id="high-level-components"></a>
 // High-level components: Identify your project’s 3-5 main components. What is their role?
@@ -43,42 +44,69 @@ or a database that needs to be running? How can they do releases?
 These are the steps a new developer joining the team would
 have to take to get started with the application.
 
-### Prerequisites
-As the application is mainly written in JavaScript, downloading [Node.js](https://nodejs.org) is needed. All other
-dependencies, including React, get installed with:
+### Getting Started
+We recommend reading and doing the following:
+- work through the [React Quick Start Guide](https://react.dev/learn)
+- get an understanding of [CSS basics](https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/CSS_basics), [SCSS](https://sass-lang.com/documentation/syntax), and [HTML](https://www.w3schools.com/html/html_intro.asp)
+
+Next, you should look at these to prevalent technologies:
+
+* [React Router](https://reactrouter.com/en/main/start/concepts) - our application frontend features a lot of separate views, the linking and routing of which are handled by the react router.
+* [React Hooks](https://blog.logrocket.com/using-hooks-react-router/) - dynamic displays within the same view are largely handled via React Hooks.
+
+### Prerequisites and Installation
+For the local development environment, you will need Node.js.\
+Please install the exact version **v20.11.0** which comes with the npm package manager. You can download it [here](https://nodejs.org/download/release/v20.11.0/).\
+If you are confused about which download to choose, consult these links:
+
+- **MacOS:** [node-v20.11.0.pkg](https://nodejs.org/download/release/v20.11.0/node-v20.11.0.pkg)
+- **Windows 32-bit:** [node-v20.11.0-x86.msi](https://nodejs.org/download/release/v20.11.0/node-v20.11.0-x86.msi)
+- **Windows 64-bit:** [node-v20.11.0-x64.msi](https://nodejs.org/download/release/v20.11.0/node-v20.11.0-x64.msi)
+- **Linux:** [node-v20.11.0.tar.xz](https://nodejs.org/dist/v20.11.0/node-v20.11.0-linux-x64.tar.xz) (use this [installation guide](https://github.com/nodejs/help/wiki/Installation#how-to-install-nodejs-via-binary-archive-on-linux) if you are new to Linux)
+
+If you happen to have a package manager the following commands can be used:
+
+- **Homebrew:** `brew install node@20.11.0`
+- **Chocolatey:** `choco install nodejs-lts --version=20.11.0`
+
+After the installation, update the npm package manager to **10.4.0** by running ```npm install -g npm@10.4.0```\
+You can ensure the correct version of node and npm by running ```node -v``` and ```npm --version```, which should give you **v20.11.0** and **10.4.0** respectively.\
+Before you start your application for the first time, run this command to install all other dependencies, including React:
 
 ```npm install```
 
-Furthermore, you need to install the libraries used :
+### Text-to-Speech API Setup
+After installing both the client and server, you need to create and include a new Google Cloud Text-to-Speech API key in the client before you can run the application in your local environment. 
 
-* Depending on your existing setup, you might need to install more.
+To activate the Google Cloud Text-to-Speech AI, please follow the [documentation](https://cloud.google.com/text-to-speech/docs/before-you-begin).
 
-To be able to run the Appliacation you require an API Key for the Google Text-to-Speech AI.<br />
-Check [the Documentation](https://cloud.google.com/text-to-speech/docs/before-you-begin) in case you require assistance activating the Cloud Text-to-Speech AI.<br />
-
-Once you activate the Cloud Text-to-Speech AI on your account follow the next steps to create a API Key.<br />
+Once you have activated the Google Cloud Text-to-Speech AI on your account, follow these steps to create a new API key:
 1. Navigate to "APIs & Services" in the Navigation Menu
 2. Select Credentials
 3. Create a new API Key by pressing the "+ CREATE CREDENTIALS" and Selecting API Key.
 4. We recommend restricting the Access of the created API KEY to the Cloud Text-to-Speech API. You can do so by clicking on "Edit API key"
 
-To use the API locally create in the Client Repository a .env file with the following content:<br />
+Once you have created a new API key, you must include it in your local client repository: 
+1. Create a new file called ".env" inside the root folder of the client
+2. Inside this file, paste the following:
+```REACT_APP_API_KEY="YOUR_API_KEY"```
+3. Replace "YOUR_API_KEY" with your previously created API Key. (Note: the quotation marks must be removed as well).
 
-```REACT_APP_API_KEY="YOUR_API_KEY"```<br />
-
-Substitute "YOUR_API_KEY" with the previously created API Key.<br />
-
-If you plan on Deploying the Application with github Actions on google Cloud, make sure to add the API KEY to a Github Secret and reference it in the Workflow.<br />
+If you plan on deploying the application with github Actions on google Cloud, make sure to add the API KEY to a Github Secret and reference it in the Workflow.<br />
 If you name your Github Actions Secret "REACT_APP_API_KEY", you do not need to change the Workflow in main.yml.<br />
 
-### Commands to build and run the project locally
+### Running Locally
+Now, you're ready to start the app with:
 
-Start the app with: `npm run dev`
+```npm run dev```
 
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+You can open [http://localhost:3000](http://localhost:3000) to view it in the browser.\
+Notice that the page will reload if you make any edits. You will also see any lint errors in the console (use a Chrome-based browser).\
 
-**We strongly recommend to use Google Chrome in full screen *only*, no matter if you have deployed the app or
-are accessing it locally**.
+In order to interact with the application in a meaningful way, you need to install and start the [server] (https://github.com/sopra-fs24-group-42/server) as well.
+
+
+**Please note: the application was developed for Google Chrome, so please stick to Google Chrome (in full screen) whenever you are running it**
 
 ### Tests
 
@@ -91,7 +119,7 @@ Run the tests with: `npm run test`
 To build the app, run `npm run build` <br>
 
 ### Deployment
-Deployment to the Google App Engine happens automatically when pushed to main. 
+Deployment to the Google App Engine happens automatically when pushed to main. You can also trigger deployment manually via gitHub Actions workflows.  
 
 ### External dependencies
 
