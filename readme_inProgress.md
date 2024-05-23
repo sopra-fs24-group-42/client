@@ -51,7 +51,25 @@ Consider the diagram below for a visual representation and interaction of these 
 What follows is a more detailed explanation of each high-level component individually: 
 
 #### The Lobby Object
+A game and its state is captured by a "lobby object". This object is created in the server upon the creation of a new game in the client, and will get continuously updated whenever anything happens that changes the state of the game. For example, when another player joins the game, the lobby object corresponding to this game is updated by the server and broadcasted to all websocket connections subscribed to this particular game endpoint. Specifically, the lobby object pertaining to a game instance contains the following information concerning the game state:
+* **lobby ID** - A unique lobby identifier. The lobby ID is required in the server to update and fetch information in the database about the correct lobby. The lobby ID of an existing lobby never changes.  
+* **host username** - The current host player's username concatenated with the lobby code of the lobby. The host views differ slightly from other players' views in certain phases. For example, the [preNight](/src/components/views/PreNight.tsx) phase is different for the host player, since the host player is the one who must play the sound of the narration. If the host player is killed or voted out, another player still alive in the game is selected to become the new host, so that the element of narration is not lost.
+* **lobby code** - A unique code consisting of 5 characters. Players join a game using this code.  
+* **list of players in the lobby** - Players themselves are also objects that are created and stored by the server. Player objects track information about existing players (such as their usernames, their role, whether they're alive, whether they received any votes or were killed, etc.), and they are also stored in the lobby object as a list. This allows the frontend to know how many and which players are currently in the game. 
+* **dictionary of players in the lobby** - This field stores the player objects via their usernames as keys instead of simply having them in a list. This allows for faster access to a particular player's role, death status, number of votes, etc., since the username of a player is stored in the localStorage in the frontend upon joining or creating a game. 
+* **game state** - The game iterates through the following states: WAITINGROOM, NIGHT, REVEALNIGHT, DISCUSSION, PREVOTING, VOTING, REVEALVOTING, PRENIGHT, ENDGAME. The game state of the game is used to trigger collective navigation of all players to another view in the frontend. 
+* **winning team** - The game can end in a tie, the villager team winning, or the werewolf team winning depending on the game state. Winning and losing teams are shown different views in the frontend. 
+* **number of players** - The total number of players is set by the host player upon the creation of a game or updated by the host player in the settings in the [waitingRoom](/src/components/views/WaitingRoom.tsx). This field does not reflect the number of players who are currently in the game, rather, the total of players who are to play the game. This information is needed in the frontend to disable the starting of the game until everyone has joined. 
+* **minimum number of players** - The minimum number of players ensures no trivial games can be created by default (i.e. games that end immediately and directly in a win or a loss).
+* **game settings** - The game settings store the number of roles set in a game.
+
+The lobby object therefore encodes the entire game and its state at any point in time. It is the most crucial element in both the client and the server, as a round of <i>Survive the Night</i> would not be playable without it. The frontend displays information stored inside the lobby object in every view all the time (except for the frontPage, joinGame and createGame views) and routes to other views also based on information in lobby object.
+
+The lobby object is broadcast by the server as a JSON to all websocket connections subscribed to the corresponding lobby endpoint as a response to almost all interactions made by players.  
+
 #### Connecting and Subscribing
+
+
 #### Listening for Lobby Updates
 
 
