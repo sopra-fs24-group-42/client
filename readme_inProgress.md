@@ -1,3 +1,4 @@
+![image](/resources/forest%20copy.jpg)
 # Survive the Night
 <div style="text-align: justify"> 
 
