@@ -7,7 +7,7 @@ Check out the back-end implementation [here](https://github.com/sopra-fs24-group
 
 1. [Introduction](#introduction)
 2. [Technologies](#technologies)
-3. [High-level Components](#high-level-components)
+3. [High-Level Components](#high-level-components)
 4. [Launch & Development](#launch--development)
     - [Getting started](#getting-started)
     - [Prerequisites & installation](#prerequisites-installation)
@@ -35,10 +35,26 @@ To develop the frontend, we used the following technologies:
 * [Google Cloud Text-to-Speech API](https://cloud.google.com/text-to-speech/?utm_source=google&utm_medium=cpc&utm_campaign=emea-ch-all-de-dr-bkws-all-all-trial-%7Bmatchtype%7D-gcp-1707574&utm_content=text-ad-none-any-DEV_%7Bdevice%7D-CRE_%7Bcreative%7D-ADGP_%7B_dsadgroup%7D-KWID_%7B_dstrackerid%7D-%7Btargetid%7D-userloc_%7Bloc_physical_ms%7D&utm_term=KW_%7Bkeyword%7D-NET_%7Bnetwork%7D-PLAC_%7Bplacement%7D&%7B_dsmrktparam%7D%7Bignore%7D&%7B_dsmrktparam%7D&gclsrc=aw.ds&gad_source=1&gclid=CjwKCAjwr7ayBhAPEiwA6EIGxG33Q6L4eJWnLkzXBZ5FXbQ_lYYSrb1PmWgjV9mQaOEKemZDA6TdMhoCpJoQAvD_BwE&gclsrc=aw.ds&hl=en) - Lifelike speech synthesis: used for dynamic, realistic-sounding narration
 * [Google Cloud](https://cloud.google.com/gcp/?hl=de&utm_source=google&utm_medium=cpc&utm_campaign=emea-ch-all-de-bkws-all-all-trial-e-gcp-1707574&utm_content=text-ad-none-any-DEV_c-CRE_554508006169-ADGP_Hybrid+%7C+BKWS+-+EXA+%7C+Txt+-+GCP+-+General+-+v3-KWID_43700060389294309-kwd-6458750523-userloc_9187657&utm_term=KW_google%20cloud-NET_g-PLAC_&&gad_source=1&gclid=CjwKCAjwr7ayBhAPEiwA6EIGxCgj6yr0qBDqIbATub4ITjJg381-LR80X3dpxf-pvkhGdq4ZlO70GhoCiWcQAvD_BwE&gclsrc=aw.ds) - Suite of cloud computing serves: used for deployment and hosting
 
-## High-level Components <a id="high-level-components"></a>
+## High-Level Components <a id="high-level-components"></a>
 // High-level components: Identify your project’s 3-5 main components. What is their role?
 How are they correlated? Reference the main class, file, or function in the README text
 with a link.
+
+The frontend can be broken down into a handful of main components that operate on different levels to explain the way it works from a higher level of abstraction. 
+
+Essentially, the frontend is made up of a collection of separate [views](/src/components/views/) that are rendered by specific URLs defined in the [AppRouter](/src/components/routing/routers/AppRouter.js). The display style of what is rendered in a view is specificied in its respective scss [style file](/src/styles/views/). Finally, and most important for the interactive, cooperative part of application, there are two crucial useEffect hooks in every view (except for the frontPage, joinGame and createGame views): [one](https://vscode.dev/github/sopra-fs24-group-42/client/blob/main/src/components/views/WaitingRoom.tsx#L119) that handles the initial websocket connection to the server as well as the subscription to the correct "topic" (i.e., the correct game lobby), and the other that listens to and acts based on incoming messages from the server via the established websocket connection. To see these two useEffect hooks in action, consider the [waitingRoom view](/src/components/views/WaitingRoom.tsx) as an example: the first useEffect handling connection & subscription can be found [here](https://vscode.dev/github/sopra-fs24-group-42/client/blob/main/src/components/views/WaitingRoom.tsx#L119), while the second useEffect hook tracking changes to the game (i.e., the lobby) can be observed [here](https://vscode.dev/github/sopra-fs24-group-42/client/blob/main/src/components/views/WaitingRoom.tsx#L164).
+
+Consider the diagram below for a visual representation and interaction of these high-level components:
+
+![Image]() 
+
+What follows is a more detailed explanation of each high-level component individually: 
+
+#### The Lobby Object
+#### Connecting and Subscribing
+#### Listening for Lobby Updates
+
+
 
 ## Launch & Development <a id="launch--development"></a>
 // Launch & Deployment: Write down the steps a new developer joining your team would
@@ -145,18 +161,17 @@ include a few screenshots of your application.
 could add.
 
 ## Authors <a id="authors"></a>
-//Authors and acknowledgment.
 * [Charlotte Model](https://github.com/cmodel1)
 * [Polina Kuptsova](https://github.com/kuppolina)
 * [Lukas Niedhart](https://github.com/lukasniedh)
 * [Rafael Urech](https://github.com/DaKnechtCoder)
 
 ## Acknowledgments <a id="acknowledgements"></a>
-We want to thank our Teaching Assistant [Marco Leder](https://github.com/marcoleder) for guiding us through the course.
+We want to thank our Teaching Assistant [Marco Leder](https://github.com/marcoleder) for guiding us through the course!
 
 ## Attributions <a id="attributions"></a>
 
-We want to attribute the source that allowed us to use the pictures
+We want to attribute the sources that allowed us to use the pictures
 
 // Example of sourcing an image
 
