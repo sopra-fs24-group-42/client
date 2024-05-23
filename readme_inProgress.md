@@ -39,19 +39,7 @@ To develop the frontend, we used the following technologies:
 * [Google Cloud](https://cloud.google.com/gcp/?hl=de&utm_source=google&utm_medium=cpc&utm_campaign=emea-ch-all-de-bkws-all-all-trial-e-gcp-1707574&utm_content=text-ad-none-any-DEV_c-CRE_554508006169-ADGP_Hybrid+%7C+BKWS+-+EXA+%7C+Txt+-+GCP+-+General+-+v3-KWID_43700060389294309-kwd-6458750523-userloc_9187657&utm_term=KW_google%20cloud-NET_g-PLAC_&&gad_source=1&gclid=CjwKCAjwr7ayBhAPEiwA6EIGxCgj6yr0qBDqIbATub4ITjJg381-LR80X3dpxf-pvkhGdq4ZlO70GhoCiWcQAvD_BwE&gclsrc=aw.ds) - Suite of cloud computing serves: used for deployment and hosting
 
 ## High-Level Components <a id="high-level-components"></a>
-// High-level components: Identify your project’s 3-5 main components. What is their role?
-How are they correlated? Reference the main class, file, or function in the README text
-with a link.
-
-The frontend can be broken down into a handful of main components that operate on different levels to explain the way it works from a higher level of abstraction. 
-
-Essentially, the frontend is made up of a collection of separate [views](/src/components/views/) that are rendered by specific URLs defined in the [AppRouter](/src/components/routing/routers/AppRouter.js). The display style of what is rendered in a view is specificied in its respective scss [style file](/src/styles/views/). Finally, and most important for the interactive, cooperative part of application, there are two crucial useEffect hooks in every view (except for the frontPage, joinGame and createGame views): [one](https://vscode.dev/github/sopra-fs24-group-42/client/blob/main/src/components/views/WaitingRoom.tsx#L119) that handles the initial websocket connection to the server as well as the subscription to the correct "topic" (i.e., the correct game lobby), and the other that listens to and acts based on incoming messages from the server via the established websocket connection. To see these two useEffect hooks in action, consider the [waitingRoom view](/src/components/views/WaitingRoom.tsx) as an example: the first useEffect handling connection & subscription can be found [here](https://vscode.dev/github/sopra-fs24-group-42/client/blob/main/src/components/views/WaitingRoom.tsx#L119), while the second useEffect hook tracking changes to the game (i.e., the lobby) can be observed [here](https://vscode.dev/github/sopra-fs24-group-42/client/blob/main/src/components/views/WaitingRoom.tsx#L164).
-
-Consider the diagram below for a visual representation and interaction of these high-level components:
-
-![Image]() 
-
-What follows is a more detailed explanation of each high-level component individually: 
+When considering pure implementation only, the frontend is made up of a collection of separate [views](/src/components/views/) that are rendered by specific URLs defined in the [AppRouter](/src/components/routing/routers/AppRouter.js), invoked through the use of React's useNavigate hook. However, to understand how the application works on a more conceptual level, i.e., how the frontend and backend communicate and how this influences a user's view, the frontend needs to be  described in conbination with more abstract, high-level components: the lobby object, websockets, and the useState variable "ready":
 
 ### The Lobby Object <a id="the-lobby-object"></a>
 A game and its state is captured by a "lobby object". This object is created in the server upon the creation of a new game in the client, and will get continuously updated whenever anything happens that changes the state of the game. For example, when another player joins the game, the lobby object corresponding to this game is updated by the server and broadcasted to all websocket connections subscribed to this particular game endpoint. Specifically, the lobby object pertaining to a game instance contains the following information concerning the game state:
@@ -176,7 +164,7 @@ Deployment to the Google App Engine happens automatically when pushed to main. Y
 Both the client and the server have to be running for the application to behave as expected.
 
 ### Contributing
-If you want to contribute, please contact the authors first. If you want to make changes to or add features, please do so on your own branch first and properly test it before submitting a pull request to the main repository. 
+If you want to contribute, please contact the [authors](#authors) first. If you want to make changes to or add features, please do so on your own branch first and properly test it before submitting a pull request to the main repository. 
 
 ### Releases 
 We recommend to follow this [tutorial](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) and to properly document and comment your release. 
@@ -189,6 +177,12 @@ include a few screenshots of your application.
 ## Roadmap <a id="roadmap"></a>
 //Roadmap: The top 2-3 features that new developers who want to contribute to your project
 could add.
+At this stage, the following features have not yet been implemented in the frontend: 
+* Adding a chat function to allow players to play remotely.
+* Fetching timer data from the server 
+* Implementing new roles: sheriff
+* Adding themes/different design overlays
+
 
 ## Authors <a id="authors"></a>
 * [Charlotte Model](https://github.com/cmodel1)
@@ -200,11 +194,21 @@ could add.
 We want to thank our Teaching Assistant [Marco Leder](https://github.com/marcoleder) for guiding us through the course!
 
 ## Attributions <a id="attributions"></a>
+We want to attribute the sources from where we got our public domain images:
 
-We want to attribute the sources that allowed us to use the pictures
-
-// Example of sourcing an image
-
+* Green Forest Background Image
+* Dark Forest Background Image
+* Werewolf Role Graphic
+* Seer Role Graphic
+* Protector Role Graphic
+* Sacrifice Role Graphic
+* Villager Role Graphic
+* Tombstone Graphic
+* Outstretched Arm With Fist Graphic
+* Skull Graphic
+* Walled Off Village Graphic
+* Crown Graphic
+* 
 * Birds: Images by <a href="https://www.freepik.com/free-vector/hand-drawn-cute-animal-avatars-element-set_32987087.htm">Freepik</a>
 
 
