@@ -4,7 +4,7 @@
 
 Check out the back-end implementation [here](https://github.com/sopra-fs24-group-42/server).
 
-## 📖 Table of Contents
+## Table of Contents
 
 1. [Introduction](#introduction)
 2. [Technologies](#technologies)
