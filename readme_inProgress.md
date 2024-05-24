@@ -227,8 +227,6 @@ To make the game more exciting and to allow for a greater range of game experien
 * [Polina Kuptsova](https://github.com/kuppolina)
 * [Lukas Niedhart](https://github.com/lukasniedh)
 * [Rafael Urech](https://github.com/DaKnechtCoder)
-  
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
 ## Acknowledgments <a id="acknowledgements"></a>
 We would like to thank our Teaching Assistant [Marco Leder](https://github.com/marcoleder) for guiding us through the course!
