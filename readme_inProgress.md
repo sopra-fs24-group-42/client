@@ -4,7 +4,7 @@
 
 Check out the back-end implementation [here](https://github.com/sopra-fs24-group-42/server).
 
-## 📖 Table of Contents
+## Table of Contents
 
 1. [Introduction](#introduction)
 2. [Technologies](#technologies)
@@ -37,6 +37,7 @@ To develop the frontend, we used the following technologies:
 * [STOMP JS](https://stomp-js.github.io/stomp-websocket/codo/extra/docs-src/Usage.md.html) - JavaScript/Typescript client for STOMP protocol: used for websocket communication with the server via SockJS
 * [Mantine](https://mantine.dev/) - Component library for React: used for the Popover, ActionIcon, NumberInput and Table components
 * [Tabler Icons](https://tablericons.com/) - Open source free SVG icons: used for the settings and infocircle icons
+* [DALL·E 2 by Open AI](https://openai.com/index/dall-e-2/) - AI Image generator: Used for background Images
 * [Google Cloud Text-to-Speech API](https://cloud.google.com/text-to-speech/?utm_source=google&utm_medium=cpc&utm_campaign=emea-ch-all-de-dr-bkws-all-all-trial-%7Bmatchtype%7D-gcp-1707574&utm_content=text-ad-none-any-DEV_%7Bdevice%7D-CRE_%7Bcreative%7D-ADGP_%7B_dsadgroup%7D-KWID_%7B_dstrackerid%7D-%7Btargetid%7D-userloc_%7Bloc_physical_ms%7D&utm_term=KW_%7Bkeyword%7D-NET_%7Bnetwork%7D-PLAC_%7Bplacement%7D&%7B_dsmrktparam%7D%7Bignore%7D&%7B_dsmrktparam%7D&gclsrc=aw.ds&gad_source=1&gclid=CjwKCAjwr7ayBhAPEiwA6EIGxG33Q6L4eJWnLkzXBZ5FXbQ_lYYSrb1PmWgjV9mQaOEKemZDA6TdMhoCpJoQAvD_BwE&gclsrc=aw.ds&hl=en) - Lifelike speech synthesis: used for dynamic, realistic-sounding narration
 * [Google Cloud](https://cloud.google.com/gcp/?hl=de&utm_source=google&utm_medium=cpc&utm_campaign=emea-ch-all-de-bkws-all-all-trial-e-gcp-1707574&utm_content=text-ad-none-any-DEV_c-CRE_554508006169-ADGP_Hybrid+%7C+BKWS+-+EXA+%7C+Txt+-+GCP+-+General+-+v3-KWID_43700060389294309-kwd-6458750523-userloc_9187657&utm_term=KW_google%20cloud-NET_g-PLAC_&&gad_source=1&gclid=CjwKCAjwr7ayBhAPEiwA6EIGxCgj6yr0qBDqIbATub4ITjJg381-LR80X3dpxf-pvkhGdq4ZlO70GhoCiWcQAvD_BwE&gclsrc=aw.ds) - Suite of cloud computing serves: used for deployment and hosting
 
@@ -172,13 +173,40 @@ If you want to contribute, please contact the [authors](#authors) first. If you 
 We recommend to follow this [tutorial](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) and to properly document and comment your release. 
 
 ## Illustrations <a id="illustrations"></a>
-![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_frontpage.png)
-![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_waitingroom%20(2).png)
-![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_waitingroom%20(1).png)
-![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_waitingroom%20(3).png)
-![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_waitingroom%20(5).png)
-![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_waitingroom%20(6).png)
-![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_waitingroom%20(24).png)
+
+**Frontpage** view of the Applicationé:
+The user can choose to either join an existing game or create a newone. The User has Access to the leaderboard and additional Information on how to play the game
+
+![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/Comic/sopra-fs24-group-42-client.oa.r.appspot.com_.png)
+
+To invite other players to a created Game the displayed lobby code can be sahred. Inside the Waitingroom the Settings can be modified and Spots for additional Player can be created.
+View of the **Waitingroom**:
+
+![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/Comic/sopra-fs24-group-42-client.oa.r.appspot.com_%20(5).png)
+
+View of of the **modifiable Settings**:
+
+![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/Comic/sopra-fs24-group-42-client.oa.r.appspot.com_%20(6).png)
+
+The Application is a round based Game with a Nigh Phase and Voting Phase in which the User can infuence the Outcome of a Game.
+**View of the Nightphase** in which the user can use their Rolespecifica abilities by selecting another player that will be affected by the users ability:
+
+![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/Comic/sopra-fs24-group-42-client.oa.r.appspot.com_%20(10).png)
+
+The Outcome of each Night Phase or Voting Phase is displayed to the user. It is accompanied by a dynamic and inclusive Narration that is handled by a Text-to_Speech API.
+View of the **Revelation of the Voting Phase** including a List of Players that recived atleas 1 Vote:
+
+![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/Comic/sopra-fs24-group-42-client.oa.r.appspot.com_%20(15).png)
+
+Killed Players are rerouted to a custom **Deadscreen** informing them if they have either been killed during the night or voted out during the day
+View of a killed player:
+
+![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/Comic/sopra-fs24-group-42-client.oa.r.appspot.com_%20(21).png)
+
+Once a game has Ended each Player gets rerouted to the waitingroom so that a new game can be directly started again with the same players. Additionally players can leave leave and the Number of players can be adapted the fit the users needs.
+View of the **waitingroom** with the user leaving after a game has ended:
+
+![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/Comic/sopra-fs24-group-42-client.oa.r.appspot.com_%20(18).png)
 
 
 ## Roadmap <a id="roadmap"></a>
@@ -195,12 +223,10 @@ To make the game more exciting and to allow for a greater range of game experien
 <br> To further the differentiate <i>Survive the Night</i> from other werewolf game implementations, we would like to add a number of design overlays to the game, to make the game playable within different themes. Concretely, we would like the player creating the game to be able to choose a game theme when creating a new game, which should also be changeable in the [waitingRoom](/src/components/views/WaitingRoom.tsx) (in the settings popover). For example, we would love to add an Office Theme in addition to the default Medieval theme, where the traditional roles are replaced with characters from the popular TV show <i>The Office</i> and the design of the game changes accordingly. 
 
 ## Authors <a id="authors"></a>
-* **Charlotte Model** - [cmodel1](https://github.com/cmodel1)
-* **Polina Kuptsova** - [kuppolina](https://github.com/kuppolina)
-* **Lukas Niedhart** - [lukasniedh](https://github.com/lukasniedh)
-* **Rafael Urech** - [DaKnechtCoder](https://github.com/DaKnechtCoder)
-  
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+* [Charlotte Model](https://github.com/cmodel1)
+* [Polina Kuptsova](https://github.com/kuppolina)
+* [Lukas Niedhart](https://github.com/lukasniedh)
+* [Rafael Urech](https://github.com/DaKnechtCoder)
 
 ## Acknowledgments <a id="acknowledgements"></a>
 We would like to thank our Teaching Assistant [Marco Leder](https://github.com/marcoleder) for guiding us through the course!
@@ -230,6 +256,8 @@ We would like to attribute the sources from where we got our public domain image
 ">rawpixel</a>
 * Crown on Pillow Graphic by <a href="https://www.rawpixel.com/image/6438562/image-vintage-public-domain-black
 ">rawpixel</a>
+* Backgroundpictures created with OpenAIs DALL·E 2 <a href="https://openai.com/index/dall-e-2/
+">DALL·E 2</a>
 
 ## License <a id="license"></a>
 This project is licensed under the GNU GPLv3 License. 
