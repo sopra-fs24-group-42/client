@@ -174,12 +174,12 @@ We recommend to follow this [tutorial](https://docs.github.com/en/repositories/r
 
 ## Illustrations <a id="illustrations"></a>
 
-**Frontpage** view of the Applications:
-The user can choose to either join an existing game or create a new one. The user has access to the leaderboard and additional information on how to play the game
+**Frontpage** view of the application:
+The player can choose to either join an existing game or create a new one. The player has access to the leaderboard and additional information on how to play the game via the icons on the upper right. 
 
 ![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/Comic/sopra-fs24-group-42-client.oa.r.appspot.com_.png)
 
-To invite other players to a created game the displayed lobby code can be shared. Inside the waitingRoom, the settings can be modified and spots for additional players can be created.
+To invite other players to a created game, the displayed lobby code can be shared verbally. Inside the waitingRoom, the settings can be modified via the icon on the upper right and space for additional players can be created.
 View of the **Waitingroom**:
 
 ![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/Comic/sopra-fs24-group-42-client.oa.r.appspot.com_%20(5).png)
@@ -188,23 +188,23 @@ View of of the **modifiable settings**:
 
 ![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/Comic/sopra-fs24-group-42-client.oa.r.appspot.com_%20(6).png)
 
-The application is a round based game with a Night Phase and Voting Phase in which players can infuence the outcome of the game.
-**View of the Nightphase** in which the user can use their Rolespecifica abilities by selecting another player that will be affected by the users ability:
+The application is a round based game with a Night Phase and Voting Phase, in which players can influence the outcome of the game.
+**View of the Nightphase** in which a player can apply their role-specific power to a another player (some roles may choose themselves) by selecting them from the list of all alive players:
 
 ![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/Comic/sopra-fs24-group-42-client.oa.r.appspot.com_%20(10).png)
 
-The Outcome of each Night Phase or Voting Phase is displayed to the user. It is accompanied by a dynamic and inclusive Narration that is handled by a Text-to_Speech API.
-View of the **Revelation of the Voting Phase** including a List of Players that recived atleas 1 Vote:
+The outcome of each Night Phase or Voting Phase is displayed to the player. It is accompanied by a dynamic and inclusive narration that is handled by a Text-to_Speech API.
+View of the **reveal of the Voting Phase**, which includes a list of all players who received at least one vote:
 
 ![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/Comic/sopra-fs24-group-42-client.oa.r.appspot.com_%20(15).png)
 
-Killed Players are rerouted to a custom **Deadscreen** informing them if they have either been killed during the night or voted out during the day
+Killed players are rerouted to a custom **Deadscreen** informing them if they have either been killed during the night or voted out during the day.
 View of a killed player:
 
 ![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/Comic/sopra-fs24-group-42-client.oa.r.appspot.com_%20(21).png)
 
-Once a game has Ended each Player gets rerouted to the waitingroom so that a new game can be directly started again with the same players. Additionally players can leave leave and the Number of players can be adapted the fit the users needs.
-View of the **waitingroom** with the user leaving after a game has ended:
+Once a game has ended each player gets rerouted to the waitingRoom so that a new game can be directly started again with the same players. Additionally, players can leave and the number of players or roles can be adapted to fit the players' needs.
+View of the **waitingRoom** with the player leaving after a game has ended:
 
 ![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/Comic/sopra-fs24-group-42-client.oa.r.appspot.com_%20(18).png)
 
