@@ -13,7 +13,6 @@ import NightReveal from "../../views/NightReveal";
 import VotingReveal from "../../views/VotingReveal";
 import Discussion from "../../views/Discussion";
 import Voting from "../../views/Voting";
-import NarrationPhase from "../../views/NarrationPhase";
 import End from "../../views/End";
 import DeadScreen from "../../views/DeadPlayer";
 import PreNight from "../../views/PreNight";
@@ -43,7 +42,6 @@ const AppRouter = () => {
         <Route path="/discussion" element={<Discussion />} />
         <Route path="/voting" element={<Voting />} />
         <Route path="/revealvoting" element={<VotingReveal />} />
-        <Route path="/NarrationPhase" element={<NarrationPhase />} />
         <Route path="/end" element={<End />} />
         <Route path="/deadscreen" element={<DeadScreen />} />
         <Route path="/prenight" element={<PreNight />} />
