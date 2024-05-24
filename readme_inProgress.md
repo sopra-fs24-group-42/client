@@ -172,9 +172,14 @@ If you want to contribute, please contact the [authors](#authors) first. If you 
 We recommend to follow this [tutorial](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) and to properly document and comment your release. 
 
 ## Illustrations <a id="illustrations"></a>
-//Illustrations: In your client repository, briefly describe and illustrate the main user flow(s)
-of your interface. How does it work (without going into too much detail)? Feel free to
-include a few screenshots of your application.
+![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_frontpage.png)
+![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_waitingroom%20(2).png)
+![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_waitingroom%20(1).png)
+![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_waitingroom%20(3).png)
+![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_waitingroom%20(5).png)
+![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_waitingroom%20(6).png)
+![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_waitingroom%20(24).png)
+
 
 ## Roadmap <a id="roadmap"></a>
 //Roadmap: The top 2-3 features that new developers who want to contribute to your project
