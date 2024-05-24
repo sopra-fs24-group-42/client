@@ -26,27 +26,28 @@
     "The village wakes up, and dawn brings clarity. It’s time to find out what happened during the night."
   ],
 
-    "RevealNightPost": [
-      "Gather in the marketplace to discuss who you suspect. Cast your votes to decide who will be killed.",
-      "It's time to meet in the marketplace. Discuss your suspicions and vote on who to execute.",
-      "Head to the marketplace. Share your thoughts and vote on who you think is a werewolf.",
-      "Everyone, gather in the marketplace. Discuss, suspect, and vote on who should be executed.",
-      "Meet in the marketplace to discuss your suspicions and vote on who to kill.",
-      "Assemble in the marketplace. Talk about your suspicions and vote on who will be executed.",
-      "Join the marketplace discussion. Share your thoughts and vote on who to kill.",
-      "Gather in the marketplace to decide who you think is a werewolf. Vote to execute.",
-      "It's time to discuss in the marketplace. Vote on who you believe is the hidden monster.",
-      "Meet in the marketplace. Discuss suspicions and cast your votes to decide who to execute."
-    ],
+  "RevealNightPost": [
+    "Gather in the marketplace to discuss who you suspect. Cast your votes to decide who will be killed.",
+    "It's time to meet in the marketplace. Discuss your suspicions and vote on who to execute.",
+    "Head to the marketplace. Share your thoughts and vote on who you think is a werewolf.",
+    "Everyone, gather in the marketplace. Discuss, suspect, and vote on who should be executed.",
+    "Meet in the marketplace to discuss your suspicions and vote on who to kill.",
+    "Assemble in the marketplace. Talk about your suspicions and vote on who will be executed.",
+    "Join the marketplace discussion. Share your thoughts and vote on who to kill.",
+    "Gather in the marketplace to decide who you think is a werewolf. Vote to execute.",
+    "It's time to discuss in the marketplace. Vote on who you believe is the hidden monster.",
+    "Meet in the marketplace. Discuss suspicions and cast your votes to decide who to execute."
+  ],
 
-    "RevealVotingSurvival": [
+  "RevealVotingSurvival": [
     "All villagers survived the night unharmed.",
     "The village is quiet; no one was harmed last night.",
     "Everyone remained safe last night.",
     "The night passed without any loss of life.",
     "All residents made it through the night safely."
   ],
-    "RevealVotingPre": [
+
+  "RevealVotingPre": [
     "After intense debate, the villagers have cast their votes. The decision is made.",
     "Following heated discussions, the votes are now in. The villagers have decided.",
     "The debate is over, and the villagers have voted. The results are ready.",
@@ -63,13 +64,14 @@
     "Following a lively discussion, the villagers have voted. The outcome is ready.",
     "The villagers have cast their votes after intense debate. The decision will be shown."
   ],
-    "RevealVotingPost": [
-      "The villagers return to their daily routines.",
-      "Life resumes as the villagers go back to their duties.",
-      "The Villagers return to their everyday activities.",
-      "Daily life continues for the villagers.",
-      "The villagers go back to their normal lives.",
-      "Life goes on as villagers resume their duties.",
-      "Daily business resumes for the villagers."
-    ]
-  }
+
+  "RevealVotingPost": [
+    "The villagers return to their daily routines.",
+    "Life resumes as the villagers go back to their duties.",
+    "The Villagers return to their everyday activities.",
+    "Daily life continues for the villagers.",
+    "The villagers go back to their normal lives.",
+    "Life goes on as villagers resume their duties.",
+    "Daily business resumes for the villagers."
+  ]
+}

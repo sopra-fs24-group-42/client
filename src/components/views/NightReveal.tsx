@@ -42,24 +42,28 @@ const NightReveal = () => {
   const [playPressed, setPlayPressed] = useState(false);  // State to track if Playbutton has been pressed
   const [dataNotFetched, setDataNotFetched] = useState(true);
   const [findKilledPlayersRan, setFindKilledPlayersRan] = useState(false);
-  let NumberOfWerewolfsAlive = 0;
-  let NumberOfVillagersAlive = 0;
+  const [NumberOfWerewolfsAlive, setNumberOfWerewolfsAlive] = useState(0);
+  const [NumberOfVillagersAlive, setNumberOfVillagersAlive] = useState(0);
 
   const findKilledPlayers = () => {
     console.log("Inside findKilledPlayers");
     let foundPlayers = [];
+    let werewolfsAlive = 0;
+    let villagersAlive = 0;
     for (let i = 0; i < messageReceived.players.length; i++) { // iterating through list of players to check their isKilled field
       let currentPlayer = messageReceived.players[i];
       if (messageReceived.playerMap[currentPlayer.username].isAlive && messageReceived.playerMap[currentPlayer.username].roleName === "Werewolf") {
-        NumberOfWerewolfsAlive += 1;
+        werewolfsAlive += 1;
       } else if (messageReceived.playerMap[currentPlayer.username].isAlive && messageReceived.playerMap[currentPlayer.username].roleName !== "Werewolf"){
-        NumberOfVillagersAlive += 1;
+        villagersAlive += 1;
       }
 
       if (messageReceived.playerMap[currentPlayer.username].isKilled) { // Check if the current player was marked as killed
         foundPlayers.push(currentPlayer); // Correctly pushing currentPlayer into the foundPlayers array
       }
     }
+    setNumberOfWerewolfsAlive(werewolfsAlive);
+    setNumberOfVillagersAlive(villagersAlive);
     setKilledPlayers(foundPlayers); // Update the state with the list of killed players
     foundPlayers.forEach(player => {
       if (username === player.username) {
@@ -204,10 +208,15 @@ const NightReveal = () => {
         console.log("Entered the API Useffect") 
         const RevealNightPre = textSamples.RevealNightPre[Math.floor(Math.random() * textSamples.RevealNightPre.length)];
         let RevealNightPost;
+        console.log("RevealNightPost init")
+        console.log("Werewolfs Alive", NumberOfWerewolfsAlive)
+        console.log("Villagers Alive", NumberOfVillagersAlive)
         if (NumberOfWerewolfsAlive === 0 || NumberOfWerewolfsAlive >= NumberOfVillagersAlive){
           RevealNightPost = "";
+          console.log("RevealNightPost Gameover")
         } else {
           RevealNightPost = textSamples.RevealNightPost[Math.floor(Math.random() * textSamples.RevealNightPost.length)];
+          console.log("RevealNightPost Random")
         }
 
         /*logic to differentiat between the number of killed players and making the text for the 
@@ -240,7 +249,8 @@ const NightReveal = () => {
           RevealNightMid = ""; // Initialize it as an empty string even in the error case
         }        
 
-        const selectedText = "<speak>" + "<break time=\"500ms\"/> " +  RevealNightPre + " " + "<break time=\"1s\"/> " + RevealNightMid + " " + "<break time=\"2s\"/> " + RevealNightPost + "</speak>";
+        const selectedText = "<speak>" + "<break time=\"500ms\"/> " +  RevealNightPre + " " + "<break time=\"1s\"/> " + RevealNightMid + " " + "<break time=\"1500ms\"/> " + RevealNightPost + "</speak>";
+        
         const fetchData = async () => {
           const baseURL = "https://texttospeech.googleapis.com/v1beta1/text:synthesize?fields=audioContent&key="
           const URLSecret = process.env.REACT_APP_API_KEY;
@@ -270,7 +280,7 @@ const NightReveal = () => {
             }
             const jsonData = await response.json();
             let modifiedString = JSON.stringify(jsonData);
-            console.log("Recieved Respnse");
+            console.log("recieved response");
             let newstring = modifiedString.substring(17);
             console.log("first 17 Elements deleted");
             newstring = newstring.slice(0, -2);
