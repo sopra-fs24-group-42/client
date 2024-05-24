@@ -195,16 +195,18 @@ To make the game more exciting and to allow for a greater range of game experien
 <br> To further the differentiate <i>Survive the Night</i> from other werewolf game implementations, we would like to add a number of design overlays to the game, to make the game playable within different themes. Concretely, we would like the player creating the game to be able to choose a game theme when creating a new game, which should also be changeable in the [waitingRoom](/src/components/views/WaitingRoom.tsx) (in the settings popover). For example, we would love to add an Office Theme in addition to the default Medieval theme, where the traditional roles are replaced with characters from the popular TV show <i>The Office</i> and the design of the game changes accordingly. 
 
 ## Authors <a id="authors"></a>
-* [Charlotte Model](https://github.com/cmodel1)
-* [Polina Kuptsova](https://github.com/kuppolina)
-* [Lukas Niedhart](https://github.com/lukasniedh)
-* [Rafael Urech](https://github.com/DaKnechtCoder)
+* **Charlotte Model** - [cmodel1](https://github.com/cmodel1)
+* **Polina Kuptsova** - [kuppolina](https://github.com/kuppolina)
+* **Lukas Niedhart** - [lukasniedh](https://github.com/lukasniedh)
+* **Rafael Urech** - [DaKnechtCoder](https://github.com/DaKnechtCoder)
+  
+See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
 ## Acknowledgments <a id="acknowledgements"></a>
-We want to thank our Teaching Assistant [Marco Leder](https://github.com/marcoleder) for guiding us through the course!
+We would like to thank our Teaching Assistant [Marco Leder](https://github.com/marcoleder) for guiding us through the course!
 
 ## Image Attributions <a id="image-attributions"></a>
-We want to attribute the sources from where we got our public domain images:
+We would like to attribute the sources from where we got our public domain images:
 
 * Green Forest Background Image by <a href="https://www.wallpaperflare.com/aerial-photo-of-forest-trees-fog-green-nature-clouds-aesthetic-wallpaper-zadso/download/2560x1440">Wallpaper Flare</a>
 * Dark Forest Background Image by <a href="https://www.rawpixel.com/image/3304611/free-photo-image-nature-monochrome-forest-fog?destination=%2Fimage%2F3304611%2Ffree-photo-image-nature-monochrome-forest-fog
@@ -229,8 +231,7 @@ We want to attribute the sources from where we got our public domain images:
 * Crown on Pillow Graphic by <a href="https://www.rawpixel.com/image/6438562/image-vintage-public-domain-black
 ">rawpixel</a>
 
-## ©️ License <a id="license"></a>
-//License: Say how your project is licensed (see License guide3).
+## License <a id="license"></a>
 This project is licensed under the GNU GPLv3 License. 
 
 </div>
