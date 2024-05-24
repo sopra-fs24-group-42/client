@@ -173,13 +173,6 @@ If you want to contribute, please contact the [authors](#authors) first. If you 
 We recommend to follow this [tutorial](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) and to properly document and comment your release. 
 
 ## Illustrations <a id="illustrations"></a>
-![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_frontpage.png)
-![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_waitingroom%20(2).png)
-![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_waitingroom%20(1).png)
-![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_waitingroom%20(3).png)
-![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_waitingroom%20(5).png)
-![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_waitingroom%20(6).png)
-![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_waitingroom%20(24).png)
 
 **Frontpage** view of the Applicationé:
 The user can choose to either join an existing game or create a newone. The User has Access to the leaderboard and additional Information on how to play the game
