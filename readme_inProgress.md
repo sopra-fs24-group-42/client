@@ -182,14 +182,17 @@ We recommend to follow this [tutorial](https://docs.github.com/en/repositories/r
 
 
 ## Roadmap <a id="roadmap"></a>
-//Roadmap: The top 2-3 features that new developers who want to contribute to your project
-could add.
-At this stage, the following features have not yet been implemented in the frontend: 
-* Adding a chat function to allow players to play remotely.
-* Fetching timer data from the server 
-* Implementing new roles: sheriff
-* Adding themes/different design overlays
-
+To further develop the game, we envision the addition of the following features as next steps:
+* **Adding a chat and voice call feature**: 
+<br>This would give players the option to play the game remotely if they preferred to. As of right now, the discussion phase takes place purely in the physical dimension, meaning that players can only play the game when they are all in the same place. The addition of a text and voice chat feature would allow players to play <i>Survive the Night</i> in any manner of situations.    
+* **Implementing more roles**: <br>
+To make the game more exciting and to allow for a greater range of game experiences, the addition of new roles is crucial. We would love to add the following roles to <i>Survive the Night</i>:     
+    - the sheriff role 
+    - the amor role 
+    - the swapper role 
+    - the hunter role
+* **Adding themes/different design overlays**:
+<br> To further the differentiate <i>Survive the Night</i> from other werewolf game implementations, we would like to add a number of design overlays to the game, to make the game playable within different themes. Concretely, we would like the player creating the game to be able to choose a game theme when creating a new game, which should also be changeable in the [waitingRoom](/src/components/views/WaitingRoom.tsx) (in the settings popover). For example, we would love to add an Office Theme in addition to the default Medieval theme, where the traditional roles are replaced with characters from the popular TV show <i>The Office</i> and the design of the game changes accordingly. 
 
 ## Authors <a id="authors"></a>
 * [Charlotte Model](https://github.com/cmodel1)
