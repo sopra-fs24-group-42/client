@@ -223,10 +223,10 @@ To make the game more exciting and to allow for a greater range of game experien
 <br> To further the differentiate <i>Survive the Night</i> from other werewolf game implementations, we would like to add a number of design overlays to the game, to make the game playable within different themes. Concretely, we would like the player creating the game to be able to choose a game theme when creating a new game, which should also be changeable in the [waitingRoom](/src/components/views/WaitingRoom.tsx) (in the settings popover). For example, we would love to add an Office Theme in addition to the default Medieval theme, where the traditional roles are replaced with characters from the popular TV show <i>The Office</i> and the design of the game changes accordingly. 
 
 ## Authors <a id="authors"></a>
-* **Charlotte Model** - [cmodel1](https://github.com/cmodel1)
-* **Polina Kuptsova** - [kuppolina](https://github.com/kuppolina)
-* **Lukas Niedhart** - [lukasniedh](https://github.com/lukasniedh)
-* **Rafael Urech** - [DaKnechtCoder](https://github.com/DaKnechtCoder)
+* [Charlotte Model](https://github.com/cmodel1)
+* [Polina Kuptsova](https://github.com/kuppolina)
+* [Lukas Niedhart](https://github.com/lukasniedh)
+* [Rafael Urech](https://github.com/DaKnechtCoder)
   
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
