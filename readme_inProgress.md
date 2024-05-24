@@ -180,6 +180,40 @@ We recommend to follow this [tutorial](https://docs.github.com/en/repositories/r
 ![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_waitingroom%20(6).png)
 ![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/sopra-fs24-group-42-client.oa.r.appspot.com_waitingroom%20(24).png)
 
+**Frontpage** view of the Applicationé:
+The user can choose to either join an existing game or create a newone. The User has Access to the leaderboard and additional Information on how to play the game
+
+![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/Comic/sopra-fs24-group-42-client.oa.r.appspot.com_.png)
+
+To invite other players to a created Game the displayed lobby code can be sahred. Inside the Waitingroom the Settings can be modified and Spots for additional Player can be created.
+View of the **Waitingroom**:
+
+![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/Comic/sopra-fs24-group-42-client.oa.r.appspot.com_%20(5).png)
+
+View of of the **modifiable Settings**:
+
+![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/Comic/sopra-fs24-group-42-client.oa.r.appspot.com_%20(6).png)
+
+The Application is a round based Game with a Nigh Phase and Voting Phase in which the User can infuence the Outcome of a Game.
+**View of the Nightphase** in which the user can use their Rolespecifica abilities by selecting another player that will be affected by the users ability:
+
+![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/Comic/sopra-fs24-group-42-client.oa.r.appspot.com_%20(10).png)
+
+The Outcome of each Night Phase or Voting Phase is displayed to the user. It is accompanied by a dynamic and inclusive Narration that is handled by a Text-to_Speech API.
+View of the **Revelation of the Voting Phase** including a List of Players that recived atleas 1 Vote:
+
+![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/Comic/sopra-fs24-group-42-client.oa.r.appspot.com_%20(15).png)
+
+Killed Players are rerouted to a custom **Deadscreen** informing them if they have either been killed during the night or voted out during the day
+View of a killed player:
+
+![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/Comic/sopra-fs24-group-42-client.oa.r.appspot.com_%20(21).png)
+
+Once a game has Ended each Player gets rerouted to the waitingroom so that a new game can be directly started again with the same players. Additionally players can leave leave and the Number of players can be adapted the fit the users needs.
+View of the **waitingroom** with the user leaving after a game has ended:
+
+![image](https://github.com/sopra-fs24-group-42/client/blob/main/Screenshots/Comic/sopra-fs24-group-42-client.oa.r.appspot.com_%20(18).png)
+
 
 ## Roadmap <a id="roadmap"></a>
 To further develop the game, we envision the addition of the following features as next steps:
