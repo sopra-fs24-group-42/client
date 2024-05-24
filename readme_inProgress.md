@@ -37,6 +37,7 @@ To develop the frontend, we used the following technologies:
 * [STOMP JS](https://stomp-js.github.io/stomp-websocket/codo/extra/docs-src/Usage.md.html) - JavaScript/Typescript client for STOMP protocol: used for websocket communication with the server via SockJS
 * [Mantine](https://mantine.dev/) - Component library for React: used for the Popover, ActionIcon, NumberInput and Table components
 * [Tabler Icons](https://tablericons.com/) - Open source free SVG icons: used for the settings and infocircle icons
+* [DALL·E 2 by Open AI](https://openai.com/index/dall-e-2/) - AI Image generator: Used for background Images
 * [Google Cloud Text-to-Speech API](https://cloud.google.com/text-to-speech/?utm_source=google&utm_medium=cpc&utm_campaign=emea-ch-all-de-dr-bkws-all-all-trial-%7Bmatchtype%7D-gcp-1707574&utm_content=text-ad-none-any-DEV_%7Bdevice%7D-CRE_%7Bcreative%7D-ADGP_%7B_dsadgroup%7D-KWID_%7B_dstrackerid%7D-%7Btargetid%7D-userloc_%7Bloc_physical_ms%7D&utm_term=KW_%7Bkeyword%7D-NET_%7Bnetwork%7D-PLAC_%7Bplacement%7D&%7B_dsmrktparam%7D%7Bignore%7D&%7B_dsmrktparam%7D&gclsrc=aw.ds&gad_source=1&gclid=CjwKCAjwr7ayBhAPEiwA6EIGxG33Q6L4eJWnLkzXBZ5FXbQ_lYYSrb1PmWgjV9mQaOEKemZDA6TdMhoCpJoQAvD_BwE&gclsrc=aw.ds&hl=en) - Lifelike speech synthesis: used for dynamic, realistic-sounding narration
 * [Google Cloud](https://cloud.google.com/gcp/?hl=de&utm_source=google&utm_medium=cpc&utm_campaign=emea-ch-all-de-bkws-all-all-trial-e-gcp-1707574&utm_content=text-ad-none-any-DEV_c-CRE_554508006169-ADGP_Hybrid+%7C+BKWS+-+EXA+%7C+Txt+-+GCP+-+General+-+v3-KWID_43700060389294309-kwd-6458750523-userloc_9187657&utm_term=KW_google%20cloud-NET_g-PLAC_&&gad_source=1&gclid=CjwKCAjwr7ayBhAPEiwA6EIGxCgj6yr0qBDqIbATub4ITjJg381-LR80X3dpxf-pvkhGdq4ZlO70GhoCiWcQAvD_BwE&gclsrc=aw.ds) - Suite of cloud computing serves: used for deployment and hosting
 
@@ -264,6 +265,8 @@ We would like to attribute the sources from where we got our public domain image
 ">rawpixel</a>
 * Crown on Pillow Graphic by <a href="https://www.rawpixel.com/image/6438562/image-vintage-public-domain-black
 ">rawpixel</a>
+* Backgroundpictures created with OpenAIs DALL·E 2 <a href="https://openai.com/index/dall-e-2/
+">DALL·E 2</a>
 
 ## License <a id="license"></a>
 This project is licensed under the GNU GPLv3 License. 
