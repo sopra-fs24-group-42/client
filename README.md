@@ -253,7 +253,7 @@ We would like to attribute the sources from where we got our public domain image
 ">rawpixel</a>
 * Crown on Pillow Graphic by <a href="https://www.rawpixel.com/image/6438562/image-vintage-public-domain-black
 ">rawpixel</a>
-* Backgroundpictures created with OpenAIs DALL·E 2 <a href="https://openai.com/index/dall-e-2/
+* Background pictures created with OpenAIs DALL·E 2 <a href="https://openai.com/index/dall-e-2/
 ">DALL·E 2</a>
 
 ## License <a id="license"></a>
