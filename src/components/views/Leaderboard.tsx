@@ -5,24 +5,30 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/Leaderboard.scss";
 import BaseContainer from "components/ui/BaseContainer";
-import { Table } from "@mantine/core";
-
+import { Table, Popover } from "@mantine/core";
+import "styles/views/JoinGame.scss";
 
 const Leaderboard = () => {
   const navigate = useNavigate();
   const [leaderboardTable, setLeaderboardTable] = useState(null);
   const [noPlayers, setNoPlayers] = useState(false);
   const maxNumberOfTopPlayers = 25;
+  const [popoverNoGamePlayed, setpopoverNoGamePlayed] = useState(false);
 
   const doGetTopPlayers = async () => {
     try {
       const response = await api.get(`/leaderboards/${maxNumberOfTopPlayers}`);
       setLeaderboardTable(response.data);
     } catch (error) {
-      setNoPlayers(true);
-      alert(
-        `Something went wrong during opening the leaderboard: \n${handleError(error)}`
-      );
+      if (error.response && error.response.status === 404) {
+        setpopoverNoGamePlayed(true);
+        setNoPlayers(true);
+      }
+      else {
+        alert(
+          `Something went wrong during opening the leaderboard: \n${handleError(error)}`
+        );
+      }
     }
   };
 
@@ -94,6 +100,27 @@ const Leaderboard = () => {
             </div>
           </div>
         </div>
+        {popoverNoGamePlayed && (
+          <Popover
+            opened={popoverNoGamePlayed}
+            onClose={() => setpopoverNoGamePlayed(false)}
+            withArrow
+            shadow="md"
+          >
+            <Popover.Dropdown className="joinGame dropdown">
+              <div className="joinGame popover-container">
+                <div className="joinGame heading">No games have been played so far. Be the first one to do so!</div>
+                <Button
+                  width="100%"
+                  height="40px"
+                  onClick={() => setpopoverNoGamePlayed(false)}
+                >
+                  ok
+                </Button>
+              </div>
+            </Popover.Dropdown>
+          </Popover>
+        )}
       </BaseContainer>
     </div>
   );
