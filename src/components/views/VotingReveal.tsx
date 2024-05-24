@@ -205,7 +205,6 @@ const VotingReveal = () => {
             <div className = "votingReveal villager"></div>
             <div className = "votingReveal header">{votedPlayer.username.slice(0,-5)}, a</div>
             <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
-            <div className = "votingReveal highlight">{votedPlayer.roleName}</div>
             <div className = "votingReveal header">was voted out!</div>
             <div className="votingReveal heading">Players who received votes:</div>
             {details}
